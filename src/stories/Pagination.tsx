@@ -9,23 +9,6 @@ type PaginationPorps = {
   count: number; // 要素の数
 };
 
-/**
- * ページネーションコンポーネントの作成
- *
- * @description
- * ページネーションを表示するコンポーネント
- *
- *
- * @example
- * // 基本的な使用方法
- * <Pagination initialPage={3} limit={3} count={150}' />
- *
- * @param props - コンポーネントのプロパティ
- * @param props.initialPage - 初期ページ
- * @param props.limit - 一ページに表示する要素の数
- * @param props.count - 要素の数
- *
- */
 
 export const Pagination = ({ initialPage, limit, count }: PaginationPorps) => {
   const totalPages = Math.ceil(count / limit); // Math.ceil = 与えられた数値を最も近い大きな整数に切り上げる
