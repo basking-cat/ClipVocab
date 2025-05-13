@@ -1,0 +1,48 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); // 半透明グレー
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background-color: white;
+  border-radius: 8px;
+  padding: 24px;
+  position: relative;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+  max-height: 90vh;
+  overflow-y: auto;
+
+  &.small {
+    width: 300px;
+  }
+
+  &.medium {
+    width: 500px;
+  }
+
+  &.large {
+    width: 800px;
+  }
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.modal-content {
+  margin-top: 32px;
+}
