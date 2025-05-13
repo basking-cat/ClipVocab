@@ -1,21 +1,3 @@
-// import type { Meta, StoryObj } from "@storybook/react";
-// import { ModalWindow } from "./ModalWindow";
-
-// const meta: Meta<typeof ModalWindow> = {
-//   component: ModalWindow,
-// };
-// export default meta;
-
-// type Story = StoryObj<typeof ModalWindow>;
-
-// export const ModalWindowSample: Story = {
-//   args: {
-//     isOpen: true,
-//     size: "medium",
-//     children: {},
-//   },
-// };
-
 import type { Meta, StoryObj } from "@storybook/react";
 import { ModalWindow } from "./ModalWindow";
 
