@@ -14,7 +14,6 @@ export const Checkbox = ({ label, checked }: CheckboxProps) => {
   return (
     <label>
       <input
-        className={styles.checkbox}
         type="checkbox"
         checked={ischecked}
         onChange={handleCheckboxChange}
