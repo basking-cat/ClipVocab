@@ -1,0 +1,104 @@
+.container {
+  display: flex;
+  gap: 40px;
+  padding: 40px;
+  text-align: left;
+}
+
+.left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  h1 {
+    font-size: 28px;
+    margin-bottom: 50px;
+  }
+
+  .brand {
+    font-weight: bold;
+  }
+
+  p {
+    font-size: 16px;
+    line-height: 1.6;
+    margin-top: 8px;
+  }
+}
+.right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 450px;
+}
+
+.title {
+  font-size: 20px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.buttonBox {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 24px 20px;
+  width: 100%;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: #fff;
+}
+
+.authBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  img {
+    width: 20px;
+    height: 20px;
+  }
+
+  &:hover {
+    background: #f7f7f7;
+  }
+}
+
+.emailBtn {
+  background: #000;
+  color: #fff;
+
+  &:hover {
+    background: #222;
+  }
+}
+
+.divider {
+  margin: 24px 0 12px;
+  width: 100%;
+  max-width: 300px;
+  border: none;
+  border-top: 1px solid #ddd;
+}
+
+.loginText {
+  font-size: 14px;
+  text-align: center;
+
+  a {
+    color: #555;
+    text-decoration: underline;
+  }
+}
