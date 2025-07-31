@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5); // 半透明グレー
+  background-color: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -35,14 +35,18 @@
 
 .modal-close {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 20px;
+  right: 20px;
+
   background: transparent;
   border: none;
-  font-size: 16px;
+  padding: 0;
+  line-height: 0;
   cursor: pointer;
+
+  outline: none;
 }
 
-.modal-content {
-  margin-top: 32px;
+.modal-close:hover svg {
+  stroke: #555555;
 }

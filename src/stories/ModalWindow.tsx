@@ -9,12 +9,14 @@ type ModalWindowProps = {
   closeModal: () => void;
   size?: "small" | "medium" | "large";
   children?: ReactNode;
+  height?: string;
 };
 
 export const ModalWindow = ({
   isOpen = false,
   closeModal,
   size = "medium",
+  height,
   children,
 }: ModalWindowProps) => {
   return (
@@ -23,6 +25,11 @@ export const ModalWindow = ({
       onRequestClose={closeModal}
       className={`${styles.modal} ${styles[size]}`}
       overlayClassName={styles.overlay}
+      style={{
+        content: {
+          height: height || "auto",
+        },
+      }}
     >
       <button
         onClick={closeModal}

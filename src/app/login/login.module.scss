@@ -1,0 +1,115 @@
+.title {
+  color: black;
+  font-size: 30px;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.logoRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 60%;
+  margin: 0 auto;
+}
+
+.logoWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.logoCircle {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid #bbbbbb;
+  margin-top: 20px;
+}
+
+.logo {
+  display: block;
+  width: auto;
+}
+
+.logoName {
+  color: #000000;
+  width: 80px;
+  text-align: center;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #dcdcdc;
+  margin: 18px 0;
+}
+
+.form {
+  width: 70%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.label {
+  font-size: 14px;
+  color: #333;
+  text-transform: lowercase;
+}
+
+.input {
+  width: 100%;
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid #bfbfbf;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.forgot {
+  font-size: 13px;
+  color: #666;
+  text-decoration: none;
+  margin-top: -4px;
+}
+.loginBtn {
+  width: 100%;
+  height: 42px;
+  margin: 8px auto 0;
+  background: #666666;
+  color: #ffffff;
+  border: none;
+  display: block;
+  font-size: 15px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-bottom: 10px;
+
+  box-shadow: none;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.loginBtn:hover {
+  background: #7a7a7a;
+}
+
+.signup {
+  text-align: center;
+  font-size: 14px;
+  margin-top: 30px;
+  color: #666666;
+
+  a {
+    color: #0066cc;
+    text-decoration: none;
+  }
+}
