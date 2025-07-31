@@ -1,95 +1,155 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
 
-export default function Home() {
+import React, { useState } from "react";
+import Link from "next/link";
+import { Search } from "lucide-react";
+import styles from "./page.module.scss";
+
+// -----------------------------
+// Temporary mock data ─ replace with API call later
+// -----------------------------
+const mockVideos = [
+  {
+    id: "ed-sheeran-shape-of-you",
+    videoId: "JGwWNGJdvx8",
+    title: "Ed Sheeran – Shape of You (Official Music Video)",
+    channel: "Ed Sheeran",
+    views: "6.4 B views",
+    clipRange: "0:12 – 0:30",
+  },
+  {
+    id: "saweetie-closer",
+    videoId: "7W3uE2q7y2Y",
+    title: "Saweetie – Closer (feat. H.E.R.) [Official Music Video]",
+    channel: "Official Saweetie",
+    views: "32 M views",
+    clipRange: "0:24 – 0:48",
+  },
+  {
+    id: "dua-lipa-break-my-heart",
+    videoId: "Nj2U6rhnucI",
+    title: "Dua Lipa – Break My Heart (Official Video)",
+    channel: "Dua Lipa",
+    views: "638 M views",
+    clipRange: "1:06 – 1:28",
+  },
+  {
+    id: "ed-sheeran-shape-of-you-2",
+    videoId: "JGwWNGJdvx8",
+    title: "Ed Sheeran – Shape of You (Official Music Video)",
+    channel: "Ed Sheeran",
+    views: "6.4 B views",
+    clipRange: "0:12 – 0:30",
+  },
+  {
+    id: "saweetie-closer-2",
+    videoId: "7W3uE2q7y2Y",
+    title: "Saweetie – Closer (feat. H.E.R.) [Official Music Video]",
+    channel: "Official Saweetie",
+    views: "32 M views",
+    clipRange: "0:24 – 0:48",
+  },
+  {
+    id: "dua-lipa-break-my-heart-2",
+    videoId: "Nj2U6rhnucI",
+    title: "Dua Lipa – Break My Heart (Official Video)",
+    channel: "Dua Lipa",
+    views: "638 M views",
+    clipRange: "1:06 – 1:28",
+  },
+  {
+    id: "ed-sheeran-shape-of-you-3",
+    videoId: "JGwWNGJdvx8",
+    title: "Ed Sheeran – Shape of You (Official Music Video)",
+    channel: "Ed Sheeran",
+    views: "6.4 B views",
+    clipRange: "0:12 – 0:30",
+  },
+  {
+    id: "saweetie-closer-3",
+    videoId: "7W3uE2q7y2Y",
+    title: "Saweetie – Closer (feat. H.E.R.) [Official Music Video]",
+    channel: "Official Saweetie",
+    views: "32 M views",
+    clipRange: "0:24 – 0:48",
+  },
+  {
+    id: "dua-lipa-break-my-heart-3",
+    videoId: "Nj2U6rhnucI",
+    title: "Dua Lipa – Break My Heart (Official Video)",
+    channel: "Dua Lipa",
+    views: "638 M views",
+    clipRange: "1:06 – 1:28",
+  },
+];
+
+export default function ClipVocabLanding() {
+  const [query, setQuery] = useState("");
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // TODO: navigate to search results page
+    console.log("Searching for:", query);
+  };
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <main className={styles.container}>
+      {/* ── Hero copy ─────────────────────────────── */}
+      <section className={styles.hero}>
+        <h1 className={styles.heroTitle}>
+          Learn real English
+          <br /> from the videos you love
+        </h1>
+        <p className={styles.heroSub}>
+          Discover powerful vocabulary through real English in context.
+        </p>
+      </section>
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+      {/* ── Search bar ─────────────────────────────── */}
+      <form className={styles.searchForm} onSubmit={handleSubmit}>
+        <input
+          className={styles.searchInput}
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="write the vocabulary"
+          aria-label="Search vocabulary"
+        />
+        <button className={styles.searchBtn} type="submit" aria-label="Search">
+          <Search size={20} />
+        </button>
+      </form>
+
+      {/* ── Recommendations grid ───────────────────── */}
+      <section className={styles.recommendations}>
+        <h2 className={styles.sectionHeading}>You might like</h2>
+
+        <div className={styles.videoGrid}>
+          {mockVideos.map((video) => (
+            <Link
+              key={video.id}
+              href={`/video/${video.id}`}
+              className={styles.card}
+            >
+              <div className={styles.thumbnailWrapper}>
+                <img
+                  src={`https://img.youtube.com/vi/${video.videoId}/hqdefault.jpg`}
+                  alt={video.title}
+                  className={styles.thumbnail}
+                />
+                <span className={styles.clipRange}>{video.clipRange}</span>
+              </div>
+
+              <div className={styles.cardBody}>
+                <p className={styles.videoTitle}>{video.title}</p>
+                <p className={styles.meta}>
+                  {video.channel} &nbsp;•&nbsp; {video.views}
+                </p>
+              </div>
+            </Link>
+          ))}
         </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </section>
+    </main>
   );
 }

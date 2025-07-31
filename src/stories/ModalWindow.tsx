@@ -1,5 +1,5 @@
 "use client";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { CloseIcon } from "./CloseIcon";
 import styles from "./ModalWindow.module.scss";
 import Modal from "react-modal";
@@ -19,6 +19,14 @@ export const ModalWindow = ({
   height,
   children,
 }: ModalWindowProps) => {
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const el = document.getElementById("__next");
+      if (el) {
+        Modal.setAppElement(el);
+      }
+    }
+  }, []);
   return (
     <Modal
       isOpen={isOpen}
