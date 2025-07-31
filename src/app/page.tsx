@@ -90,7 +90,6 @@ export default function ClipVocabLanding() {
 
   return (
     <main className={styles.container}>
-      {/* ── Hero copy ─────────────────────────────── */}
       <section className={styles.hero}>
         <h1 className={styles.heroTitle}>
           Learn real English
@@ -100,8 +99,6 @@ export default function ClipVocabLanding() {
           Discover powerful vocabulary through real English in context.
         </p>
       </section>
-
-      {/* ── Search bar ─────────────────────────────── */}
       <form className={styles.searchForm} onSubmit={handleSubmit}>
         <input
           className={styles.searchInput}
@@ -116,7 +113,6 @@ export default function ClipVocabLanding() {
         </button>
       </form>
 
-      {/* ── Recommendations grid ───────────────────── */}
       <section className={styles.recommendations}>
         <h2 className={styles.sectionHeading}>You might like</h2>
 

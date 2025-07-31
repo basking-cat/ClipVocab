@@ -18,7 +18,6 @@ export default function CreateAccount() {
       <h1 className={styles.title}>Create your account on ClipVocab</h1>
 
       <form className={styles.form}>
-        {/* mail */}
         <label htmlFor="email" className={styles.label}>
           mail address
         </label>
@@ -29,7 +28,6 @@ export default function CreateAccount() {
           className={styles.input}
         />
 
-        {/* password */}
         <label htmlFor="password" className={styles.label}>
           password
         </label>
@@ -46,7 +44,6 @@ export default function CreateAccount() {
             onClick={() => setShowPw(!showPw)}
             aria-label={showPw ? "Hide password" : "Show password"}
           >
-            {/* グレーのアイ（開眼）アイコン */}
             <svg
               width="20"
               height="20"
@@ -72,7 +69,6 @@ export default function CreateAccount() {
           </button>
         </div>
 
-        {/* submit */}
         <button type="submit" className={styles.submitBtn}>
           Log In
         </button>
