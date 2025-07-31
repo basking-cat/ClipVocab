@@ -5,7 +5,6 @@ $bg-body: #f5f5f5;
 $card-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 $transition: 0.25s ease;
 
-// ---- Layout -------------------------------------
 .container {
   min-height: 100vh;
   padding: 3rem 1rem;
@@ -16,7 +15,6 @@ $transition: 0.25s ease;
   gap: 4rem;
 }
 
-// ---- Hero copy ----------------------------------
 .hero {
   text-align: center;
   max-width: 640px;
@@ -37,7 +35,6 @@ $transition: 0.25s ease;
   color: $text-dark;
 }
 
-// ---- Search -------------------------------------
 .searchForm {
   position: relative;
   width: 100%;
@@ -80,7 +77,6 @@ $transition: 0.25s ease;
   }
 }
 
-// ---- Recommendations ----------------------------
 .recommendations {
   width: 100%;
   max-width: 1040px;
@@ -99,7 +95,6 @@ $transition: 0.25s ease;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
 }
 
-// ---- Card ---------------------------------------
 .card {
   background: #fff;
   border-radius: 8px;

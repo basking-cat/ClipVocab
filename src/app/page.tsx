@@ -5,9 +5,6 @@ import Link from "next/link";
 import { Search } from "lucide-react";
 import styles from "./page.module.scss";
 
-// -----------------------------
-// Temporary mock data ─ replace with API call later
-// -----------------------------
 const mockVideos = [
   {
     id: "ed-sheeran-shape-of-you",
@@ -88,7 +85,6 @@ export default function ClipVocabLanding() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // TODO: navigate to search results page
     console.log("Searching for:", query);
   };
 
