@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { Search } from "lucide-react";
+import { SlidersHorizontal } from "lucide-react";
 import styles from "./page.module.scss";
 
 const mockVideos = [
@@ -108,6 +109,13 @@ export default function ClipVocabLanding() {
           placeholder="write the vocabulary"
           aria-label="Search vocabulary"
         />
+        <button
+          className={styles.filterBtn}
+          type="button"
+          aria-label="Filter options"
+        >
+          <SlidersHorizontal size={20} />
+        </button>
         <button className={styles.searchBtn} type="submit" aria-label="Search">
           <Search size={20} />
         </button>
