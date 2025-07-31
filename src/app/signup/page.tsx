@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { ModalWindow } from "@/stories/ModalWindow";
+import { ModalWindow } from "@/components/ModalWindow";
 import styles from "./SignUpScreen.module.scss";
+import Header from "@/components/Header";
 
 function SignUpScreen() {
   const [isOpen, setIsOpen] = useState(true);
