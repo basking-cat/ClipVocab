@@ -29,10 +29,6 @@ function SignUpScreen() {
         <div className={styles.right}>
           <h2 className={styles.title}>Sign up for ClipVocab</h2>
           <div className={styles.buttonBox}>
-            {/* <button className={`${styles.authBtn} ${styles.emailBtn}`}>
-              <img src="/images/email.svg" alt="email icon" />
-              Sign up with Email
-            </button> */}
             <button className={styles.authBtn}>
               <img src="/images/google.svg" alt="google icon" />
               Sign up with Google
