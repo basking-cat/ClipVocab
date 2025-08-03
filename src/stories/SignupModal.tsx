@@ -1,14 +1,14 @@
 "use client";
 
-import { useState } from "react";
 import { ModalWindow } from "@/components/ModalWindow";
-import styles from "./SignUpScreen.module.scss";
-import Header from "@/components/Header";
+import styles from "./SignupModal.module.scss";
 
-function SignUpScreen() {
-  const [isOpen, setIsOpen] = useState(true);
-  const closeModal = () => setIsOpen(false);
+type SignupModalProps = {
+  isOpen: boolean;
+  closeModal: () => void;
+};
 
+export const SignupModal = ({ isOpen, closeModal }: SignupModalProps) => {
   return (
     <ModalWindow isOpen={isOpen} closeModal={closeModal} size="large">
       <div className={styles.container}>
@@ -46,6 +46,4 @@ function SignUpScreen() {
       </div>
     </ModalWindow>
   );
-}
-
-export default SignUpScreen;
+};

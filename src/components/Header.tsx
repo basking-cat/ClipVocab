@@ -3,7 +3,7 @@ import { SlidersHorizontal, Search } from "lucide-react";
 import { useState } from "react";
 import { FilterModal } from "@/stories/FilterModal";
 import { LoginModal } from "@/stories/LoginModal";
-
+import { SignupModal } from "@/stories/SignupModal";
 type HeaderProps = {
   showSearch?: boolean;
 };
@@ -18,6 +18,7 @@ export default function Header({ showSearch }: HeaderProps) {
   // ---------------- Filter modal state ----------------
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
+  const [isSignupOpen, setIsSignupOpen] = useState(false);
 
   const [categories, setCategories] = useState<Option[]>([
     { id: "news", label: "NEWS", checked: false },
@@ -80,8 +81,12 @@ export default function Header({ showSearch }: HeaderProps) {
       </div>
 
       <div className={styles.authButtons}>
-        <button className={styles.signup}>
-          <a href="">Sign Up</a>
+        <button
+          className={styles.signup}
+          type="button"
+          onClick={() => setIsSignupOpen(true)}
+        >
+          Sign Up
         </button>
         <button
           className={styles.login}
@@ -109,6 +114,10 @@ export default function Header({ showSearch }: HeaderProps) {
       <LoginModal
         isOpen={isLoginOpen}
         closeModal={() => setIsLoginOpen(false)}
+      />
+      <SignupModal
+        isOpen={isSignupOpen}
+        closeModal={() => setIsSignupOpen(false)}
       />
     </header>
   );
