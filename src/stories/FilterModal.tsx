@@ -40,7 +40,6 @@ export const FilterModal = ({
   range,
   setRange,
 }: FilterModalProps) => {
-  // 共通トグルヘルパー
   const toggle = (
     list: Option[],
     setter: (v: Option[]) => void,
@@ -65,7 +64,6 @@ export const FilterModal = ({
       >
         <h2 className={styles.filterHeading}>Filters</h2>
 
-        {/* ---------- Category ---------- */}
         <fieldset className={styles.filterGroup}>
           <legend>Category</legend>
           <label>
@@ -87,20 +85,16 @@ export const FilterModal = ({
           </label>
         </fieldset>
 
-        {/* ---------- Video Length ---------- */}
         <fieldset className={styles.filterGroup}>
           <legend>Video Length</legend>
           <div className={styles.rangeWrapper}>
-            {/* Min thumb */}
             <input
               type="range"
               min={0}
               max={80}
               step={1}
               value={range[0]}
-              onChange={(e) =>
-                setRange([Number(e.target.value), range[1]])
-              }
+              onChange={(e) => setRange([Number(e.target.value), range[1]])}
               className={styles.range}
             />
           </div>
@@ -109,7 +103,6 @@ export const FilterModal = ({
           </div>
         </fieldset>
 
-        {/* ---------- English Style ---------- */}
         <fieldset className={styles.filterGroup}>
           <legend>English Style</legend>
           <label>
@@ -129,8 +122,6 @@ export const FilterModal = ({
             <input type="checkbox" name="style" value="slang" /> Slang / Youth
           </label>
         </fieldset>
-
-        {/* ---------- English Level ---------- */}
         <fieldset className={styles.filterGroup}>
           <legend>English Level</legend>
           {levels.map((l) => (
@@ -147,9 +138,12 @@ export const FilterModal = ({
 
         <hr className={styles.divider} />
 
-        {/* ---------- Action Buttons ---------- */}
         <div className={styles.filterActions}>
-          <button type="button" className={styles.clearBtn} onClick={clearFilters}>
+          <button
+            type="button"
+            className={styles.clearBtn}
+            onClick={clearFilters}
+          >
             CLEAR
           </button>
           <button type="button" className={styles.useSettingsBtn}>

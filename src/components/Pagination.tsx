@@ -5,13 +5,13 @@ import Image from "next/image";
 
 type PaginationPorps = {
   initialPage: number;
-  limit: number; // 一ページに表示する要素の数
-  count: number; // 要素の数
+  limit: number; 
+  count: number; 
 };
 
 
 export const Pagination = ({ initialPage, limit, count }: PaginationPorps) => {
-  const totalPages = Math.ceil(count / limit); // Math.ceil = 与えられた数値を最も近い大きな整数に切り上げる
+  const totalPages = Math.ceil(count / limit); 
   const [currentPage, setCurrentPage] = useState(initialPage);
 
   let pagesToShow: (number | "...")[] = [];

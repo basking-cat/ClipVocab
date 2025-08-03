@@ -17,7 +17,6 @@ export const Default: Story = {
   render: () => {
     const [isOpen, setOpen] = useState(true);
 
-    // デモ用ダミーステート
     const [categories, setCategories] = useState([
       { id: "music", label: "Music", checked: false },
       { id: "news", label: "News", checked: true },
@@ -35,7 +34,6 @@ export const Default: Story = {
     const [range, setRange] = useState<[number, number]>([0, 80]);
 
     const applyFilters = () => {
-      // Storybook なので値を表示するだけ
       console.log({ categories, stylesOpt, range });
       setOpen(false);
     };

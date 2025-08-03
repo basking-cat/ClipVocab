@@ -84,9 +84,6 @@ const mockVideos = [
 export default function ClipVocabLanding() {
   const [query, setQuery] = useState("");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  // [min, max] video length in seconds
-
-  // --- filter modal state ---
   type Option = { id: string; label: string; checked: boolean };
 
   const [categories, setCategories] = useState<Option[]>([
@@ -110,16 +107,13 @@ export default function ClipVocabLanding() {
     { id: "advanced", label: "Advanced", checked: false },
   ]);
 
-  // [min, max] in **minutes** for storybook; convert to sec if必要
   const [range, setRange] = useState<[number, number]>([0, 10]);
 
-  /** apply filters from modal – TODO: integrate into search */
   const applyFilters = () => {
     console.log({ categories, stylesOpt, range });
     setIsFilterOpen(false);
   };
 
-  /** clear all filter selections */
   const clearFilters = () => {
     setCategories(categories.map((c) => ({ ...c, checked: false })));
     setStylesOpt(stylesOpt.map((s) => ({ ...s, checked: false })));

@@ -15,7 +15,6 @@ type Option = {
 };
 
 export default function Header({ showSearch }: HeaderProps) {
-  // ---------------- Filter modal state ----------------
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isSignupOpen, setIsSignupOpen] = useState(false);
@@ -45,7 +44,6 @@ export default function Header({ showSearch }: HeaderProps) {
   const [range, setRange] = useState<[number, number]>([0, 80]);
 
   const applyFilters = () => {
-    // TODO: integrate with search query
     setIsFilterOpen(false);
   };
 
