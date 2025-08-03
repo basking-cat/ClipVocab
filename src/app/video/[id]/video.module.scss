@@ -1,0 +1,120 @@
+.container {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 24px 24px 64px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.backLink {
+  font-size: 13px;
+  color: #000;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+.topSection {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+
+.heroThumb {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.transBox {
+  max-height: 420px;
+  overflow-y: auto;
+  padding: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 1.45;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.originalText {
+  color: #555;
+}
+
+.highlightText {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.translationJa {
+  font-size: 14px;
+}
+
+.mark {
+  background: #ffed75;
+}
+
+.videoTitle {
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.meta {
+  font-size: 13px;
+  color: #666;
+}
+
+.otherSection {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.otherHeading {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.videoGrid {
+  --min-card-w: 200px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--min-card-w), 1fr));
+  gap: 24px 16px;
+}
+
+.card {
+  color: inherit;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  &:hover .cardThumb {
+    transform: scale(1.04);
+  }
+}
+
+.cardThumb {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 4px;
+  transition: transform 0.15s ease;
+}
+
+.cardTitle {
+  font-size: 13px;
+  line-height: 1.35;
+  font-weight: 600;
+}
+
+.cardMeta {
+  font-size: 11px;
+  color: #666;
+}
