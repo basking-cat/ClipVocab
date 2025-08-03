@@ -177,3 +177,215 @@ $transition: 0.25s ease;
   font-size: 0.75rem;
   color: $text-muted;
 }
+
+/* ─────────── Filter‑modal styles ─────────── */
+
+.filterContent {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  padding: 3rem 5rem 2rem;
+
+  /* For scroll safety on small screens */
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+.filterHeading {
+  font-size: 1.75rem;
+  font-weight: 600;
+  text-align: center;
+  margin: 0;
+  color: $text-dark;
+}
+
+/* Shared layout for each fieldset (Category, Style, etc.) */
+.filterGroup {
+  border: none;
+  margin: 0;
+  padding: 0;
+
+  legend {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: $text-dark;
+  }
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem 3rem;
+  align-items: center;
+
+  label {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-size: 1rem;
+    cursor: pointer;
+    color: $text-dark;
+
+    input[type="checkbox"] {
+      // basic size & behaviour
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+
+      // reset the browser‑native look and build our own
+      -webkit-appearance: none;
+      appearance: none;
+
+      // persistent black border & white fill when unchecked
+      border: 2px solid #000;
+      border-radius: 3px;
+      background: #fff;
+      position: relative;
+
+      // black fill when checked
+      &:checked {
+        background: #000;
+      }
+
+      // white tick mark
+      &:checked::before {
+        content: "";
+        position: absolute;
+        top: 2px;
+        left: 5px;
+        width: 4px;
+        height: 8px;
+        border: solid #fff;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+      }
+    }
+  }
+}
+
+/* ------- Video length slider ------- */
+.range {
+  width: 100%;
+  -webkit-appearance: none;
+  height: 4px;
+  background: #9b9b9b;
+  border-radius: 2px;
+  outline: none;
+
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #000;
+    cursor: pointer;
+  }
+
+  &::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #000;
+    cursor: pointer;
+  }
+}
+
+/* Make labels span the full width */
+.rangeLabels {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  margin-top: 0.75rem;
+  color: $text-dark;
+}
+
+/* Horizontal divider */
+.divider {
+  border: none;
+  border-top: 1px solid $border-color;
+}
+
+/* ------- Action buttons ------- */
+.filterActions {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.clearBtn,
+.useSettingsBtn,
+.applyBtn {
+  padding: 0.75rem 2rem;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background $transition, color $transition, border-color $transition;
+  min-width: 180px;
+}
+
+/* Clear ＝ white with black border */
+.clearBtn {
+  background: #fff;
+  border: 2px solid #000;
+  color: #000;
+
+  &:hover {
+    background: #000;
+    color: #fff;
+  }
+}
+
+/* Use settings ＝ mid‑gray, disabled feel by default */
+.useSettingsBtn {
+  background: #9b9b9b;
+  border: none;
+  color: #fff;
+
+  &:hover {
+    background: darken(#9b9b9b, 10%);
+  }
+}
+
+/* Apply filters ＝ black */
+.applyBtn {
+  background: #000;
+  border: none;
+  color: #fff;
+
+  &:hover {
+    background: #222;
+  }
+}
+
+/* Dual-thumb range slider */
+.rangeWrapper {
+  position: relative;
+  width: 100%;
+  height: 22px; /* just enough to host the thumbs */
+}
+
+.rangeMin,
+.rangeMax {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+}
+
+/* show the grey track on the bottom slider only */
+.rangeMin {
+  background: #9b9b9b;
+  z-index: 3;
+}
+
+/* keep the top slider transparent so only its thumb shows */
+.rangeMax {
+  background: transparent;
+  z-index: 2;
+}

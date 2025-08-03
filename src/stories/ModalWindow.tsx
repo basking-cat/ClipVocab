@@ -7,7 +7,7 @@ import Modal from "react-modal";
 type ModalWindowProps = {
   isOpen: boolean;
   closeModal: () => void;
-  size?: "small" | "medium" | "large";
+  size?: "small" | "medium" | "large" | "largest";
   children?: ReactNode;
   height?: string;
 };

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Search } from "lucide-react";
 import { SlidersHorizontal } from "lucide-react";
 import styles from "./page.module.scss";
+import { ModalWindow } from "@/stories/ModalWindow";
 
 const mockVideos = [
   {
@@ -83,6 +84,9 @@ const mockVideos = [
 
 export default function ClipVocabLanding() {
   const [query, setQuery] = useState("");
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  // [min, max] video length in seconds
+  const [videoLength, setVideoLength] = useState<[number, number]>([0, 80]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -113,6 +117,7 @@ export default function ClipVocabLanding() {
           className={styles.filterBtn}
           type="button"
           aria-label="Filter options"
+          onClick={() => setIsFilterOpen(true)}
         >
           <SlidersHorizontal size={20} />
         </button>
@@ -120,6 +125,148 @@ export default function ClipVocabLanding() {
           <Search size={20} />
         </button>
       </form>
+      <ModalWindow
+        isOpen={isFilterOpen}
+        closeModal={() => setIsFilterOpen(false)}
+        size="largest"
+        height="636px"
+      >
+        <form
+          className={styles.filterContent}
+          onSubmit={(e) => {
+            e.preventDefault();
+            // TODO: wire these values into your search query
+            setIsFilterOpen(false);
+          }}
+        >
+          <h2 className={styles.filterHeading}>Filters</h2>
+
+          {/* ---------- Category ---------- */}
+          <fieldset className={styles.filterGroup}>
+            <legend>Category</legend>
+            <label>
+              <input type="checkbox" name="category" value="news" /> NEWS
+            </label>
+            <label>
+              <input type="checkbox" name="category" value="interview" />{" "}
+              Interview, TED
+            </label>
+            <label>
+              <input type="checkbox" name="category" value="music" /> Music
+            </label>
+            <label>
+              <input type="checkbox" name="category" value="vlogs" /> Vlogs
+            </label>
+            <label>
+              <input type="checkbox" name="category" value="game" /> Game
+              Commentary
+            </label>
+          </fieldset>
+
+          {/* ---------- Video Length ---------- */}
+          <fieldset className={styles.filterGroup}>
+            <legend>Video Length</legend>
+            <div className={styles.rangeWrapper}>
+              {/* Min thumb */}
+              <input
+                type="range"
+                min={0}
+                max={80}
+                step={1}
+                value={videoLength[0]}
+                onChange={(e) =>
+                  setVideoLength([
+                    Math.min(Number(e.target.value), videoLength[1] - 1),
+                    videoLength[1],
+                  ])
+                }
+                className={`${styles.range} ${styles.rangeMin}`}
+              />
+              {/* Max thumb */}
+              <input
+                type="range"
+                min={0}
+                max={80}
+                step={1}
+                value={videoLength[1]}
+                onChange={(e) =>
+                  setVideoLength([
+                    videoLength[0],
+                    Math.max(Number(e.target.value), videoLength[0] + 1),
+                  ])
+                }
+                className={`${styles.range} ${styles.rangeMax}`}
+              />
+            </div>
+            <div className={styles.rangeLabels}>
+              <span>{videoLength[0]}&nbsp;sec</span>
+              <span>{videoLength[1]}&nbsp;sec</span>
+            </div>
+          </fieldset>
+
+          {/* ---------- English Style ---------- */}
+          <fieldset className={styles.filterGroup}>
+            <legend>English Style</legend>
+            <label>
+              <input
+                type="checkbox"
+                name="style"
+                value="casual"
+                defaultChecked
+              />{" "}
+              Casual
+            </label>
+            <label>
+              <input type="checkbox" name="style" value="formal" /> Formal
+            </label>
+            <label>
+              <input type="checkbox" name="style" value="business" /> Business
+            </label>
+            <label>
+              <input type="checkbox" name="style" value="native" /> Native‑like
+            </label>
+            <label>
+              <input type="checkbox" name="style" value="slang" /> Slang / Youth
+            </label>
+          </fieldset>
+
+          {/* ---------- English Level ---------- */}
+          <fieldset className={styles.filterGroup}>
+            <legend>English Level</legend>
+            <label>
+              <input
+                type="checkbox"
+                name="level"
+                value="beginner"
+                defaultChecked
+              />{" "}
+              Beginner
+            </label>
+            <label>
+              <input type="checkbox" name="level" value="intermediate" />{" "}
+              Intermediate
+            </label>
+            <label>
+              <input type="checkbox" name="level" value="advanced" /> Advanced
+            </label>
+          </fieldset>
+
+          <hr className={styles.divider} />
+
+          {/* ---------- Action Buttons ---------- */}
+          <div className={styles.filterActions}>
+            <button type="button" className={styles.clearBtn}>
+              CLEAR
+            </button>
+            <button type="button" className={styles.useSettingsBtn}>
+              Use Your Settings
+            </button>
+            <button type="submit" className={styles.applyBtn}>
+              APPLY FILTERS
+            </button>
+          </div>
+        </form>
+      </ModalWindow>
 
       <section className={styles.recommendations}>
         <h2 className={styles.sectionHeading}>You might like</h2>
