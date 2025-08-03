@@ -1,6 +1,6 @@
 "use client";
 
-import { ModalWindow } from "@/stories/ModalWindow";
+import { ModalWindow } from "@/components/ModalWindow";
 import styles from "./createAccount.module.scss";
 import { useState } from "react";
 import React from "react";

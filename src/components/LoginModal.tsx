@@ -1,6 +1,6 @@
 "use client";
 
-import { ModalWindow } from "@/stories/ModalWindow";
+import { ModalWindow } from "./ModalWindow";
 import styles from "./LoginModal.module.scss";
 
 import React from "react";
@@ -11,13 +11,8 @@ type LoginModalProps = {
 };
 
 export const LoginModal = ({ isOpen, closeModal }: LoginModalProps) => {
-
   return (
-    <ModalWindow
-      isOpen={isOpen}
-      closeModal={closeModal}
-      height="600px"
-    >
+    <ModalWindow isOpen={isOpen} closeModal={closeModal} height="600px">
       <h1 className={styles.title}>Log In</h1>
 
       <div className={styles.logoRow}>
@@ -108,4 +103,4 @@ export const LoginModal = ({ isOpen, closeModal }: LoginModalProps) => {
       </p>
     </ModalWindow>
   );
-}
+};

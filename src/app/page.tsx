@@ -5,7 +5,8 @@ import Link from "next/link";
 import { Search } from "lucide-react";
 import { SlidersHorizontal } from "lucide-react";
 import styles from "./page.module.scss";
-import { FilterModal } from "@/stories/FilterModal";
+import { FilterModal } from "@/components/FilterModal";
+
 const mockVideos = [
   {
     id: "ed-sheeran-shape-of-you",

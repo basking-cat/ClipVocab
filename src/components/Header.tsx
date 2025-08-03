@@ -1,9 +1,10 @@
 import styles from "./Header.module.scss";
 import { SlidersHorizontal, Search } from "lucide-react";
 import { useState } from "react";
-import { FilterModal } from "@/stories/FilterModal";
-import { LoginModal } from "@/stories/LoginModal";
-import { SignupModal } from "@/stories/SignupModal";
+import { FilterModal } from "@/components/FilterModal";
+import { LoginModal } from "@/components/LoginModal";
+import { SignupModal } from "./SignupModal";
+
 type HeaderProps = {
   showSearch?: boolean;
 };

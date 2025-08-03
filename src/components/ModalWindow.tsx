@@ -7,14 +7,16 @@ import Modal from "react-modal";
 type ModalWindowProps = {
   isOpen: boolean;
   closeModal: () => void;
-  size?: "small" | "medium" | "large";
+  size?: "small" | "medium" | "large" | "largest";
   children?: ReactNode;
+  height?: string;
 };
 
 export const ModalWindow = ({
   isOpen = false,
   closeModal,
   size = "medium",
+  height,
   children,
 }: ModalWindowProps) => {
   return (
@@ -23,6 +25,11 @@ export const ModalWindow = ({
       onRequestClose={closeModal}
       className={`${styles.modal} ${styles[size]}`}
       overlayClassName={styles.overlay}
+      style={{
+        content: {
+          height: height || "auto",
+        },
+      }}
     >
       <button
         onClick={closeModal}
