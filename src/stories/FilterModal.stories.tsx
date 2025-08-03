@@ -27,7 +27,12 @@ export const Default: Story = {
       { id: "casual", label: "Casual", checked: true },
       { id: "formal", label: "Formal", checked: false },
     ]);
-    const [range, setRange] = useState<[number, number]>([0, 10]);
+    const [levels, setLevels] = useState([
+      { id: "beginner", label: "Beginner", checked: true },
+      { id: "intermediate", label: "Intermediate", checked: false },
+      { id: "advanced", label: "Advanced", checked: false },
+    ]);
+    const [range, setRange] = useState<[number, number]>([0, 80]);
 
     const applyFilters = () => {
       // Storybook なので値を表示するだけ
@@ -53,6 +58,8 @@ export const Default: Story = {
           setCategories={setCategories}
           stylesOpt={stylesOpt}
           setStylesOpt={setStylesOpt}
+          levels={levels}
+          setLevels={setLevels}
           range={range}
           setRange={setRange}
         />
