@@ -1,8 +1,9 @@
 "use client";
+
 import { ReactNode } from "react";
+import Modal from "react-modal";
 import { CloseIcon } from "./CloseIcon";
 import styles from "./ModalWindow.module.scss";
-import Modal from "react-modal";
 
 type ModalWindowProps = {
   isOpen: boolean;
@@ -35,9 +36,11 @@ export const ModalWindow = ({
         onClick={closeModal}
         className={styles["modal-close"]}
         type="button"
+        aria-label="Close modal"
       >
-        <CloseIcon></CloseIcon>
+        <CloseIcon />
       </button>
+
       <div className={styles["modal-content"]}>{children}</div>
     </Modal>
   );
