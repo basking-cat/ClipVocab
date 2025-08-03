@@ -122,11 +122,6 @@ export default function ClipVocabLanding() {
     setRange([0, 10]);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    console.log("Searching for:", query);
-  };
-
   return (
     <main className={styles.container}>
       <section className={styles.hero}>
@@ -138,14 +133,20 @@ export default function ClipVocabLanding() {
           Discover powerful vocabulary through real English in context.
         </p>
       </section>
-      <form className={styles.searchForm} onSubmit={handleSubmit}>
+      <form
+        className={styles.searchForm}
+        method="get"
+        action="/search"
+      >
         <input
           className={styles.searchInput}
           type="search"
+          name="q"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="write the vocabulary"
           aria-label="Search vocabulary"
+          required
         />
         <button
           className={styles.filterBtn}
