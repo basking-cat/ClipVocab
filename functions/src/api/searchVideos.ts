@@ -1,29 +1,28 @@
 import * as functions from "firebase-functions";
 import { google, youtube_v3 } from "googleapis";
-import * as dotenv from "dotenv";
-dotenv.config({ path: __dirname + "/../../.env" }); // ← Cloud 上は不要
+import { defineSecret } from "firebase-functions/params";
 
-const youtube = google.youtube({
-  version: "v3",
-  auth: process.env.YOUTUBE_API_KEY,
-});
+// Secret 定義
+const youtubeApiKey = defineSecret("YOUTUBE_API_KEY");
 
-/**
- * GET https://{REGION}-{PROJECT}.cloudfunctions.net/searchVideos?kw=apple
- *   &max=25&caption=closedCaption
- */
 export const searchVideos = functions
+  .runWith({ secrets: ["YOUTUBE_API_KEY"] })
   .region("asia-northeast1")
-  // 戻り値を Promise<void> と明示
   .https.onRequest(async (req, res): Promise<void> => {
+    // --- YouTube API 初期化
+    const youtube = google.youtube({
+      version: "v3",
+      auth: youtubeApiKey.value(),
+    });
+
     // --- ① パラメータ解析
     const kw = ((req.query.kw as string) || "").trim().toLowerCase();
     if (!kw) {
       res.status(400).json({ error: "kw (keyword) is required" });
-      return; // ← res.*() 後は void で早期終了
+      return;
     }
     const max = Math.min(Number(req.query.max) || 25, 50);
-    const caption = (req.query.caption as string) || "any"; // any / closedCaption
+    const caption = (req.query.caption as string) || "any";
 
     try {
       // --- ② YouTube search.list 呼び出し
@@ -48,10 +47,8 @@ export const searchVideos = functions
 
       res.set("Cache-Control", "public, max-age=300, s-maxage=600");
       res.json({ kw, videos });
-      return; // ← 成功時も void を返して終了
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: "YouTube API error" });
-      return; // ← エラー時も同様
     }
   });

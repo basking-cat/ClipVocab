@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Search } from "lucide-react";
 import { SlidersHorizontal } from "lucide-react";
 import styles from "./page.module.scss";
@@ -85,6 +86,7 @@ const mockVideos = [
 export default function ClipVocabLanding() {
   const [query, setQuery] = useState("");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const router = useRouter();
   type Option = { id: string; label: string; checked: boolean };
 
   const [categories, setCategories] = useState<Option[]>([
@@ -135,13 +137,16 @@ export default function ClipVocabLanding() {
       </section>
       <form
         className={styles.searchForm}
-        method="get"
-        action="/search"
+        onSubmit={(e) => {
+          e.preventDefault();
+          const trimmed = query.trim();
+          if (!trimmed) return;
+          router.push(`/search?q=${encodeURIComponent(trimmed)}`);
+        }}
       >
         <input
           className={styles.searchInput}
           type="search"
-          name="q"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="write the vocabulary"
