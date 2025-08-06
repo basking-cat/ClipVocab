@@ -13,8 +13,7 @@ export async function fetchVideoCandidates(
   if (!keyword.trim()) return [];
 
   const res = await fetch(
-    `https://asia-northeast1-<your-project-id>.cloudfunctions.net/searchVideos?kw=${encodeURIComponent(keyword)}&max=${max}`,
-    { next: { revalidate: 60 } } // ← ISR: 60 秒キャッシュ
+    `/api/searchVideos?kw=${encodeURIComponent(keyword)}&max=${max}`
   );
 
   if (!res.ok) throw new Error("Search API failed");
