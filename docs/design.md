@@ -137,7 +137,7 @@
 
 ### High-level (Hybrid: Firebase + AWS Workers)
 
-````mermaid
+```mermaid
 flowchart LR
 %% ======================
 %% Client
