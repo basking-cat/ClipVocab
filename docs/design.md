@@ -216,6 +216,7 @@ Fargate --> LLM
 Fargate --> FS
 ```
 
+
 ### Deployment / Hosting Strategy
 
 - 軽量なアプリ機能（認証・ユーザデータ・学習履歴・feed状態）はFirebase（Auth/Firestore）で管理する
@@ -358,7 +359,8 @@ erDiagram
     int rank
     float score "optional"
     string reason "optional"
-  }```
+  }
+```
 
 ### Deployment / Hosting Strategy
 
