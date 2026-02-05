@@ -47,9 +47,12 @@
 
 ## 2. Evaluation Metrics
 
-- 検索結果がユーザの好みに一致しているかを、クリック率や再生完了率で評価する
-- 振り返り機能で提示された単語が、過去の学習履歴に対して適切かを確認する
-- ユーザが推薦されたコンテンツを実際に視聴・保存した割合を指標とする
+- 検索で提示されたクリップがユーザの好みに一致しているかを、再生開始率・視聴継続率（例: 一定秒数以上の視聴）・保存率で評価する
+- 学習体験が途切れずに継続できているかを、セッションあたりの学習クリップ数・離脱率で評価する
+- 復習（文章作成）機能の有効性を、AI判定スコアの推移（正確さ/自然さ）および復習後の再学習率で評価する
+- 推薦（復習候補/関連単語）の妥当性を、提示後の実行率（復習開始率）・保存率で評価する
+
+---
 
 ## 3. Requirements
 
@@ -60,31 +63,59 @@
 箇条書きでOK
 -->
 
-- ユーザが、入力した好みと単語に基づいたyoutube上のコンテンツから生成したクリップで単語学習ができる
-- 入力した好みに基づいたyoutube上の動画を探し、その中から入力した単語が含まれる部分の前後数秒を切り取りクリップを生成。切り取る際には文が完結している箇所で切る。
-- クリップ再生画面では、クリップと英語字幕と日本語訳を表示。字幕と訳はそれぞれ表示・非表示選択可能。単語は色でハイライト。
-- 検索時には十分な数の候補動画を取得し、その中から学習に適したクリップを選定する
+#### Learning / Feed Experience
+
+- ユーザは、入力した好み（Preference）に基づいてYouTube上の動画を探索し、学習に適したクリップを**feed形式（順次提示）**で学習できる
+- 学習画面では一度に1クリップを表示し、次の学習候補へ容易に遷移できる（例: ボタンまたはスワイプ）
 - 検索結果はすべて一覧表示せず、学習に適したクリップを順次提示する
-- 動画検索は段階的に行い、初回は限定された件数のみ取得する
-- ユーザーの操作に応じて、学習候補は動的に更新される
-- 学習画面では一度に1クリップを表示し、次の学習候補へ容易に遷移できる
-- 残り件数などの明示的な数値は表示しない
-- 字幕が利用可能な動画のみを探索対象とする
-- 一定の品質基準を満たす動画を優先する
-- 学習単語を含む有効な例文が一定数見つかった場合、それ以上の探索は行わない
+- feedが途切れないよう、必要に応じて追加の学習候補を取得・生成する
+
+#### Clip Definition / Playback (Copyright-safe)
+
+- クリップは動画データを保存せず、**YouTubeの動画IDと再生区間（start/end）**のみを保持する
+- クリップ再生は**YouTube公式プレイヤー**を用いて行い、指定した区間のみを再生する（再配布や自前配信は行わない）
 - 同一動画から連続してクリップを提示しない
 
-- AIを用いた過去に学習した単語の振り返り機能
-- 復習画面から、単語単位で過去に見たクリップを見返し・保存出来る（過去に学習した単語一覧を表示し、単語をクリックするとその単語のクリップ一覧が表示される）。日付ごとに一覧を表示。
-- 過去の学習履歴から関連のある単語をおすすめとして表示
-- 過去の学習履歴の中で再視聴回数が少ない単語を復習候補として推薦
-- 復習機能では、視聴したクリップに含まれる文を利用？
+#### Clip Generation / Selection
 
-- メイン画面から好みの再設定が可能
+- Preferenceに基づいて候補動画を探索し、その中から学習に適した区間を抽出してクリップ（start/end）を生成する
+- クリップ抽出時は、学習単語を含む**文が完結している区間**を優先して切り出す
+- 字幕が利用可能な動画のみを探索対象とする
+- （優先度低）一定の品質基準（例: 字幕品質、音声の明瞭さ、過度なノイズがない等）を満たす動画を優先する
 
-(Memo 後で消す)
+#### Search Strategy (Bounded but Endless UX)
 
-- 検索結果を表示するんじゃなくてインスタのリールみたいに次々と出てくる形式の方がいい気がしてきた。もしくは左右に矢印ボタンをつけて簡単に遷移できるように
+- 動画探索は段階的に行い、初回は限定された件数の候補のみ取得する
+- 学習単語を含む有効な例文（=クリップ候補）が一定数見つかった場合、それ以上の探索は行わない
+- 残り件数などの明示的な数値は表示しない
+- ユーザの操作（スキップ/保存/学習継続など）に応じて、学習候補（feed）は動的に更新される
+
+#### Subtitle / Translation UI
+
+- クリップ再生画面では、英語字幕と日本語訳を表示できる
+- 英語字幕・日本語訳はそれぞれ表示/非表示を切り替え可能
+- 学習対象の単語はハイライトなどによって視覚的に区別される
+
+#### Review / Recall (AI-assisted)
+
+- ユーザは過去に学習した単語を復習できる
+- 復習では、ユーザが学習済み単語を用いた英文を作成し、AIが**正誤（意味的妥当性）**および**自然さ**を評価する
+- 復習時の提示内容は、過去に学習したクリップの文脈（例文/字幕）を活用できる
+
+#### History / Saved Items
+
+- ユーザは学習した単語やクリップを保存できる
+- ユーザは単語単位で、過去に保存した/学習したクリップを見返せる（例: 単語→クリップ一覧）
+- 学習履歴は日付などの単位で閲覧できる
+
+#### Recommendations
+
+- 過去の学習履歴に基づいて、関連する単語をおすすめとして提示できる
+- 視聴・復習が少ない単語を復習候補として推薦できる
+
+#### Preferences
+
+- ユーザはメイン画面（または設定画面）から好み（Preference）を更新できる
 
 ### Non-functional Requirements
 
@@ -104,6 +135,95 @@
 図があれば貼る
 -->
 
+### High-level (Hybrid: Firebase + AWS Workers)
+
+````mermaid
+flowchart LR
+%% ======================
+%% Client
+%% ======================
+subgraph Client["Client (Web / Mobile)"]
+UI["UI (Feed / Review / Settings)"]
+YTPlayer["YouTube Official Player (Embed/SDK)"]
+end
+
+%% ======================
+%% Firebase / GCP side
+%% ======================
+subgraph Firebase["Firebase / GCP (Lightweight app state)"]
+Auth["Firebase Auth"]
+FS["Firestore (User/Preference/Clip meta/SavedClip/StudyEvent/SearchSession)"]
+CR["Cloud Run API (optional)"]
+end
+
+%% ======================
+%% AWS side
+%% ======================
+subgraph AWS["AWS (Heavy processing)"]
+SQS["SQS Queue (Job: search/generate/review-eval)"]
+Fargate["ECS Fargate Worker (Clip candidate generation / AI eval)"]
+CloudWatch_Logs["CloudWatch Logs"]
+Secrets_Manager["Secrets Manager (Firebase Admin creds, API keys)"]
+end
+
+%% ======================
+%% External services
+%% ======================
+subgraph External["External Services"]
+YTAPI["YouTube Data APIs (search/meta/captions if available)"]
+Translate["Translation API"]
+LLM["LLM API (review evaluation / feedback)"]
+end
+
+%% ----------------------
+%% Auth & app state
+%% ----------------------
+UI --> Auth
+UI <--> FS
+
+%% ----------------------
+%% Search / feed generation
+%% ----------------------
+UI --> CR
+CR --> FS
+CR --> SQS
+SQS --> Fargate
+
+%% Worker reads secrets + calls external APIs
+Fargate --> Secrets_Manager
+Fargate --> YTAPI
+Fargate --> Translate
+
+%% Worker writes results back
+Fargate --> FS
+Fargate --> CloudWatch_Logs
+
+%% Client listens for updates
+UI <--> FS
+
+%% ----------------------
+%% Playback
+%% ----------------------
+UI --> YTPlayer
+
+%% ----------------------
+%% Review
+%% ----------------------
+UI --> FS
+FS --> CR
+CR --> SQS
+Fargate --> LLM
+Fargate --> FS
+```
+
+### Deployment / Hosting Strategy
+
+- 軽量なアプリ機能（認証・ユーザデータ・学習履歴・feed状態）はFirebase（Auth/Firestore）で管理する
+- 重い処理（動画探索、字幕処理、クリップ区間抽出、翻訳、LLM評価、推薦計算）はAWSの非同期ワーカーで実行する
+- 非同期処理はSQSをキューとして利用し、ECS Fargate上のワーカーコンテナがジョブを処理する
+- ワーカーは処理結果をFirestoreに書き戻し、クライアントはFirestoreの更新を読んでfeedを更新する
+- Clip は動画データを保存せず、videoIdと再生区間（start/end）のみを保持し、再生はYouTube公式プレイヤーで行う
+
 ---
 
 ## 5. Data Design
@@ -113,202 +233,140 @@
 テーブル / コレクション / 主キー / インデックスなど
 -->
 
-### Entities
+### ERD
 
-> 方針：まずは「学習体験（検索→学習→保存→復習）」に必要な最小エンティティで固める。  
-> クリップ生成や推薦は、あとから強化できるよう 検索セッション / 学習イベント を置いて拡張性を確保する。
+```mermaid
+erDiagram
+  USER ||--|| PREFERENCE : has
+  PREFERENCE ||--o{ PREFERENCE_TOPIC : includes
 
----
+  VIDEO ||--o{ CLIP : contains
+  CLIP ||--o{ CLIP_OCCURRENCE : has
+  WORD ||--o{ CLIP_OCCURRENCE : appears_in
 
-#### User
+  USER ||--o{ SAVED_CLIP : saves
+  CLIP ||--o{ SAVED_CLIP : referenced_by
+  WORD ||--o{ SAVED_CLIP : saved_as
 
-- **relations**
-  - User は **1つの Preference** を持つ（1:1）
-  - User は **複数の SavedClip** を持つ（1:N）
-  - User は **複数の StudyEvent** を持つ（1:N）
-  - User は **複数の SearchSession** を持つ（1:N）
-- **fields (例)**
-  - `id`
-  - `displayName`
-  - `createdAt`, `updatedAt`
+  USER ||--o{ STUDY_EVENT : generates
+  CLIP ||--o{ STUDY_EVENT : related_to
+  WORD ||--o{ STUDY_EVENT : related_to
+  SEARCH_SESSION ||--o{ STUDY_EVENT : context_of
 
----
+  USER ||--o{ SEARCH_SESSION : starts
+  SEARCH_SESSION ||--o{ SEARCH_RESULT_ITEM : produces
+  CLIP ||--o{ SEARCH_RESULT_ITEM : candidate
 
-#### Preference
+  USER {
+    string id PK
+    string displayName
+    datetime createdAt
+    datetime updatedAt
+  }
 
-- **relations**
-  - Preference は **1人の User** に属する（N:1）
-  - Preference は **複数の PreferenceTopic** を持つ（1:N）※配列でもOK
-- **fields (例)**
-  - `id`
-  - `userId`
-  - `languagePair`（例: `en-ja`）
-  - `level`（例: `beginner/intermediate/advanced`）
-  - `updatedAt`
-- **notes**
-  - 好みは「自由入力の文章」でも良いが、検索に使うなら内部では **トピック配列 + 重み** に寄せると後々強い。
+  PREFERENCE {
+    string id PK
+    string userId FK  "unique (1:1)"
+    string languagePair
+    string level
+    datetime updatedAt
+  }
 
----
+  PREFERENCE_TOPIC {
+    string id PK
+    string preferenceId FK
+    string label
+    float weight
+  }
 
-#### PreferenceTopic（任意：Preference内の要素として配列でも可）
+  WORD {
+    string id PK
+    string text
+    string normalized
+    datetime createdAt
+  }
 
-- **relations**
-  - PreferenceTopic は **1つの Preference** に属する（N:1）
-- **fields (例)**
-  - `id`
-  - `preferenceId`
-  - `label`（例: `tech`, `music`, `fashion`, `study abroad`）
-  - `weight`（0.0〜1.0）
+  VIDEO {
+    string id PK  "YouTube videoId"
+    string title
+    string channelId
+    string channelTitle
+    int durationSec
+    datetime publishedAt
+    string language
+  }
 
----
+  CLIP {
+    string id PK
+    string videoId FK
+    float startSec
+    float endSec
+    string captionSnippetEn  "optional"
+    string translationJa     "optional"
+    string captionSource
+    datetime createdAt
+  }
 
-#### Word
+  CLIP_OCCURRENCE {
+    string id PK
+    string clipId FK
+    string wordId FK
+    int startChar
+    int endChar
+    float confidence "optional"
+  }
 
-- **relations**
-  - Word は **複数の ClipOccurrence** を持つ（1:N）
-  - Word は **複数の SavedClip** から参照されうる（N:M）※SavedClip側で保持でもOK
-- **fields (例)**
-  - `id`
-  - `text`（例: `overwhelmed`）
-  - `normalized`（小文字化など）
-  - `createdAt`
+  SAVED_CLIP {
+    string id PK
+    string userId FK
+    string clipId FK
+    string wordId FK
+    datetime savedAt
+    string tags "optional"
+  }
 
----
+  STUDY_EVENT {
+    string id PK
+    string userId FK
+    string clipId FK "nullable"
+    string wordId FK "nullable"
+    string searchSessionId FK "nullable"
+    string eventType
+    string source "optional"
+    float watchedSec "optional"
+    datetime createdAt
+    string reviewType "optional"
+    string prompt "optional"
+    string userAnswer "optional"
+    float aiScore "optional"
+    string aiFeedback "optional"
+  }
 
-#### Video
+  SEARCH_SESSION {
+    string id PK
+    string userId FK
+    string queryWord "optional"
+    string preferenceSnapshot "optional"
+    datetime createdAt
+    string status
+  }
 
-- **relations**
-  - Video は **複数の Clip** を持つ（1:N）
-- **fields (例)**
-  - `id`（YouTube videoId）
-  - `title`
-  - `channelId`, `channelTitle`
-  - `durationSec`
-  - `publishedAt`
-  - `language`（推定でも可）
-- **notes**
-  - Video は「外部参照」なので、まずは最低限メタデータだけ保存してOK。
+  SEARCH_RESULT_ITEM {
+    string id PK
+    string searchSessionId FK
+    string clipId FK
+    int rank
+    float score "optional"
+    string reason "optional"
+  }```
 
----
+### Deployment / Hosting Strategy
 
-#### Clip
-
-- **relations**
-  - Clip は **1つの Video** に属する（N:1）
-  - Clip は **複数の ClipOccurrence** を持つ（1:N）
-  - Clip は **複数の SavedClip** から参照されうる（1:N）
-- **fields (例)**
-  - `id`
-  - `videoId`
-  - `startSec`, `endSec`
-  - `captionTextEn`（取得できる場合）
-  - `captionTextJa`（翻訳済み or 外部翻訳結果）
-  - `captionSource`（`youtube` / `whisper` / etc）
-  - `createdAt`
-- **notes**
-  - 「文が完結している箇所で切る」は Clip 生成ロジックで担保し、Clip には結果のみ入れる。
-
----
-
-#### ClipOccurrence（Clip内でどの単語がどこに出たか）
-
-- **relations**
-  - ClipOccurrence は **1つの Clip** に属する（N:1）
-  - ClipOccurrence は **1つの Word** を参照する（N:1）
-- **fields (例)**
-  - `id`
-  - `clipId`
-  - `wordId`
-  - `startChar`, `endChar`（字幕テキスト上の位置）
-  - `confidence`（任意）
-
----
-
-#### SavedClip（ユーザが保存した学習単位）
-
-- **relations**
-  - SavedClip は **1人の User** に属する（N:1）
-  - SavedClip は **1つの Clip** を参照する（N:1）
-  - SavedClip は **1つの Word** を参照する（N:1）※「どの単語として保存したか」
-- **fields (例)**
-  - `id`
-  - `userId`
-  - `clipId`
-  - `wordId`
-  - `savedAt`
-  - `tags`（任意）
-- **notes**
-  - 「単語→クリップ一覧」表示は SavedClip を wordId でグルーピングすれば実現できる。
-
----
-
-#### StudyEvent（視聴や学習のログ：推薦/復習の材料）
-
-- **relations**
-  - StudyEvent は **1人の User** に属する（N:1）
-  - StudyEvent は **1つの Clip** を参照する（N:1）
-  - StudyEvent は **1つの Word** を参照しても良い（任意）（N:1）
-- **fields (例)**
-  - `id`
-  - `userId`
-  - `clipId`
-  - `wordId`（任意）
-  - `eventType`（`view` / `complete` / `save` / `skip`）
-  - `watchedSec`（任意）
-  - `createdAt`
-
----
-
-#### SearchSession（検索1回分：feed生成の単位）
-
-- **relations**
-  - SearchSession は **1人の User** に属する（N:1）
-  - SearchSession は **複数の SearchResultItem** を持つ（1:N）
-- **fields (例)**
-  - `id`
-  - `userId`
-  - `queryWord`（検索単語）
-  - `queryPreferenceSnapshot`（Preferenceのスナップショット：任意）
-  - `createdAt`
-  - `status`（`pending` / `ready` / `failed`）
-
----
-
-#### SearchResultItem（feedに流す候補の1件）
-
-- **relations**
-  - SearchResultItem は **1つの SearchSession** に属する（N:1）
-  - SearchResultItem は **1つの Clip** を参照する（N:1）
-- **fields (例)**
-  - `id`
-  - `searchSessionId`
-  - `clipId`
-  - `rank`
-  - `score`（任意）
-  - `reason`（任意：なぜおすすめか）
-- **notes**
-  - 「無限探索」問題は SearchSession 単位で **候補数に上限** を持たせ、足りなければ追加バッチを作る設計にしやすい。
-
----
-
-### Relationships Summary
-
-- User (1) --- (1) Preference
-- User (1) --- (N) SavedClip --- (1) Clip --- (N) ClipOccurrence --- (1) Word
-- User (1) --- (N) StudyEvent --- (1) Clip
-- User (1) --- (N) SearchSession --- (N) SearchResultItem --- (1) Clip
-- Video (1) --- (N) Clip
-
----
-
-### 最小構成
-
-- User / Preference
-- Word
-- Video / Clip
-- SavedClip
-- StudyEvent（最低 `view` と `save` だけでも）
-- SearchSession / SearchResultItem（feed形式にするなら）
+- 軽量なアプリ機能（認証・ユーザデータ・学習履歴・feed状態）はFirebase（Auth/Firestore）で管理する
+- 重い処理（動画探索、字幕処理、クリップ区間抽出、翻訳、LLM評価、推薦計算）はAWSの非同期ワーカーで実行する
+- 非同期処理はSQSをキューとして利用し、ECS Fargate上のワーカーコンテナがジョブを処理する
+- ワーカーは処理結果をFirestoreに書き戻し、クライアントはFirestoreの更新を読んでfeedを更新する
+- Clip は動画データを保存せず、videoIdと再生区間（start/end）のみを保持し、再生はYouTube公式プレイヤーで行う
 
 ## 6. APIs
 
@@ -368,7 +426,7 @@
 外部API・外部サービス・ライブラリなど
 -->
 
-- AWS
+- 軽い部分はFirebase, 重い処理（）
 
 ---
 
@@ -377,6 +435,8 @@
 <!--
 検討した別案と、それを採用しなかった理由
 -->
+
+- このアプリの作成はAWSの学習も兼ねているため全てにAWSを採用することも考えたが、MVPの完成速度を優先したいためFirebaseとのハイブリッドにした。
 
 ---
 
@@ -394,3 +454,4 @@
 ## 11. Personal
 
 - テスト、CI/CD、コンテナ、デプロイを経験する
+````
