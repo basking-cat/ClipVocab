@@ -1,0 +1,152 @@
+rules_version = '2';
+
+// ---------------------------------------------------------------------------
+// ClipVocab — Firestore security rules
+//
+// Collection layout
+// ─────────────────
+// Shared (written by backend workers via Admin SDK, read-only for clients):
+//   videos/{videoId}
+//   words/{wordId}
+//   clips/{clipId}
+//   clipOccurrences/{occurrenceId}
+//
+// User-owned (document ID = userId for easy O(1) lookup):
+//   users/{userId}
+//   preferences/{userId}
+//   preferences/{userId}/topics/{topicId}
+//
+// User-owned (general):
+//   users/{userId}/savedClips/{savedClipId}
+//   users/{userId}/studyEvents/{eventId}
+//   users/{userId}/searchSessions/{sessionId}
+//   users/{userId}/searchSessions/{sessionId}/results/{resultId}
+// ---------------------------------------------------------------------------
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // -----------------------------------------------------------------------
+    // Helper functions
+    // -----------------------------------------------------------------------
+
+    /** Returns true when the request comes from an authenticated user. */
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    /**
+     * Returns true when the authenticated user's UID matches the given userId.
+     * Use this to gate access to any document that belongs to a single user.
+     */
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // -----------------------------------------------------------------------
+    // users/{userId}
+    // -----------------------------------------------------------------------
+    match /users/{userId} {
+      allow read:   if isOwner(userId);
+      allow create: if isOwner(userId);
+      allow update: if isOwner(userId);
+      allow delete: if false;
+    }
+
+    // -----------------------------------------------------------------------
+    // preferences/{userId}
+    // Document ID equals userId (1 : 1 relationship), making lookups trivial.
+    // -----------------------------------------------------------------------
+    match /preferences/{userId} {
+      allow read:   if isOwner(userId);
+      allow create: if isOwner(userId)
+                    && request.resource.data.userId == request.auth.uid;
+      allow update: if isOwner(userId)
+                    && request.resource.data.userId == request.auth.uid;
+      allow delete: if false;
+
+      // preferences/{userId}/topics/{topicId}
+      match /topics/{topicId} {
+        allow read:   if isOwner(userId);
+        allow create: if isOwner(userId);
+        allow update: if isOwner(userId);
+        allow delete: if isOwner(userId);
+      }
+    }
+
+    // -----------------------------------------------------------------------
+    // videos/{videoId}  — shared catalogue; client read-only
+    // -----------------------------------------------------------------------
+    match /videos/{videoId} {
+      allow read:  if isAuthenticated();
+      allow write: if false;
+    }
+
+    // -----------------------------------------------------------------------
+    // words/{wordId}  — shared catalogue; client read-only
+    // -----------------------------------------------------------------------
+    match /words/{wordId} {
+      allow read:  if isAuthenticated();
+      allow write: if false;
+    }
+
+    // -----------------------------------------------------------------------
+    // clips/{clipId}  — shared catalogue; client read-only
+    // -----------------------------------------------------------------------
+    match /clips/{clipId} {
+      allow read:  if isAuthenticated();
+      allow write: if false;
+    }
+
+    // -----------------------------------------------------------------------
+    // clipOccurrences/{occurrenceId}  — shared catalogue; client read-only
+    // -----------------------------------------------------------------------
+    match /clipOccurrences/{occurrenceId} {
+      allow read:  if isAuthenticated();
+      allow write: if false;
+    }
+
+    // -----------------------------------------------------------------------
+    // users/{userId}/savedClips/{savedClipId}
+    // -----------------------------------------------------------------------
+    match /users/{userId}/savedClips/{savedClipId} {
+      allow read:   if isOwner(userId);
+      allow create: if isOwner(userId)
+                    && request.resource.data.userId == request.auth.uid;
+      allow update: if isOwner(userId)
+                    && request.resource.data.userId == request.auth.uid;
+      allow delete: if isOwner(userId);
+    }
+
+    // -----------------------------------------------------------------------
+    // users/{userId}/studyEvents/{eventId}
+    // Events are immutable once written; no update or delete from clients.
+    // -----------------------------------------------------------------------
+    match /users/{userId}/studyEvents/{eventId} {
+      allow read:   if isOwner(userId);
+      allow create: if isOwner(userId)
+                    && request.resource.data.userId == request.auth.uid;
+      allow update: if false;
+      allow delete: if false;
+    }
+
+    // -----------------------------------------------------------------------
+    // users/{userId}/searchSessions/{sessionId}
+    // -----------------------------------------------------------------------
+    match /users/{userId}/searchSessions/{sessionId} {
+      allow read:   if isOwner(userId);
+      allow create: if isOwner(userId)
+                    && request.resource.data.userId == request.auth.uid;
+      allow update: if isOwner(userId)
+                    && request.resource.data.userId == request.auth.uid;
+      allow delete: if false;
+
+      // users/{userId}/searchSessions/{sessionId}/results/{resultId}
+      // Written by backend workers; clients may read their own session results.
+      match /results/{resultId} {
+        allow read:  if isOwner(userId);
+        allow write: if false;
+      }
+    }
+  }
+}
