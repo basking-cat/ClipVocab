@@ -1,0 +1,70 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 共通の関数：ユーザーが認証されているか
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // 共通の関数：リクエストを送った本人のデータか
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // USER: ユーザー情報
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+
+      // PREFERENCE: ユーザーの好みの設定 (1:1の関係)
+      // users/{userId}/preferences/settingsとした構造を想定
+      match /preferences/{preferenceId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // SAVED_CLIP: ユーザーが保存したクリップ
+      match /savedClips/{savedClipId} {
+        allow read, write: if isOwner(userId);
+      }
+    }
+
+    // WORD / VIDEO / CLIP: コンテンツ関連
+    // 基本的にユーザーは閲覧のみ可能。作成・更新はAWSワーカー（Admin SDK）が行う
+    match /words/{wordId} {
+      allow read: if isSignedIn();
+      allow write: if false; // クライアントからは書き込み不可
+    }
+
+    match /videos/{videoId} {
+      allow read: if isSignedIn();
+      allow write: if false;
+
+      // CLIP: 動画内のクリップ情報
+      match /clips/{clipId} {
+        allow read: if isSignedIn();
+        allow write: if false;
+      }
+    }
+
+    // STUDY_EVENT: 学習ログ
+    match /studyEvents/{eventId} {
+      // 自分のログのみ作成と読み取りが可能。更新・削除は不可（イミュータブル）
+      allow create: if isSignedIn() 
+                    && request.resource.data.userId == request.auth.uid;
+      allow read: if isSignedIn() 
+                  && resource.data.userId == request.auth.uid;
+    }
+
+    // SEARCH_SESSION: 検索セッション
+    match /searchSessions/{sessionId} {
+      allow create: if isSignedIn() 
+                    && request.resource.data.userId == request.auth.uid;
+      allow read: if isSignedIn() 
+                  && resource.data.userId == request.auth.uid;
+      
+      // SEARCH_RESULT_ITEM はセッション内のデータとして扱う場合
+      // (AWSワーカーが書き込むため、クライアントはreadのみ)
+      allow update, delete: if false;
+    }
+  }
+}
