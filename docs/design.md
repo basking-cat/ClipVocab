@@ -234,7 +234,7 @@ Fargate --> FS
 テーブル / コレクション / 主キー / インデックスなど
 -->
 
-### ERD
+### 5.1 ERD
 
 ```mermaid
 erDiagram
@@ -361,6 +361,32 @@ erDiagram
   string reason "optional"
   }
 ```
+
+## 5.2 Access Patterns(Firestore Queries)
+
+各画面で必要となる主要なクエリ要件は以下。
+
+| 機能 or 画面       | 対象コレクション     | クエリ条件                                                                                    | 備考                                                 |
+| :----------------- | :------------------- | :-------------------------------------------------------------------------------------------- | :--------------------------------------------------- |
+| **ログイン**       | `USER`               | `getDoc(doc(db, "USER", uid))`                                                                | ユーザープロフィールの取得                           |
+| **ホーム (進捗)**  | `STUDY_EVENT`        | `where("userId", "==", uid)`, `orderBy("createdAt", "desc")`, `limit(10)`                     | 直近の学習状況の表示                                 |
+| **視聴 (Feed)**    | `SEARCH_RESULT_ITEM` | `where("searchSessionId", "==", sessionId)`, `orderBy("rank", "asc")`                         | **複合インデックス必須**。セッションに基づく候補提示 |
+| **復習 (リスト)**  | `SAVED_CLIP`         | `where("userId", "==", uid)`, `orderBy("savedAt", "asc")`                                     | 復習が必要な保存済みアイテムの取得                   |
+| **復習 (詳細)**    | `STUDY_EVENT`        | `where("userId", "==", uid)`, `where("wordId", "==", wordId)`, `orderBy("createdAt", "desc")` | **複合インデックス必須**。過去の回答傾向の参照       |
+| **保存済み一覧**   | `SAVED_CLIP`         | `where("userId", "==", uid)`, `orderBy("savedAt", "desc")`                                    | **複合インデックス必須**。保存した順での表示         |
+| **単語別クリップ** | `SAVED_CLIP`         | `where("userId", "==", uid)`, `where("wordId", "==", wordId)`, `orderBy("savedAt", "desc")`   | **複合インデックス必須**。特定単語の例文一覧         |
+| **学習履歴**       | `STUDY_EVENT`        | `where("userId", "==", uid)`, `orderBy("createdAt", "desc")`                                  | **複合インデックス必須**。全学習ログの時系列表示     |
+| **設定管理**       | `PREFERENCE`         | `where("userId", "==", uid)`, `limit(1)`                                                      | ユーザーの好み設定の取得                             |
+
+### Index Requirements
+
+以下のクエリ実行には、Firestore 上で複合インデックスの作成が必要となる。
+
+1.  **STUDY_EVENT**: `userId` (ASC) + `createdAt` (DESC)
+2.  **SEARCH_RESULT_ITEM**: `searchSessionId` (ASC) + `rank` (ASC)
+3.  **SAVED_CLIP**: `userId` (ASC) + `savedAt` (DESC)
+4.  **SAVED_CLIP**: `userId` (ASC) + `wordId` (ASC) + `savedAt` (DESC)
+5.  **STUDY_EVENT**: `userId` (ASC) + `wordId` (ASC) + `createdAt` (DESC)
 
 ### Supplement
 
