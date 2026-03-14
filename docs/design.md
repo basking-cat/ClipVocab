@@ -137,7 +137,7 @@
 
 ### High-level (Hybrid: Firebase + AWS Workers)
 
-````mermaid
+```mermaid
 flowchart LR
 %% ======================
 %% Client
@@ -216,10 +216,10 @@ Fargate --> LLM
 Fargate --> FS
 ```
 
-
 ### Deployment / Hosting Strategy
 
 - 軽量なアプリ機能（認証・ユーザデータ・学習履歴・feed状態）はFirebase（Auth/Firestore）で管理する
+- クライアントからの検索・復習評価などのリクエストは Cloud Run API（または Firebase Cloud Functions）で受け、SQS にジョブを投入する
 - 重い処理（動画探索、字幕処理、クリップ区間抽出、翻訳、LLM評価、推薦計算）はAWSの非同期ワーカーで実行する
 - 非同期処理はSQSをキューとして利用し、ECS Fargate上のワーカーコンテナがジョブを処理する
 - ワーカーは処理結果をFirestoreに書き戻し、クライアントはFirestoreの更新を読んでfeedを更新する
@@ -357,18 +357,15 @@ erDiagram
     string searchSessionId FK
     string clipId FK
     int rank
-    float score "optional"
-    string reason "optional"
+  float score "optional"
+  string reason "optional"
   }
 ```
 
-### Deployment / Hosting Strategy
+### Supplement
 
-- 軽量なアプリ機能（認証・ユーザデータ・学習履歴・feed状態）はFirebase（Auth/Firestore）で管理する
-- 重い処理（動画探索、字幕処理、クリップ区間抽出、翻訳、LLM評価、推薦計算）はAWSの非同期ワーカーで実行する
-- 非同期処理はSQSをキューとして利用し、ECS Fargate上のワーカーコンテナがジョブを処理する
-- ワーカーは処理結果をFirestoreに書き戻し、クライアントはFirestoreの更新を読んでfeedを更新する
-- Clip は動画データを保存せず、videoIdと再生区間（start/end）のみを保持し、再生はYouTube公式プレイヤーで行う
+- **推薦（復習候補・関連単語）**: 専用エンティティは設けず、STUDY_EVENT / SAVED_CLIP から都度算出する想定とする。
+- **Feed の並び**: 要件「同一動画から連続してクリップを提示しない」は、SEARCH_RESULT_ITEM の rank や feed 生成ロジックで同一 videoId が連続しないよう並べ替えて満たす。
 
 ## 6. APIs
 
@@ -428,7 +425,7 @@ erDiagram
 外部API・外部サービス・ライブラリなど
 -->
 
-- 軽い部分はFirebase, 重い処理（）
+- 軽い部分は Firebase（Auth / Firestore）、重い処理は AWS（SQS + ECS Fargate ワーカー）で実行する。ワーカーから Firestore への書き込みには Firebase Admin SDK を使用する。
 
 ---
 
@@ -456,4 +453,3 @@ erDiagram
 ## 11. Personal
 
 - テスト、CI/CD、コンテナ、デプロイを経験する
-````
