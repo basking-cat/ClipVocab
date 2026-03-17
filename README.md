@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+## clip-vocab
 
-## Getting Started
+**clip-vocab** is a monorepo for a vocabulary/learning app, consisting of:
 
-First, run the development server:
+- **`apps/web`**: Next.js 15 React 19 frontend
+- **`apps/server`**: Go backend (built with `go build`)
+
+Package management and task running are handled with **pnpm** and **turbo**.
+
+---
+
+### Prerequisites
+
+- **Node.js** (LTS recommended)
+- **pnpm** (`npm install -g pnpm`)
+- **Go** (for `apps/server`)
+
+Install dependencies from the repo root:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Development
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+From the repo root, run both apps via Turbo:
 
-## Learn More
+```bash
+pnpm dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+This will start:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- `apps/web`: Next.js dev server (usually at `http://localhost:3000`)
+- `apps/server`: Go server via `air` (see `apps/server` for config)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+You can also run each app directly:
 
-## Deploy on Vercel
+```bash
+# Web app
+cd apps/web
+pnpm dev
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Server
+cd apps/server
+pnpm dev   # or run `air` directly if configured globally
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+### Scripts
+
+From the repo root:
+
+- **`pnpm dev`**: Run all dev processes with Turbo
+- **`pnpm build`**: Build all apps/packages
+- **`pnpm lint`**: Run lint across the monorepo
+
+In `apps/web`:
+
+- **`pnpm dev`**: Next.js dev server
+- **`pnpm build`**: Next.js production build
+- **`pnpm start`**: Start Next.js in production mode
+- **`pnpm lint`**: Run ESLint
+- **`pnpm typecheck`**: TypeScript type check
+- **`pnpm test`**: Run tests with Vitest
+- **`pnpm storybook`** / **`pnpm build-storybook`**: Storybook dev/build
+
+In `apps/server`:
+
+- **`pnpm dev`**: Run server with `air` (if wired through a local `package.json`)
+- **`pnpm build`**: Build Go server binary (`go build -o server main.go`)
+
+---
+
+### Project Structure
+
+- `apps/web` – Next.js frontend
+- `apps/server` – Go backend
+- `packages/*` – Shared libraries
