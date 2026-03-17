@@ -1,0 +1,7 @@
+{
+  "name": "@clip-vocab/server",
+  "scripts": {
+    "dev": "air",
+    "build": "go build -o server main.go"
+  }
+}
