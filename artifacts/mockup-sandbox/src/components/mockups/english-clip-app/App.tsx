@@ -1,20 +1,25 @@
 import React, { useState } from 'react';
 import { Play, Pause, Volume2, Bookmark, CheckCircle2, MessageSquare, BookOpen, Ear, ArrowRight, RotateCcw } from 'lucide-react';
 
-// Logo mark — tilted play sticker + split wordmark
+// Logo mark — tilted play sticker + Outfit/SpaceMono split wordmark
 function LogoMark({ size = 'md' }: { size?: 'sm' | 'md' }) {
-  const boxSize = size === 'sm' ? 'w-6 h-6 rounded-md border shadow-[1.5px_1.5px_0_#1C1917]' : 'w-8 h-8 rounded-lg border-2 shadow-[2.5px_2.5px_0_#1C1917]';
-  const iconSize = size === 'sm' ? 'w-2.5 h-2.5' : 'w-3.5 h-3.5';
-  const textSize = size === 'sm' ? 'text-[13px]' : 'text-[17px]';
+  const boxCls = size === 'sm'
+    ? 'w-6 h-6 rounded-md border border-[#1C1917] shadow-[1.5px_1.5px_0_#1C1917]'
+    : 'w-8 h-8 rounded-lg border-2 border-[#1C1917] shadow-[2.5px_2.5px_0_#1C1917]';
+  const iconCls = size === 'sm' ? 'w-2.5 h-2.5' : 'w-3.5 h-3.5';
+  const clip = size === 'sm' ? 'text-[14px]' : 'text-[17px]';
+  const vocab = size === 'sm' ? 'text-[11px]' : 'text-[13px]';
   return (
     <div className="flex items-center gap-2.5 select-none">
-      <div className={`rotate-[-4deg] bg-[#C8623E] border-[#1C1917] ${boxSize} flex items-center justify-center shrink-0`}>
-        <svg viewBox="0 0 16 16" className={`${iconSize} text-white translate-x-[1px]`} xmlns="http://www.w3.org/2000/svg">
+      <div className={`rotate-[-4deg] bg-[#C8623E] ${boxCls} flex items-center justify-center shrink-0`}>
+        <svg viewBox="0 0 16 16" className={`${iconCls} text-white translate-x-[1px]`} xmlns="http://www.w3.org/2000/svg">
           <path d="M4 2.5L13 8L4 13.5V2.5Z" fill="currentColor" />
         </svg>
       </div>
-      <span style={{ fontFamily: 'Playfair Display, serif' }} className={`${textSize} tracking-tight text-[#1C1917] leading-none`}>
-        <span className="font-normal text-[#6B6660]">Clip</span><span className="font-bold">Vocab</span>
+      {/* Outfit = pop/bold energy  |  Space Mono = bit/digital accent */}
+      <span className="leading-none flex items-baseline gap-[2px]">
+        <span style={{ fontFamily: 'Outfit, sans-serif' }} className={`${clip} font-bold tracking-tight text-[#1C1917]`}>Clip</span>
+        <span style={{ fontFamily: 'Space Mono, monospace' }} className={`${vocab} font-bold tracking-tight text-[#C8623E]`}>Vocab</span>
       </span>
     </div>
   );
