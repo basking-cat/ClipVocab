@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { AppShell } from './_shared/AppShell';
 import { Play, Clock, BookOpen, Volume2, ChevronRight, CheckCircle2, Search, SlidersHorizontal, X } from 'lucide-react';
+import { PixelStar } from '../_shared/PixelArt';
 
 const PREFERENCE_TOPICS = [
   { label: 'Tech & Startups',   weight: 0.85 },
@@ -95,7 +96,11 @@ export function Feed() {
       <div className="max-w-5xl mx-auto px-8 py-9">
 
         {/* Header */}
-        <div className="mb-7">
+        <div className="mb-7 relative">
+          {/* Pixel star — bare accent in header margin */}
+          <div className="absolute right-0 top-0 rotate-[4deg] pointer-events-none">
+            <PixelStar sz={4} fill="#10B981" />
+          </div>
           <h1 className="text-3xl font-bold text-[#1C1917] mb-1 tracking-tight" style={{ fontFamily: 'Playfair Display, serif' }}>Daily Feed</h1>
           <p className="text-sm text-[#6B6660]">
             {isSearchMode

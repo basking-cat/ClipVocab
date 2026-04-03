@@ -2,24 +2,7 @@ import React from 'react';
 import { AppShell } from './_shared/AppShell';
 import { Settings, Flame, Bookmark, PlayCircle, Award, Sliders, Brain, TrendingUp } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-
-// Pixel art crown — 7×5 grid, each cell is `sz` CSS pixels
-function PixelCrown({ sz = 3 }: { sz?: number }) {
-  const rows = [
-    [1,0,0,1,0,0,1],
-    [1,0,1,1,1,0,1],
-    [1,1,1,1,1,1,1],
-    [1,1,1,1,1,1,1],
-    [0,1,1,1,1,1,0],
-  ];
-  return (
-    <svg width={7*sz} height={5*sz} viewBox={`0 0 ${7*sz} ${5*sz}`} shapeRendering="crispEdges" style={{ display: 'block' }}>
-      {rows.map((row, y) => row.map((on, x) =>
-        on ? <rect key={`${x}-${y}`} x={x*sz} y={y*sz} width={sz} height={sz} fill="#F59E0B" /> : null
-      ))}
-    </svg>
-  );
-}
+import { PixelCrown } from '../_shared/PixelArt';
 
 const PREFERENCE_TOPICS = [
   { label: 'Comedy & TV Shows', weight: 0.90 },
@@ -144,9 +127,9 @@ export function Profile() {
 
             {/* Weekly activity — clean card */}
             <div className="bg-white border border-[#DDD9D2] rounded-xl p-5 relative">
-              {/* Pixel crown sticker — decorative corner accent */}
-              <div className="absolute -top-3.5 -right-2 rotate-[6deg] inline-flex p-1.5 bg-white rounded-lg border-2 border-[#1C1917] shadow-[2px_2px_0_#1C1917]">
-                <PixelCrown sz={4} />
+              {/* Pixel crown — bare shape floats on card corner */}
+              <div className="absolute -top-3 -right-1 rotate-[6deg]">
+                <PixelCrown sz={4} fill="#F59E0B" />
               </div>
               <div className="flex items-center justify-between mb-5">
                 <span className="font-semibold text-[#1C1917]">Weekly Activity</span>

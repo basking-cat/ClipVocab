@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Play, Pause, Volume2, Bookmark, CheckCircle2, MessageSquare, BookOpen, Ear, ArrowRight, RotateCcw } from 'lucide-react';
+import { PixelBolt } from '../_shared/PixelArt';
 
 // Logo mark — tilted play sticker + Outfit/SpaceMono split wordmark
 function LogoMark({ size = 'md' }: { size?: 'sm' | 'md' }) {
@@ -113,6 +114,10 @@ export function App() {
           </div>
 
           <div className="relative">
+            {/* Pixel bolt — bare accent below hero card */}
+            <div className="absolute -bottom-5 -left-4 rotate-[-6deg] pointer-events-none">
+              <PixelBolt sz={4} fill="#C8623E" />
+            </div>
             {/* Hero card — clean frame, floating sticker accent */}
             <div className="relative rounded-2xl overflow-hidden border border-[#DDD9D2] bg-white p-2 rotate-1 hover:rotate-0 transition-transform duration-500 shadow-sm">
               <div className="aspect-video bg-[#1C1917] rounded-xl flex items-center justify-center">
