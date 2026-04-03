@@ -20,13 +20,19 @@ export function AppShell({ children, activePage }: AppShellProps) {
       {/* Sidebar */}
       <aside className="w-56 bg-[#F0EDE6] border-r border-[#DDD9D2] flex flex-col shrink-0">
 
-        {/* Logo */}
+        {/* Logo — block stamp, sticker shadow accent */}
         <div className="px-5 pt-7 pb-7 flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-[#C8623E] flex items-center justify-center text-white font-bold text-[11px] tracking-wide shrink-0">
+          <div
+            className="w-8 h-8 rounded-lg bg-[#C8623E] flex items-center justify-center text-white font-bold text-[11px] tracking-wide shrink-0 border border-[#A34E2E] shadow-[2px_2px_0_#6B4226]"
+          >
             CV
           </div>
-          <span className="font-bold text-[15px] tracking-tight text-[#1C1917]"
-            style={{ fontFamily: 'Playfair Display, serif' }}>ClipVocab</span>
+          <span
+            className="font-bold text-[15px] tracking-tight text-[#1C1917]"
+            style={{ fontFamily: 'Playfair Display, serif' }}
+          >
+            ClipVocab
+          </span>
         </div>
 
         {/* Nav */}
@@ -49,9 +55,12 @@ export function AppShell({ children, activePage }: AppShellProps) {
                   <Icon className={`w-4 h-4 ${isActive ? 'text-[#C8623E]' : 'text-[#A09890] group-hover:text-[#6B6660]'}`} />
                   <span className="text-sm font-medium">{item.label}</span>
                 </div>
+                {/* Review badge — sticker accent */}
                 {item.id === 'review' && (
-                  <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold tabular-nums ${
-                    isActive ? 'bg-[#F5E2D8] text-[#C8623E]' : 'bg-[#DDD9D2] text-[#6B6660]'
+                  <span className={`text-[10px] px-1.5 py-0.5 rounded font-bold tabular-nums border shadow-[1px_1px_0_#1C1917] ${
+                    isActive
+                      ? 'bg-amber-300 text-[#1C1917] border-[#1C1917]'
+                      : 'bg-amber-200 text-[#6B6660] border-[#A09890]'
                   }`}>
                     12
                   </span>
