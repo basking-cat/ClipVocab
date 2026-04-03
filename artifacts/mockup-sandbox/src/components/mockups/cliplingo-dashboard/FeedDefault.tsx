@@ -328,7 +328,7 @@ export function FeedDefault() {
 
               {/* Word heading */}
               <h3
-                className="text-lg font-bold leading-tight"
+                className="text-lg font-bold italic leading-tight"
                 style={{ fontFamily: 'Playfair Display, serif' }}
               >
                 {reel.targetWord}
@@ -370,7 +370,7 @@ export function FeedDefault() {
               >
                 {isSaved
                   ? <><CheckCircle2 className="w-4 h-4" /> Saved to deck</>
-                  : <><Bookmark className="w-4 h-4" /> Save to my vocab deck</>
+                  : <><Bookmark className="w-4 h-4" /> Save &amp; study this phrase</>
                 }
               </button>
             </div>
