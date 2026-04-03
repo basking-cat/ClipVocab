@@ -43,8 +43,8 @@ const clips = [
     duration: '0:20',
     thumbnailBg: 'bg-[#D4D0C8]',
     isCompleted: true,
-    targetWord: 'throw under the bus',
-    wordType: 'Idiom',
+    targetWord: 'nuance',
+    wordType: 'Noun',
     transcript: [],
   },
   {
@@ -59,21 +59,22 @@ const clips = [
     duration: '0:20',
     thumbnailBg: 'bg-[#C2BEB4]',
     isCompleted: false,
-    targetWord: 'throw under the bus',
-    wordType: 'Idiom',
+    targetWord: 'reckon',
+    wordType: 'Verb',
     transcript: [],
   },
 ];
 
 export function Feed() {
-  const [query, setQuery] = useState('throw under the bus');
-  const [inputValue, setInputValue] = useState('throw under the bus');
+  const [query, setQuery] = useState('');
+  const [inputValue, setInputValue] = useState('');
   const [activeClipId, setActiveClipId] = useState<string>('clip-1');
   const [isPlaying, setIsPlaying] = useState(false);
   const [activeTopics, setActiveTopics] = useState<string[]>(['Tech & Startups', 'Comedy & TV Shows', 'Podcasts']);
   const [showPrefs, setShowPrefs] = useState(false);
 
   const activeClip = clips.find(c => c.id === activeClipId)!;
+  const isSearchMode = query.trim().length > 0;
 
   const toggleTopic = (label: string) => {
     setActiveTopics(prev =>
@@ -83,7 +84,12 @@ export function Feed() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    setQuery(inputValue.trim() || query);
+    setQuery(inputValue.trim());
+  };
+
+  const clearSearch = () => {
+    setInputValue('');
+    setQuery('');
   };
 
   return (
@@ -93,7 +99,11 @@ export function Feed() {
         {/* Header */}
         <header className="mb-8">
           <h1 className="text-4xl font-['Playfair_Display'] font-bold text-[#1A1918] mb-2 tracking-tight">Daily Feed</h1>
-          <p className="text-[#5C5856]">Clips selected from your preferences for your chosen word.</p>
+          <p className="text-[#5C5856]">
+            {isSearchMode
+              ? 'Clips found for your search query.'
+              : 'Clips curated for you based on your interests.'}
+          </p>
         </header>
 
         {/* Search Row */}
@@ -104,11 +114,11 @@ export function Feed() {
               type="text"
               value={inputValue}
               onChange={e => setInputValue(e.target.value)}
-              placeholder="Enter a word or phrase to learn…"
+              placeholder="Search a word or phrase to focus on…"
               className="flex-1 bg-transparent text-[#2C2A29] placeholder:text-[#B5B0AA] text-sm outline-none font-medium"
             />
             {inputValue && (
-              <button type="button" onClick={() => setInputValue('')} className="text-[#B5B0AA] hover:text-[#827D79]">
+              <button type="button" onClick={clearSearch} className="text-[#B5B0AA] hover:text-[#827D79]">
                 <X className="w-3.5 h-3.5" />
               </button>
             )}
@@ -147,17 +157,28 @@ export function Feed() {
           </div>
         )}
 
-        {/* Active Search Tag */}
-        {query && (
-          <div className="flex items-center gap-2 mb-6">
-            <span className="text-xs text-[#827D79] uppercase tracking-wider font-semibold">Showing clips for:</span>
-            <span className="inline-flex items-center gap-1.5 bg-[#FDE2CD] text-[#A6452B] text-sm font-bold px-3 py-1 rounded-full">
-              <Sparkles className="w-3 h-3" />
-              "{query}"
-            </span>
-            <span className="text-xs text-[#827D79]">{clips.length} clips found</span>
-          </div>
-        )}
+        {/* Status tag — preference mode vs search mode */}
+        <div className="flex items-center gap-2 mb-6">
+          {isSearchMode ? (
+            <>
+              <span className="text-xs text-[#827D79] uppercase tracking-wider font-semibold">Showing clips for:</span>
+              <span className="inline-flex items-center gap-1.5 bg-[#FDE2CD] text-[#A6452B] text-sm font-bold px-3 py-1 rounded-full">
+                <Sparkles className="w-3 h-3" />
+                "{query}"
+              </span>
+              <span className="text-xs text-[#827D79]">{clips.length} clips found</span>
+              <button onClick={clearSearch} className="ml-1 text-xs text-[#B5B0AA] hover:text-[#827D79] underline underline-offset-2">clear</button>
+            </>
+          ) : (
+            <>
+              <span className="inline-flex items-center gap-1.5 bg-[#F2EFE9] text-[#5C5856] text-xs font-semibold px-3 py-1.5 rounded-full border border-[#E8E4DB]">
+                <Sparkles className="w-3 h-3 text-[#E27058]" />
+                Based on: {activeTopics.slice(0, 2).join(', ')}{activeTopics.length > 2 ? ` +${activeTopics.length - 2}` : ''}
+              </span>
+              <span className="text-xs text-[#827D79]">{clips.length} clips today</span>
+            </>
+          )}
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
