@@ -1,0 +1,8 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "tVDRaRC-Hh8alyJ5meLdr"
+uri = "file://artifacts/mockup-sandbox/public/images/hero-illustration.png"
+type = "image"
+title = "Notebook style video learning interface"
