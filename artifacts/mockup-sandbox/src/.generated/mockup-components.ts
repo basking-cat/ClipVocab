@@ -2,6 +2,8 @@
 type ModuleMap = Record<string, () => Promise<Record<string, unknown>>>;
 export const modules: ModuleMap = {
   "./components/mockups/cliplingo-dashboard/Feed.tsx": () => import("../components/mockups/cliplingo-dashboard/Feed.tsx"),
+  "./components/mockups/cliplingo-dashboard/FeedDefault.tsx": () => import("../components/mockups/cliplingo-dashboard/FeedDefault.tsx"),
+  "./components/mockups/cliplingo-dashboard/FeedSearch.tsx": () => import("../components/mockups/cliplingo-dashboard/FeedSearch.tsx"),
   "./components/mockups/cliplingo-dashboard/Profile.tsx": () => import("../components/mockups/cliplingo-dashboard/Profile.tsx"),
   "./components/mockups/cliplingo-dashboard/Review.tsx": () => import("../components/mockups/cliplingo-dashboard/Review.tsx"),
   "./components/mockups/english-clip-app/App.tsx": () => import("../components/mockups/english-clip-app/App.tsx")
