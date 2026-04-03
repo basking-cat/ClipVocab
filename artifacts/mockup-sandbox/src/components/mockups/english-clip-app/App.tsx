@@ -1,204 +1,232 @@
 import React, { useState } from 'react';
-import { Play, Pause, Volume2, Bookmark, CheckCircle2, ChevronRight, MessageSquare, BookOpen, Ear, ArrowRight, RotateCcw, VolumeX } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
+import { Play, Pause, Volume2, Bookmark, CheckCircle2, MessageSquare, BookOpen, Ear, ArrowRight, RotateCcw } from 'lucide-react';
 
 export function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [savedWords, setSavedWords] = useState<string[]>(['reckon', 'cut to the chase']);
   const [activeTab, setActiveTab] = useState<'transcript' | 'notes'>('transcript');
-  
+
   const toggleSaveWord = (word: string) => {
-    setSavedWords(prev => 
+    setSavedWords(prev =>
       prev.includes(word) ? prev.filter(w => w !== word) : [...prev, word]
     );
   };
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7] text-[#2C2A29] font-['Inter'] selection:bg-[#E27058] selection:text-white pb-24 relative overflow-hidden">
-      
-      {/* Subtle background grain */}
-      <div className="pointer-events-none fixed inset-0 opacity-[0.03]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }}></div>
+    <div
+      className="min-h-screen bg-[#F8F6F2] text-[#1C1917] pb-24"
+      style={{ fontFamily: 'Inter, sans-serif' }}
+    >
 
       {/* Navigation */}
-      <nav className="flex items-center justify-between px-6 py-6 md:px-12 max-w-7xl mx-auto relative z-10">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-[#E27058] flex items-center justify-center text-white font-bold font-['Playfair_Display'] italic">C</div>
-          <span className="font-['Playfair_Display'] font-bold text-xl tracking-tight">ClipLingo</span>
+      <nav className="flex items-center justify-between px-6 py-5 md:px-12 max-w-7xl mx-auto border-b border-[#E8E5DF]">
+        {/* Logo — block stamp, sticker shadow accent */}
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-lg bg-[#C8623E] flex items-center justify-center text-white font-bold text-[11px] tracking-wide shrink-0 border border-[#A34E2E] shadow-[2px_2px_0_#6B4226]">
+            CV
+          </div>
+          <span
+            className="font-bold text-[17px] tracking-tight text-[#1C1917]"
+            style={{ fontFamily: 'Playfair Display, serif' }}
+          >
+            ClipVocab
+          </span>
         </div>
-        <div className="hidden md:flex items-center gap-8 font-medium text-sm text-[#5C5856]">
-          <a href="#" className="hover:text-[#2C2A29] transition-colors">Philosophy</a>
-          <a href="#" className="hover:text-[#2C2A29] transition-colors">Library</a>
-          <a href="#" className="hover:text-[#2C2A29] transition-colors">Pricing</a>
+        <div className="hidden md:flex items-center gap-8 font-medium text-sm text-[#6B6660]">
+          <a href="#" className="hover:text-[#1C1917] transition-colors">Philosophy</a>
+          <a href="#" className="hover:text-[#1C1917] transition-colors">Library</a>
+          <a href="#" className="hover:text-[#1C1917] transition-colors">Pricing</a>
         </div>
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" className="font-medium text-[#2C2A29] hover:bg-[#F2EFE9] rounded-full px-6">Log in</Button>
-          <Button className="bg-[#2C2A29] hover:bg-[#1A1918] text-white rounded-full px-6 font-medium shadow-sm">Start free</Button>
+        <div className="flex items-center gap-3">
+          <button className="text-sm font-medium text-[#52504B] px-4 py-2 rounded-lg hover:bg-[#E8E5DF] transition-colors">
+            Log in
+          </button>
+          {/* Primary nav CTA — sticker shadow accent */}
+          <button className="text-sm font-bold text-white bg-[#1C1917] px-5 py-2 rounded-lg border border-[#1C1917] shadow-[2px_2px_0_#6B4226] hover:shadow-[1px_1px_0_#6B4226] hover:translate-x-[1px] hover:translate-y-[1px] transition-all">
+            Start free
+          </button>
         </div>
       </nav>
 
-      <main className="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
-        
-        {/* Hero Section */}
+      <main className="max-w-7xl mx-auto px-6 md:px-12">
+
+        {/* Hero */}
         <section className="py-16 md:py-24 grid md:grid-cols-2 gap-12 items-center">
-          <div className="space-y-8">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F2EFE9] border border-[#E8E4DB] text-sm font-medium text-[#5C5856]">
-              <span className="w-2 h-2 rounded-full bg-[#E27058] animate-pulse"></span>
+          <div className="space-y-7">
+            {/* Announcement — sticker accent */}
+            <div className="inline-flex items-center gap-2 text-[11px] font-bold px-3 py-1.5 rounded border border-[#1C1917] bg-amber-200 text-[#1C1917] shadow-[1.5px_1.5px_0_#1C1917]">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#C8623E]" />
               New: Conversational Nuance series
             </div>
-            
-            <h1 className="text-5xl md:text-7xl font-['Playfair_Display'] font-bold leading-[1.05] tracking-tight text-[#1A1918]">
-              Learn English <br/>
+
+            <h1
+              className="text-5xl md:text-6xl font-bold leading-[1.08] tracking-tight text-[#1C1917]"
+              style={{ fontFamily: 'Playfair Display, serif' }}
+            >
+              Learn English<br />
               <span className="relative inline-block">
                 the way it's
-                <svg className="absolute w-full h-3 -bottom-1 left-0 text-[#E27058] opacity-80" viewBox="0 0 100 10" preserveAspectRatio="none">
+                <svg className="absolute w-full h-3 -bottom-1 left-0 text-[#C8623E] opacity-70" viewBox="0 0 100 10" preserveAspectRatio="none">
                   <path d="M0 5 Q 50 10 100 2" stroke="currentColor" strokeWidth="3" fill="none" strokeLinecap="round" />
                 </svg>
-              </span> <br/>
+              </span><br />
               actually spoken.
             </h1>
-            
-            <p className="text-lg md:text-xl text-[#5C5856] leading-relaxed max-w-md font-light">
+
+            <p className="text-lg text-[#52504B] leading-relaxed max-w-md font-light">
               Stop drilling textbook grammar. Absorb real phrases, slang, and cultural context from hand-picked YouTube clips with native speakers.
             </p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Button className="bg-[#E27058] hover:bg-[#D15F43] text-white rounded-full px-8 py-6 text-lg font-medium shadow-[0_4px_14px_0_rgba(226,112,88,0.39)] transition-all hover:shadow-[0_6px_20px_rgba(226,112,88,0.23)] hover:-translate-y-0.5">
-                Try a lesson
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
+
+            <div className="flex flex-col sm:flex-row gap-3 pt-2">
+              {/* Hero CTA — sticker shadow accent */}
+              <button className="flex items-center justify-center gap-2 bg-[#C8623E] hover:bg-[#A34E2E] text-white px-7 py-3.5 text-base font-bold rounded-xl border border-[#A34E2E] shadow-[3px_3px_0_#6B4226] hover:shadow-[2px_2px_0_#6B4226] hover:translate-x-[1px] hover:translate-y-[1px] transition-all">
+                Try a lesson <ArrowRight className="w-4 h-4" />
+              </button>
+              <button className="flex items-center justify-center gap-2 bg-white text-[#52504B] px-7 py-3.5 text-sm font-medium rounded-xl border border-[#DDD9D2] hover:border-[#A09890] transition-colors">
+                See how it works
+              </button>
             </div>
-            
-            <div className="flex items-center gap-4 pt-8 text-sm text-[#827D79] font-medium">
+
+            <div className="flex items-center gap-4 pt-4 text-sm text-[#6B6660] font-medium">
               <div className="flex -space-x-2">
                 {[1, 2, 3, 4].map(i => (
-                  <div key={i} className={`w-8 h-8 rounded-full border-2 border-[#FDFBF7] bg-[#E8E4DB] flex items-center justify-center overflow-hidden`}>
-                     <img src={`https://api.dicebear.com/7.x/notionists/svg?seed=${i}&backgroundColor=E8E4DB`} alt="user" className="w-full h-full object-cover" />
+                  <div key={i} className="w-8 h-8 rounded-full border-2 border-[#F8F6F2] bg-[#E8E5DF] overflow-hidden">
+                    <img src={`https://api.dicebear.com/7.x/notionists/svg?seed=${i}&backgroundColor=E8E5DF`} alt="user" className="w-full h-full object-cover" />
                   </div>
                 ))}
               </div>
               <span>Join 12,000+ adult learners</span>
             </div>
           </div>
-          
+
           <div className="relative">
-            {/* Organic shape blob behind image */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-[#F5EEDC] rounded-[40%_60%_70%_30%/40%_50%_60%_50%] -z-10 blur-3xl opacity-60 mix-blend-multiply animate-pulse" style={{ animationDuration: '8s' }}></div>
-            
-            <div className="relative rounded-2xl overflow-hidden border border-[#E8E4DB] shadow-2xl shadow-[#2C2A29]/5 bg-white p-2 md:p-4 rotate-1 hover:rotate-0 transition-transform duration-500">
-              <img 
-                src="/__mockup/images/hero-illustration.png" 
-                alt="ClipLingo Learning Experience" 
-                className="w-full h-auto rounded-xl border border-[#F2EFE9]"
-              />
-              
-              {/* Floating decorative elements */}
-              <div className="absolute -right-6 -top-6 bg-white p-3 rounded-xl shadow-lg border border-[#E8E4DB] rotate-[6deg] animate-bounce" style={{ animationDuration: '3s' }}>
-                <span className="font-['Playfair_Display'] italic text-[#E27058] font-bold text-lg">"Cut to the chase"</span>
+            {/* Hero card — clean frame, floating sticker accent */}
+            <div className="relative rounded-2xl overflow-hidden border border-[#DDD9D2] bg-white p-2 rotate-1 hover:rotate-0 transition-transform duration-500 shadow-sm">
+              <div className="aspect-video bg-[#1C1917] rounded-xl flex items-center justify-center">
+                <Play className="w-12 h-12 text-white/40 fill-white/20" />
+              </div>
+              {/* Floating sticker quote */}
+              <div className="absolute -right-4 -top-4 bg-amber-300 px-3 py-2 rounded-lg border border-[#1C1917] shadow-[3px_3px_0_#1C1917] rotate-[5deg]">
+                <span className="font-bold text-sm text-[#1C1917]" style={{ fontFamily: 'Playfair Display, serif' }}>
+                  "Cut to the chase"
+                </span>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Feature / Live Clip Demo Section */}
-        <section className="py-24 border-t border-[#E8E4DB]/60 mt-12">
-          <div className="text-center max-w-2xl mx-auto mb-16 space-y-4">
-            <h2 className="text-3xl md:text-4xl font-['Playfair_Display'] font-bold text-[#1A1918]">Like having a native friend pause the video for you.</h2>
-            <p className="text-[#5C5856] text-lg">We take real cultural moments and break them down so you understand the nuance, not just the vocabulary.</p>
+        {/* Feature / Live Clip Demo */}
+        <section className="py-20 border-t border-[#E8E5DF]">
+          <div className="text-center max-w-2xl mx-auto mb-14 space-y-3">
+            <h2
+              className="text-3xl md:text-4xl font-bold text-[#1C1917]"
+              style={{ fontFamily: 'Playfair Display, serif' }}
+            >
+              Like having a native friend pause the video for you.
+            </h2>
+            <p className="text-[#52504B] text-base">We take real cultural moments and break them down so you understand the nuance, not just the vocabulary.</p>
           </div>
 
           <div className="grid lg:grid-cols-12 gap-8 items-start max-w-5xl mx-auto">
-            
-            {/* Left: Video Player Mock */}
-            <div className="lg:col-span-7 bg-white rounded-3xl border border-[#E8E4DB] shadow-sm overflow-hidden p-2">
-              <div className="aspect-video bg-[#1A1918] rounded-2xl relative group overflow-hidden">
-                <img src="https://images.unsplash.com/photo-1516280440502-8eb47963286b?q=80&w=1000&auto=format&fit=crop" className="w-full h-full object-cover opacity-60 mix-blend-luminosity" alt="Video frame" />
-                
+
+            {/* Left: Video Player */}
+            <div className="lg:col-span-7 bg-white rounded-2xl border border-[#DDD9D2] overflow-hidden">
+              <div className="aspect-video bg-[#1C1917] relative group overflow-hidden">
+                <img
+                  src="https://images.unsplash.com/photo-1516280440502-8eb47963286b?q=80&w=1000&auto=format&fit=crop"
+                  className="w-full h-full object-cover opacity-50 mix-blend-luminosity"
+                  alt="Video frame"
+                />
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <button 
+                  <button
                     onClick={() => setIsPlaying(!isPlaying)}
-                    className="w-16 h-16 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/30 transition-all hover:scale-105"
+                    className="w-14 h-14 rounded-full bg-white/15 border border-white/30 flex items-center justify-center text-white hover:bg-white/25 transition-all"
                   >
-                    {isPlaying ? <Pause className="w-8 h-8" /> : <Play className="w-8 h-8 ml-1" />}
+                    {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6 ml-0.5" />}
                   </button>
                 </div>
-                
-                <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
-                  <div className="flex items-center gap-4 text-white">
+                <div className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black/70">
+                  <div className="flex items-center gap-3 text-white">
                     <button onClick={() => setIsPlaying(!isPlaying)}>
-                      {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+                      {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
                     </button>
-                    <div className="flex-1 h-1.5 bg-white/30 rounded-full overflow-hidden relative">
-                      <div className="absolute top-0 left-0 h-full bg-[#E27058] w-1/3"></div>
+                    <div className="flex-1 h-1 bg-white/25 rounded-full overflow-hidden">
+                      <div className="h-full bg-[#C8623E] w-1/3 rounded-full" />
                     </div>
-                    <span className="text-xs font-medium font-mono">0:14 / 0:42</span>
-                    <Volume2 className="w-5 h-5" />
+                    <span className="text-[11px] font-mono text-white/70">0:14 / 0:42</span>
+                    <Volume2 className="w-4 h-4 text-white/70" />
                   </div>
                 </div>
               </div>
-              
-              {/* Interaction Bar */}
-              <div className="flex items-center justify-between p-4 border-b border-[#F2EFE9]">
-                <div className="flex items-center gap-2 text-sm text-[#5C5856] font-medium">
-                  <Badge variant="outline" className="bg-[#F2EFE9] text-[#2C2A29] border-transparent hover:bg-[#E8E4DB]">Idioms</Badge>
-                  <Badge variant="outline" className="bg-[#F2EFE9] text-[#2C2A29] border-transparent hover:bg-[#E8E4DB]">Business</Badge>
+
+              {/* Tags row */}
+              <div className="flex items-center justify-between px-5 py-3 border-b border-[#E8E5DF]">
+                <div className="flex items-center gap-2">
+                  {/* Word type tags — sticker accent */}
+                  {['Idioms', 'Business'].map(tag => (
+                    <span key={tag} className="text-[10px] font-bold px-2 py-0.5 rounded bg-violet-200 text-[#1C1917] border border-[#1C1917] shadow-[1px_1px_0_#1C1917]">
+                      {tag}
+                    </span>
+                  ))}
                 </div>
                 <div className="flex items-center gap-3">
-                  <button className="text-[#827D79] hover:text-[#2C2A29] transition-colors"><RotateCcw className="w-5 h-5" /></button>
-                  <button className="text-[#827D79] hover:text-[#2C2A29] transition-colors"><Bookmark className="w-5 h-5" /></button>
+                  <button className="text-[#A09890] hover:text-[#1C1917] transition-colors"><RotateCcw className="w-4 h-4" /></button>
+                  <button className="text-[#A09890] hover:text-[#C8623E] transition-colors"><Bookmark className="w-4 h-4" /></button>
                 </div>
               </div>
-              
-              {/* Transcript Area */}
-              <div className="p-6">
-                <div className="flex gap-6 mb-6">
-                  <button 
-                    onClick={() => setActiveTab('transcript')}
-                    className={`text-sm font-semibold pb-2 border-b-2 transition-colors ${activeTab === 'transcript' ? 'border-[#E27058] text-[#2C2A29]' : 'border-transparent text-[#827D79] hover:text-[#5C5856]'}`}
-                  >
-                    Transcript
-                  </button>
-                  <button 
-                    onClick={() => setActiveTab('notes')}
-                    className={`text-sm font-semibold pb-2 border-b-2 transition-colors ${activeTab === 'notes' ? 'border-[#E27058] text-[#2C2A29]' : 'border-transparent text-[#827D79] hover:text-[#5C5856]'}`}
-                  >
-                    Cultural Notes
-                  </button>
+
+              {/* Transcript */}
+              <div className="p-5">
+                <div className="flex gap-5 mb-5 border-b border-[#E8E5DF] pb-3">
+                  {(['transcript', 'notes'] as const).map(tab => (
+                    <button
+                      key={tab}
+                      onClick={() => setActiveTab(tab)}
+                      className={`text-sm font-semibold pb-1 border-b-2 transition-colors capitalize ${
+                        activeTab === tab
+                          ? 'border-[#C8623E] text-[#1C1917]'
+                          : 'border-transparent text-[#A09890] hover:text-[#6B6660]'
+                      }`}
+                    >
+                      {tab === 'notes' ? 'Cultural Notes' : 'Transcript'}
+                    </button>
+                  ))}
                 </div>
-                
+
                 {activeTab === 'transcript' ? (
                   <div className="space-y-4">
-                    <p className="text-[#827D79] text-lg leading-relaxed font-light">
-                      <span className="font-medium text-[#2C2A29] block mb-1 text-sm">Speaker 1</span>
-                      So we've been going back and forth on these mockups for weeks now. I mean, I love the direction, but we're running out of time.
-                    </p>
-                    <p className="text-[#1A1918] text-lg leading-relaxed font-medium">
-                      <span className="font-medium text-[#2C2A29] block mb-1 text-sm">Speaker 2</span>
-                      Yeah, I agree. Let's just <span className="relative inline-block cursor-help group">
-                        <span className="bg-[#FDE2CD] text-[#A6452B] px-1 rounded">cut to the chase</span>
-                        <span className="absolute hidden group-hover:block bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-3 bg-[#2C2A29] text-white text-sm rounded-lg shadow-xl z-20 font-normal">
-                          <strong className="block mb-1 text-[#FDE2CD]">Idiom</strong>
-                          To get directly to the point, leaving out unnecessary details.
-                        </span>
-                        <svg className="absolute w-full h-1 -bottom-1 left-0 text-[#E27058] opacity-60" viewBox="0 0 100 10" preserveAspectRatio="none">
-                          <path d="M0 5 Q 50 8 100 3" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" />
-                        </svg>
-                      </span>. Are we launching this feature on Tuesday or not?
-                    </p>
-                    <p className="text-[#827D79] text-lg leading-relaxed font-light">
-                      <span className="font-medium text-[#2C2A29] block mb-1 text-sm">Speaker 1</span>
-                      I <span className="border-b border-dashed border-[#827D79] hover:border-[#2C2A29] hover:text-[#2C2A29] cursor-pointer transition-colors">reckon</span> we can, if engineering gets the staging environment stable today.
-                    </p>
+                    <div>
+                      <span className="text-[9px] font-bold text-[#A09890] uppercase tracking-wider block mb-0.5">Speaker 1</span>
+                      <p className="text-sm text-[#6B6660] leading-relaxed font-light">
+                        So we've been going back and forth on these mockups for weeks now. I mean, I love the direction, but we're running out of time.
+                      </p>
+                    </div>
+                    <div>
+                      <span className="text-[9px] font-bold text-[#A09890] uppercase tracking-wider block mb-0.5">Speaker 2</span>
+                      <p className="text-sm text-[#1C1917] leading-relaxed">
+                        Yeah, I agree. Let's just{' '}
+                        {/* Phrase highlight — sticker accent */}
+                        <mark className="not-italic bg-amber-300 text-[#1C1917] font-bold px-1 py-0.5 rounded border border-[#1C1917] shadow-[1px_1px_0_#1C1917] cursor-help group relative">
+                          cut to the chase
+                        </mark>
+                        . Are we launching this feature on Tuesday or not?
+                      </p>
+                    </div>
+                    <div>
+                      <span className="text-[9px] font-bold text-[#A09890] uppercase tracking-wider block mb-0.5">Speaker 1</span>
+                      <p className="text-sm text-[#6B6660] leading-relaxed font-light">
+                        I <span className="border-b border-dashed border-[#A09890] hover:border-[#1C1917] hover:text-[#1C1917] cursor-pointer transition-colors">reckon</span> we can, if engineering gets the staging environment stable today.
+                      </p>
+                    </div>
                   </div>
                 ) : (
-                  <div className="space-y-4 text-[#5C5856]">
-                    <div className="p-4 bg-[#F2EFE9] rounded-xl">
-                      <h4 className="font-medium text-[#2C2A29] mb-1 flex items-center gap-2">
-                        <MessageSquare className="w-4 h-4 text-[#E27058]" />
+                  <div className="space-y-3 text-[#52504B]">
+                    <div className="p-4 bg-amber-50 rounded-xl border border-amber-200">
+                      <h4 className="font-semibold text-[#1C1917] mb-1 flex items-center gap-2 text-sm">
+                        <MessageSquare className="w-3.5 h-3.5 text-[#C8623E]" />
                         Workplace Directness
                       </h4>
-                      <p className="text-sm">In American business culture, saying "let's cut to the chase" is acceptable when time is short, but it can sound abrupt. It's usually softened with "Yeah, I agree" or used among equals.</p>
+                      <p className="text-sm leading-relaxed">In American business culture, saying "let's cut to the chase" is acceptable when time is short, but it can sound abrupt. It's usually softened with "Yeah, I agree" or used among equals.</p>
                     </div>
                   </div>
                 )}
@@ -206,140 +234,127 @@ export function App() {
             </div>
 
             {/* Right: Learning Panel */}
-            <div className="lg:col-span-5 space-y-6">
-              
-              {/* Context Card */}
-              <div className="bg-[#2C2A29] rounded-3xl p-6 text-white shadow-xl relative overflow-hidden">
-                <div className="absolute top-0 right-0 p-4 opacity-10">
-                  <BookOpen className="w-24 h-24" />
-                </div>
-                <div className="relative z-10">
-                  <span className="text-[#E27058] font-['Playfair_Display'] italic text-lg mb-2 block">Key phrase</span>
-                  <h3 className="text-2xl font-bold mb-4">Cut to the chase</h3>
-                  <div className="flex items-center gap-3 mb-6">
-                    <button className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
-                      <Volume2 className="w-4 h-4 text-[#FDE2CD]" />
-                    </button>
-                    <span className="text-sm text-white/70 font-mono">/kʌt tə ðə tʃeɪs/</span>
-                  </div>
-                  
-                  <p className="text-white/80 text-sm leading-relaxed mb-6 border-l-2 border-[#E27058] pl-4">
-                    Originates from early silent films, when boring dialogue scenes would transition to an exciting chase scene.
-                  </p>
+            <div className="lg:col-span-5 space-y-5">
 
-                  <div className="space-y-3">
-                    <div className="bg-white/5 rounded-lg p-3 text-sm">
-                      <strong className="text-white block mb-1">A native might say:</strong>
-                      <span className="text-white/70 italic">"We only have 5 minutes, so let's cut to the chase."</span>
-                    </div>
-                  </div>
-                  
-                  <Button 
-                    onClick={() => toggleSaveWord('cut to the chase')}
-                    className={`w-full mt-6 rounded-xl py-6 font-medium border-2 transition-all ${savedWords.includes('cut to the chase') ? 'bg-[#E27058] border-[#E27058] text-white' : 'bg-transparent border-white/20 hover:border-white/40 text-white'}`}
-                  >
-                    {savedWords.includes('cut to the chase') ? (
-                      <>
-                        <CheckCircle2 className="w-5 h-5 mr-2" />
-                        Saved to your deck
-                      </>
-                    ) : (
-                      <>
-                        <Bookmark className="w-5 h-5 mr-2" />
-                        Save to my vocab deck
-                      </>
-                    )}
-                  </Button>
+              {/* Key phrase card — dark bg, sticker save button */}
+              <div className="bg-[#1C1917] rounded-2xl p-6 text-white">
+                <span className="text-[#C8623E] text-xs font-bold uppercase tracking-widest mb-2 block" style={{ fontFamily: 'Playfair Display, serif' }}>
+                  Key phrase
+                </span>
+                <h3 className="text-xl font-bold mb-4">Cut to the chase</h3>
+                <div className="flex items-center gap-3 mb-5">
+                  <button className="w-7 h-7 rounded-lg bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors">
+                    <Volume2 className="w-3.5 h-3.5 text-[#DDD9D2]" />
+                  </button>
+                  <span className="text-xs text-white/60 font-mono">/kʌt tə ðə tʃeɪs/</span>
                 </div>
+                <p className="text-white/70 text-sm leading-relaxed mb-5 border-l-2 border-[#C8623E] pl-3">
+                  Originates from early silent films, when boring dialogue scenes would cut to an exciting chase scene.
+                </p>
+                <div className="bg-white/5 rounded-xl p-3 text-sm mb-5 border border-white/10">
+                  <strong className="text-white block mb-1 text-xs">A native might say:</strong>
+                  <span className="text-white/60 italic text-xs">"We only have 5 minutes, so let's cut to the chase."</span>
+                </div>
+                {/* Save button — sticker accent */}
+                <button
+                  onClick={() => toggleSaveWord('cut to the chase')}
+                  className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold border transition-all ${
+                    savedWords.includes('cut to the chase')
+                      ? 'bg-emerald-400 border-emerald-500 text-[#1C1917]'
+                      : 'bg-[#C8623E] border-[#A34E2E] text-white shadow-[3px_3px_0_#6B4226] hover:shadow-[2px_2px_0_#6B4226] hover:translate-x-[1px] hover:translate-y-[1px]'
+                  }`}
+                >
+                  {savedWords.includes('cut to the chase') ? (
+                    <><CheckCircle2 className="w-4 h-4" /> Saved to your deck</>
+                  ) : (
+                    <><Bookmark className="w-4 h-4" /> Save to my vocab deck</>
+                  )}
+                </button>
               </div>
 
-              {/* Mini Progress */}
-              <div className="bg-white border border-[#E8E4DB] rounded-3xl p-6 shadow-sm">
-                <h4 className="font-semibold text-[#2C2A29] mb-4">Today's Progress</h4>
+              {/* Progress card — clean */}
+              <div className="bg-white border border-[#DDD9D2] rounded-2xl p-5">
+                <h4 className="font-semibold text-[#1C1917] mb-4 text-sm">Today's Progress</h4>
                 <div className="flex items-center gap-4">
-                  <div className="relative w-16 h-16 flex items-center justify-center">
+                  <div className="relative w-14 h-14 flex items-center justify-center shrink-0">
                     <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
-                      <path className="text-[#F2EFE9]" strokeWidth="3" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
-                      <path className="text-[#E27058]" strokeWidth="3" strokeDasharray="60, 100" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" strokeLinecap="round" />
+                      <path className="text-[#E8E5DF]" strokeWidth="3" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                      <path className="text-[#C8623E]" strokeWidth="3" strokeDasharray="60, 100" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" strokeLinecap="round" />
                     </svg>
-                    <span className="absolute text-sm font-bold text-[#2C2A29]">3/5</span>
+                    <span className="absolute text-xs font-bold text-[#1C1917]">3/5</span>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-[#2C2A29]">Idioms & Expressions</p>
-                    <p className="text-xs text-[#827D79] mt-1">2 more phrases to reach your daily goal.</p>
+                    <p className="text-sm font-semibold text-[#1C1917]">Idioms & Expressions</p>
+                    <p className="text-xs text-[#A09890] mt-0.5">2 more phrases to reach your daily goal.</p>
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
         </section>
-        
+
         {/* Method Section */}
-        <section className="py-24">
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-[#F8F6F1] p-8 rounded-3xl border border-[#E8E4DB]/50">
-              <div className="w-12 h-12 rounded-xl bg-white border border-[#E8E4DB] shadow-sm flex items-center justify-center mb-6">
-                <Ear className="w-6 h-6 text-[#E27058]" />
+        <section className="py-20 border-t border-[#E8E5DF]">
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              { icon: Ear,       title: 'Active Listening',    desc: 'Train your ear to catch linked words, dropped sounds, and natural pacing that textbooks ignore.' },
+              { icon: BookOpen,  title: 'Cultural Context',    desc: 'Language is culture. Understand the humor, politeness levels, and unspoken rules behind the words.' },
+              { icon: RotateCcw, title: 'Spaced Repetition',  desc: 'Save phrases you want to use. We\'ll remind you to review them just before you\'re likely to forget.' },
+            ].map(({ icon: Icon, title, desc }) => (
+              <div key={title} className="bg-white border border-[#DDD9D2] rounded-2xl p-7">
+                {/* Icon box — sticker accent */}
+                <div className="w-10 h-10 rounded-lg bg-amber-100 border border-[#1C1917] shadow-[2px_2px_0_#1C1917] flex items-center justify-center mb-5">
+                  <Icon className="w-5 h-5 text-[#C8623E]" />
+                </div>
+                <h3
+                  className="text-lg font-bold text-[#1C1917] mb-2"
+                  style={{ fontFamily: 'Playfair Display, serif' }}
+                >
+                  {title}
+                </h3>
+                <p className="text-[#52504B] text-sm leading-relaxed">{desc}</p>
               </div>
-              <h3 className="text-xl font-['Playfair_Display'] font-bold text-[#1A1918] mb-3">Active Listening</h3>
-              <p className="text-[#5C5856] text-sm leading-relaxed">Train your ear to catch linked words, dropped sounds, and natural pacing that textbooks ignore.</p>
-            </div>
-            
-            <div className="bg-[#F8F6F1] p-8 rounded-3xl border border-[#E8E4DB]/50 relative">
-              <div className="absolute top-4 right-4 text-[#E27058]">
-                 <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="opacity-20">
-                    <path d="M20 50 Q 50 10 80 50 T 20 50" stroke="currentColor" strokeWidth="4" fill="none"/>
-                 </svg>
-              </div>
-              <div className="w-12 h-12 rounded-xl bg-white border border-[#E8E4DB] shadow-sm flex items-center justify-center mb-6 relative z-10">
-                <BookOpen className="w-6 h-6 text-[#E27058]" />
-              </div>
-              <h3 className="text-xl font-['Playfair_Display'] font-bold text-[#1A1918] mb-3 relative z-10">Cultural Context</h3>
-              <p className="text-[#5C5856] text-sm leading-relaxed relative z-10">Language is culture. Understand the humor, politeness levels, and unspoken rules behind the words.</p>
-            </div>
-            
-            <div className="bg-[#F8F6F1] p-8 rounded-3xl border border-[#E8E4DB]/50">
-              <div className="w-12 h-12 rounded-xl bg-white border border-[#E8E4DB] shadow-sm flex items-center justify-center mb-6">
-                <RotateCcw className="w-6 h-6 text-[#E27058]" />
-              </div>
-              <h3 className="text-xl font-['Playfair_Display'] font-bold text-[#1A1918] mb-3">Spaced Repetition</h3>
-              <p className="text-[#5C5856] text-sm leading-relaxed">Save phrases you want to use. We'll remind you to review them just before you're likely to forget.</p>
-            </div>
+            ))}
           </div>
         </section>
 
         {/* CTA Section */}
-        <section className="py-20 mb-12 relative overflow-hidden rounded-3xl bg-[#2C2A29] text-center px-6">
-          <div className="absolute inset-0 opacity-10 bg-[url('https://images.unsplash.com/photo-1456324504439-367cee3b3c32?q=80&w=1000&auto=format&fit=crop')] bg-cover bg-center mix-blend-overlay"></div>
-          
-          <div className="relative z-10 max-w-2xl mx-auto">
-            <h2 className="text-4xl md:text-5xl font-['Playfair_Display'] font-bold text-white mb-6">Sound like yourself, in English.</h2>
-            <p className="text-[#E8E4DB] text-lg mb-10 max-w-lg mx-auto font-light">
+        <section className="py-16 mb-12 rounded-2xl bg-[#1C1917] text-center px-8">
+          <div className="max-w-2xl mx-auto">
+            <h2
+              className="text-4xl md:text-5xl font-bold text-white mb-5"
+              style={{ fontFamily: 'Playfair Display, serif' }}
+            >
+              Sound like yourself, in English.
+            </h2>
+            <p className="text-[#A09890] text-base mb-9 max-w-lg mx-auto font-light">
               Join thousands of learners who have ditched the textbook to learn real, conversational English.
             </p>
-            <Button className="bg-[#E27058] hover:bg-[#D15F43] text-white rounded-full px-10 py-7 text-lg font-medium shadow-[0_4px_20px_0_rgba(226,112,88,0.4)] transition-transform hover:scale-105">
-              Start learning for free
-            </Button>
-            <p className="mt-6 text-sm text-[#827D79]">No credit card required. Cancel anytime.</p>
+            {/* CTA — sticker accent */}
+            <button className="inline-flex items-center gap-2 bg-[#C8623E] hover:bg-[#A34E2E] text-white px-10 py-4 text-base font-bold rounded-xl border border-[#A34E2E] shadow-[4px_4px_0_#6B4226] hover:shadow-[2px_2px_0_#6B4226] hover:translate-x-[1px] hover:translate-y-[1px] transition-all">
+              Start learning for free <ArrowRight className="w-4 h-4" />
+            </button>
+            <p className="mt-5 text-xs text-[#6B6660]">No credit card required. Cancel anytime.</p>
           </div>
         </section>
 
       </main>
-      
-      {/* Simple Footer */}
-      <footer className="border-t border-[#E8E4DB] py-12 text-center text-[#827D79] text-sm">
+
+      {/* Footer */}
+      <footer className="border-t border-[#E8E5DF] py-10 text-center text-[#A09890] text-sm">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center px-6">
-          <div className="flex items-center gap-2 mb-4 md:mb-0">
-             <div className="w-6 h-6 rounded-full bg-[#E8E4DB] flex items-center justify-center text-[#2C2A29] font-bold font-['Playfair_Display'] italic text-xs">C</div>
-             <span className="font-['Playfair_Display'] font-bold text-[#2C2A29]">ClipLingo</span>
-             <span className="ml-2">© 2024</span>
+          <div className="flex items-center gap-2.5 mb-4 md:mb-0">
+            <div className="w-6 h-6 rounded-md bg-[#C8623E] flex items-center justify-center text-white font-bold text-[9px] tracking-wide border border-[#A34E2E] shadow-[1.5px_1.5px_0_#6B4226]">
+              CV
+            </div>
+            <span className="font-bold text-[#1C1917]" style={{ fontFamily: 'Playfair Display, serif' }}>ClipVocab</span>
+            <span className="text-[#A09890]">© 2024</span>
           </div>
           <div className="flex gap-6">
-            <a href="#" className="hover:text-[#2C2A29] transition-colors">Twitter</a>
-            <a href="#" className="hover:text-[#2C2A29] transition-colors">Instagram</a>
-            <a href="#" className="hover:text-[#2C2A29] transition-colors">Terms</a>
-            <a href="#" className="hover:text-[#2C2A29] transition-colors">Privacy</a>
+            <a href="#" className="hover:text-[#1C1917] transition-colors">Twitter</a>
+            <a href="#" className="hover:text-[#1C1917] transition-colors">Instagram</a>
+            <a href="#" className="hover:text-[#1C1917] transition-colors">Terms</a>
+            <a href="#" className="hover:text-[#1C1917] transition-colors">Privacy</a>
           </div>
         </div>
       </footer>
