@@ -96,8 +96,8 @@ export function MobileFeed() {
       <div className="flex-1 overflow-y-auto px-5 pb-2 space-y-3">
         {clips.map(clip => (
           <div key={clip.id} className="bg-white rounded-2xl border border-[#DDD9D2] overflow-hidden">
-            {/* Thumbnail */}
-            <div className="h-28 bg-[#1C1917] relative flex items-center justify-center">
+            {/* Thumbnail — 16:9 landscape */}
+            <div className="aspect-video bg-[#1C1917] relative flex items-center justify-center">
               <div className="w-10 h-10 rounded-full bg-white/20 border border-white/30 flex items-center justify-center">
                 <svg viewBox="0 0 16 16" className="w-4 h-4 text-white translate-x-[1px]">
                   <path d="M4 2.5L13 8L4 13.5V2.5Z" fill="currentColor" />
