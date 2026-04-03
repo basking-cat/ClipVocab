@@ -14,7 +14,7 @@ const reels = [
     episode: 'S04 · E12',
     clipRange: '1:22 → 1:43',
     bg: 'from-[#3A3F52] via-[#2C3245] to-[#1E2235]',
-    accent: '#C95030',
+    accent: '#C8623E',
     targetWord: 'throw under the bus',
     wordType: 'Idiom',
     wordTypeJa: '慣用句',
@@ -176,7 +176,7 @@ export function FeedDefault() {
 
             {/* Save = SAVED_CLIP (clip + word) */}
             <button onClick={toggleSave}
-              className={`w-10 h-10 rounded-full backdrop-blur-md border flex flex-col items-center justify-center gap-0.5 transition-all ${isSaved ? 'bg-#C95030/90 border-#C95030' : 'bg-white/15 border-white/30 hover:bg-white/25'}`}>
+              className={`w-10 h-10 rounded-full backdrop-blur-md border flex flex-col items-center justify-center gap-0.5 transition-all ${isSaved ? 'bg-#C8623E/90 border-#C8623E' : 'bg-white/15 border-white/30 hover:bg-white/25'}`}>
               <Bookmark className={`w-4 h-4 ${isSaved ? 'text-white fill-white' : 'text-white'}`} />
             </button>
 
@@ -212,14 +212,14 @@ export function FeedDefault() {
         {/* ════════════════════════════════
             SECTION 2 — SUBTITLE & TRANSCRIPT
         ════════════════════════════════ */}
-        <div className="flex-[6] min-h-0 flex flex-col bg-[#F4F5F7] border-t-2 border-[#D8DBE4] overflow-y-auto">
+        <div className="flex-[6] min-h-0 flex flex-col bg-[#F8F6F2] border-t-2 border-[#DDD9D2] overflow-y-auto">
 
           {/* Section header */}
-          <div className="flex items-center justify-between px-6 py-3 border-b border-[#D8DBE4] bg-[#EAECF1] shrink-0">
+          <div className="flex items-center justify-between px-6 py-3 border-b border-[#DDD9D2] bg-[#EDEBE5] shrink-0">
             <div className="flex items-center gap-2">
-              <span className="text-[11px] font-bold text-[#9AA0B4] uppercase tracking-widest">Transcript</span>
+              <span className="text-[11px] font-bold text-[#958F87] uppercase tracking-widest">Transcript</span>
               <span className="text-[#D6D2C9]">·</span>
-              <span className="text-[11px] text-[#9AA0B4]">{reel.clipRange}</span>
+              <span className="text-[11px] text-[#958F87]">{reel.clipRange}</span>
             </div>
             <div className="flex items-center gap-2">
               {reel.studyCount > 0 && (
@@ -229,7 +229,7 @@ export function FeedDefault() {
               )}
               <button
                 onClick={() => setShowJa(v => !v)}
-                className={`flex items-center gap-1 px-2.5 py-1 rounded-lg border text-[11px] font-semibold transition-all ${showJa ? 'bg-[#2C2A29] text-white border-[#2C2A29]' : 'bg-white text-[#9AA0B4] border-[#D8DBE4] hover:border-[#C5C0BB]'}`}
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-lg border text-[11px] font-semibold transition-all ${showJa ? 'bg-[#2C2A29] text-white border-[#2C2A29]' : 'bg-white text-[#958F87] border-[#DDD9D2] hover:border-[#C5C0BB]'}`}
               >
                 <Languages className="w-3 h-3" />
                 日本語
@@ -243,15 +243,15 @@ export function FeedDefault() {
               if (line.active) {
                 const parts = line.en as { text: string; highlight: boolean }[];
                 return (
-                  <div key={i} className="rounded-xl bg-[#E4E6EB] border border-[#D8DBE4] px-4 py-3">
+                  <div key={i} className="rounded-xl bg-[#E8E5DF] border border-[#DDD9D2] px-4 py-3">
                     <div className="flex items-start gap-3">
                       {/* Speaker avatar placeholder */}
-                      <div className="w-6 h-6 rounded-full bg-#C95030/20 border border-#C95030/30 flex items-center justify-center shrink-0 mt-0.5">
-                        <span className="text-[9px] font-bold text-#C95030">{line.speaker[0]}</span>
+                      <div className="w-6 h-6 rounded-full bg-#C8623E/20 border border-#C8623E/30 flex items-center justify-center shrink-0 mt-0.5">
+                        <span className="text-[9px] font-bold text-#C8623E">{line.speaker[0]}</span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <span className="text-[10px] font-bold text-[#9AA0B4] mr-2">{line.speaker}</span>
-                        <p className="text-[#191C22] text-[15px] font-medium leading-snug mt-0.5">
+                        <span className="text-[10px] font-bold text-[#958F87] mr-2">{line.speaker}</span>
+                        <p className="text-[#1C1917] text-[15px] font-medium leading-snug mt-0.5">
                           {parts.map((seg, j) =>
                             seg.highlight ? (
                               <mark key={j} className="not-italic font-bold px-1 py-0.5 rounded" style={{ background: reel.accent + '28', color: reel.accent, borderBottom: `2px solid ${reel.accent}`, textDecoration: 'none' }}>
@@ -264,8 +264,8 @@ export function FeedDefault() {
                         </p>
                         {showJa && (
                           <div className="flex items-start gap-1.5 mt-1.5">
-                            <span className="text-[8px] font-bold text-[#9AA0B4] shrink-0 mt-0.5 tracking-wide">JA</span>
-                            <p className="text-[#9AA0B4] text-xs leading-relaxed">{line.ja}</p>
+                            <span className="text-[8px] font-bold text-[#958F87] shrink-0 mt-0.5 tracking-wide">JA</span>
+                            <p className="text-[#958F87] text-xs leading-relaxed">{line.ja}</p>
                           </div>
                         )}
                       </div>
@@ -279,8 +279,8 @@ export function FeedDefault() {
                     <span className="text-[9px] font-bold text-[#9C9791]">{line.speaker[0]}</span>
                   </div>
                   <div>
-                    <span className="text-[10px] font-bold text-[#9AA0B4] mr-2">{line.speaker}</span>
-                    <p className="text-[#9AA0B4] text-sm leading-snug mt-0.5">{line.en as string}</p>
+                    <span className="text-[10px] font-bold text-[#958F87] mr-2">{line.speaker}</span>
+                    <p className="text-[#958F87] text-sm leading-snug mt-0.5">{line.en as string}</p>
                   </div>
                 </div>
               );
@@ -288,19 +288,19 @@ export function FeedDefault() {
           </div>
 
           {/* Divider */}
-          <div className="mx-6 border-t border-[#D8DBE4]" />
+          <div className="mx-6 border-t border-[#DDD9D2]" />
 
           {/* Word card */}
           <div className="px-6 py-4 space-y-3">
             {/* Word header */}
             <div className="flex items-center gap-2 flex-wrap">
-              <BookOpen className="w-4 h-4 text-[#9AA0B4] shrink-0" />
-              <span className="font-['Playfair_Display'] text-[#191C22] font-bold text-base italic">
+              <BookOpen className="w-4 h-4 text-[#958F87] shrink-0" />
+              <span className="font-['Playfair_Display'] text-[#1C1917] font-bold text-base italic">
                 "{reel.targetWord}"
               </span>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#E4E6EB] text-[#9AA0B4] border border-[#D8DBE4]">{reel.wordType}</span>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#E8E5DF] text-[#958F87] border border-[#DDD9D2]">{reel.wordType}</span>
               {showJa && (
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#E4E6EB] text-[#9C9791] border border-[#D8DBE4]">{reel.wordTypeJa}</span>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#E8E5DF] text-[#9C9791] border border-[#DDD9D2]">{reel.wordTypeJa}</span>
               )}
             </div>
 
@@ -309,9 +309,9 @@ export function FeedDefault() {
               <p className="text-[#3C3A38] text-sm leading-relaxed">{reel.definition}</p>
               {showJa && (
                 <div className="flex items-start gap-1.5">
-                  <span className="text-[8px] font-bold text-[#9AA0B4] mt-0.5 shrink-0 tracking-wide">JA</span>
-                  <p className="text-[#9AA0B4] text-xs leading-relaxed">
-                    <span className="font-semibold text-[#4B5063]">{reel.phraseJa}</span>
+                  <span className="text-[8px] font-bold text-[#958F87] mt-0.5 shrink-0 tracking-wide">JA</span>
+                  <p className="text-[#958F87] text-xs leading-relaxed">
+                    <span className="font-semibold text-[#52504B]">{reel.phraseJa}</span>
                     <span className="text-[#C5C0BB] mx-1.5">—</span>
                     {reel.definitionJa}
                   </p>
@@ -322,12 +322,12 @@ export function FeedDefault() {
             {/* Related words */}
             <div>
               <div className="flex items-center gap-1.5 mb-1.5">
-                <TrendingUp className="w-3 h-3 text-[#9AA0B4]" />
-                <span className="text-[10px] font-bold text-[#9AA0B4] uppercase tracking-wider">Related words</span>
+                <TrendingUp className="w-3 h-3 text-[#958F87]" />
+                <span className="text-[10px] font-bold text-[#958F87] uppercase tracking-wider">Related words</span>
               </div>
               <div className="flex flex-wrap gap-1.5">
                 {reel.relatedWords.map(w => (
-                  <span key={w} className="text-xs px-2.5 py-1 rounded-full bg-white border border-[#D8DBE4] text-[#4B5063] cursor-pointer hover:border-[#C5C0BB] hover:bg-[#EAECF1] transition-colors">
+                  <span key={w} className="text-xs px-2.5 py-1 rounded-full bg-white border border-[#DDD9D2] text-[#52504B] cursor-pointer hover:border-[#C5C0BB] hover:bg-[#EDEBE5] transition-colors">
                     {w}
                   </span>
                 ))}
@@ -338,7 +338,7 @@ export function FeedDefault() {
             <div className="flex gap-2 pt-1">
               <button
                 onClick={toggleMark}
-                className={`flex-1 py-2.5 rounded-xl font-semibold text-xs flex items-center justify-center gap-1.5 border transition-all ${isMarked ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-white text-[#4B5063] border-[#D8DBE4] hover:border-[#C5C0BB] hover:bg-[#EAECF1]'}`}
+                className={`flex-1 py-2.5 rounded-xl font-semibold text-xs flex items-center justify-center gap-1.5 border transition-all ${isMarked ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-white text-[#52504B] border-[#DDD9D2] hover:border-[#C5C0BB] hover:bg-[#EDEBE5]'}`}
               >
                 {isMarked ? <><CheckCircle2 className="w-3.5 h-3.5" /> Got it!</> : <><Brain className="w-3.5 h-3.5" /> Mark as studied</>}
               </button>
