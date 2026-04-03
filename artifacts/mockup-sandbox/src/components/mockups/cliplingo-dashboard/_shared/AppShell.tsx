@@ -19,9 +19,10 @@ function LogoMark() {
       <div className="rotate-[-4deg] w-8 h-8 rounded-lg bg-[#C8623E] border-2 border-[#1C1917] shadow-[2.5px_2.5px_0_#1C1917] flex items-center justify-center shrink-0">
         <PlayFill className="w-3.5 h-3.5 text-white translate-x-[1px]" />
       </div>
-      {/* Wordmark — split weight */}
-      <span style={{ fontFamily: 'Playfair Display, serif' }} className="text-[15px] tracking-tight text-[#1C1917] leading-none">
-        <span className="font-normal text-[#6B6660]">Clip</span><span className="font-bold">Vocab</span>
+      {/* Wordmark — Outfit for pop energy + Space Mono for bit/digital accent */}
+      <span className="leading-none flex items-baseline gap-[2px]">
+        <span style={{ fontFamily: 'Outfit, sans-serif' }} className="text-[17px] font-bold tracking-tight text-[#1C1917]">Clip</span>
+        <span style={{ fontFamily: 'Space Mono, monospace' }} className="text-[13px] font-bold tracking-tight text-[#C8623E]">Vocab</span>
       </span>
     </div>
   );
