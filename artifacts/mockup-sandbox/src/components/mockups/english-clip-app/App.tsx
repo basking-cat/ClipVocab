@@ -1,6 +1,25 @@
 import React, { useState } from 'react';
 import { Play, Pause, Volume2, Bookmark, CheckCircle2, MessageSquare, BookOpen, Ear, ArrowRight, RotateCcw } from 'lucide-react';
 
+// Logo mark — tilted play sticker + split wordmark
+function LogoMark({ size = 'md' }: { size?: 'sm' | 'md' }) {
+  const boxSize = size === 'sm' ? 'w-6 h-6 rounded-md border shadow-[1.5px_1.5px_0_#1C1917]' : 'w-8 h-8 rounded-lg border-2 shadow-[2.5px_2.5px_0_#1C1917]';
+  const iconSize = size === 'sm' ? 'w-2.5 h-2.5' : 'w-3.5 h-3.5';
+  const textSize = size === 'sm' ? 'text-[13px]' : 'text-[17px]';
+  return (
+    <div className="flex items-center gap-2.5 select-none">
+      <div className={`rotate-[-4deg] bg-[#C8623E] border-[#1C1917] ${boxSize} flex items-center justify-center shrink-0`}>
+        <svg viewBox="0 0 16 16" className={`${iconSize} text-white translate-x-[1px]`} xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 2.5L13 8L4 13.5V2.5Z" fill="currentColor" />
+        </svg>
+      </div>
+      <span style={{ fontFamily: 'Playfair Display, serif' }} className={`${textSize} tracking-tight text-[#1C1917] leading-none`}>
+        <span className="font-normal text-[#6B6660]">Clip</span><span className="font-bold">Vocab</span>
+      </span>
+    </div>
+  );
+}
+
 export function App() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [savedWords, setSavedWords] = useState<string[]>(['reckon', 'cut to the chase']);
@@ -20,18 +39,7 @@ export function App() {
 
       {/* Navigation */}
       <nav className="flex items-center justify-between px-6 py-5 md:px-12 max-w-7xl mx-auto border-b border-[#E8E5DF]">
-        {/* Logo — block stamp, sticker shadow accent */}
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-[#C8623E] flex items-center justify-center text-white font-bold text-[11px] tracking-wide shrink-0 border border-[#A34E2E] shadow-[2px_2px_0_#6B4226]">
-            CV
-          </div>
-          <span
-            className="font-bold text-[17px] tracking-tight text-[#1C1917]"
-            style={{ fontFamily: 'Playfair Display, serif' }}
-          >
-            ClipVocab
-          </span>
-        </div>
+        <LogoMark />
         <div className="hidden md:flex items-center gap-8 font-medium text-sm text-[#6B6660]">
           <a href="#" className="hover:text-[#1C1917] transition-colors">Philosophy</a>
           <a href="#" className="hover:text-[#1C1917] transition-colors">Library</a>
@@ -343,11 +351,8 @@ export function App() {
       {/* Footer */}
       <footer className="border-t border-[#E8E5DF] py-10 text-center text-[#A09890] text-sm">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center px-6">
-          <div className="flex items-center gap-2.5 mb-4 md:mb-0">
-            <div className="w-6 h-6 rounded-md bg-[#C8623E] flex items-center justify-center text-white font-bold text-[9px] tracking-wide border border-[#A34E2E] shadow-[1.5px_1.5px_0_#6B4226]">
-              CV
-            </div>
-            <span className="font-bold text-[#1C1917]" style={{ fontFamily: 'Playfair Display, serif' }}>ClipVocab</span>
+          <div className="flex items-center gap-3 mb-4 md:mb-0">
+            <LogoMark size="sm" />
             <span className="text-[#A09890]">© 2024</span>
           </div>
           <div className="flex gap-6">

@@ -2,6 +2,31 @@ import React from 'react';
 import { PlaySquare, User, RotateCcw, Settings } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
+// Play icon path — inline so we can style fill independently
+function PlayFill({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 16 16" className={className} xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 2.5L13 8L4 13.5V2.5Z" fill="currentColor" />
+    </svg>
+  );
+}
+
+// Shared logo mark used in sidebar and nav
+function LogoMark() {
+  return (
+    <div className="flex items-center gap-2.5 select-none">
+      {/* Badge — tilted sticker play mark */}
+      <div className="rotate-[-4deg] w-8 h-8 rounded-lg bg-[#C8623E] border-2 border-[#1C1917] shadow-[2.5px_2.5px_0_#1C1917] flex items-center justify-center shrink-0">
+        <PlayFill className="w-3.5 h-3.5 text-white translate-x-[1px]" />
+      </div>
+      {/* Wordmark — split weight */}
+      <span style={{ fontFamily: 'Playfair Display, serif' }} className="text-[15px] tracking-tight text-[#1C1917] leading-none">
+        <span className="font-normal text-[#6B6660]">Clip</span><span className="font-bold">Vocab</span>
+      </span>
+    </div>
+  );
+}
+
 interface AppShellProps {
   children: React.ReactNode;
   activePage: 'feed' | 'profile' | 'review';
@@ -20,19 +45,9 @@ export function AppShell({ children, activePage }: AppShellProps) {
       {/* Sidebar */}
       <aside className="w-56 bg-[#F0EDE6] border-r border-[#DDD9D2] flex flex-col shrink-0">
 
-        {/* Logo — block stamp, sticker shadow accent */}
-        <div className="px-5 pt-7 pb-7 flex items-center gap-2.5">
-          <div
-            className="w-8 h-8 rounded-lg bg-[#C8623E] flex items-center justify-center text-white font-bold text-[11px] tracking-wide shrink-0 border border-[#A34E2E] shadow-[2px_2px_0_#6B4226]"
-          >
-            CV
-          </div>
-          <span
-            className="font-bold text-[15px] tracking-tight text-[#1C1917]"
-            style={{ fontFamily: 'Playfair Display, serif' }}
-          >
-            ClipVocab
-          </span>
+        {/* Logo */}
+        <div className="px-5 pt-7 pb-7">
+          <LogoMark />
         </div>
 
         {/* Nav */}
