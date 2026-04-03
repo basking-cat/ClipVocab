@@ -19,8 +19,10 @@ const reels = [
     targetWord: 'throw under the bus',
     wordType: 'Idiom',
     wordTypeJa: '慣用句',
+    ipa: '/θroʊ ˈʌndər ðə bʌs/',
     definition: 'To betray a colleague to avoid blame for yourself.',
     definitionJa: '自分の責任を逃れるために同僚を裏切ること。',
+    nativeUsage: `"I can't believe she threw me under the bus in front of the whole team."`,
     lines: [
       { speaker: 'Michael', active: false, en: 'So the presentation went fine. I handled it.', ja: null },
       { speaker: 'Jim',     active: false, en: 'Really? Because Pam looked pretty upset when she left.', ja: null },
@@ -40,6 +42,10 @@ const reels = [
     relatedWords: ['scapegoat', 'blame-shifting', 'backstab'],
     preferences: ['Comedy', 'Business English'],
     studyCount: 2,
+    progressFraction: 0.6,
+    progressCategory: 'Idioms & Expressions',
+    progressGoal: 5,
+    progressDone: 3,
   },
   {
     id: 'r2',
@@ -52,8 +58,10 @@ const reels = [
     targetWord: 'nuance',
     wordType: 'Noun',
     wordTypeJa: '名詞',
+    ipa: '/ˈnjuːɑːns/',
     definition: 'A subtle difference in meaning, expression, or sound.',
     definitionJa: '意味・表現・響きにおける微妙な差異や濃淡のこと。',
+    nativeUsage: `"You really need to appreciate the nuance here — it's not black and white."`,
     lines: [
       { speaker: 'Guest', active: false, en: 'People assume these models just pattern-match.', ja: null },
       { speaker: 'Lex',   active: false, en: "Yeah, but that framing misses a lot.", ja: null },
@@ -73,6 +81,10 @@ const reels = [
     relatedWords: ['subtlety', 'connotation', 'implication'],
     preferences: ['Tech', 'Science'],
     studyCount: 0,
+    progressFraction: 0.4,
+    progressCategory: 'Academic Vocabulary',
+    progressGoal: 5,
+    progressDone: 2,
   },
 ];
 
@@ -81,7 +93,6 @@ export function FeedDefault() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [saved, setSaved] = useState<Record<string, boolean>>({});
   const [searchValue, setSearchValue] = useState('');
-  const [wordCardOpen, setWordCardOpen] = useState(true);
   const [showJa, setShowJa] = useState(true);
   const [marked, setMarked] = useState<Record<string, boolean>>({});
 
@@ -89,10 +100,13 @@ export function FeedDefault() {
   const isSaved = saved[reel.id];
   const isMarked = marked[reel.id];
 
-  const prev = () => { setCurrentIdx(i => Math.max(0, i - 1)); setWordCardOpen(true); };
-  const next = () => { setCurrentIdx(i => Math.min(reels.length - 1, i + 1)); setWordCardOpen(true); };
+  const prev = () => { setCurrentIdx(i => Math.max(0, i - 1)); };
+  const next = () => { setCurrentIdx(i => Math.min(reels.length - 1, i + 1)); };
   const toggleSave = () => setSaved(s => ({ ...s, [reel.id]: !s[reel.id] }));
   const toggleMark = () => setMarked(m => ({ ...m, [reel.id]: !m[reel.id] }));
+
+  const circumference = 2 * Math.PI * 15.9155;
+  const dashArray = `${reel.progressFraction * circumference} ${circumference}`;
 
   return (
     <AppShell activePage="feed">
@@ -175,13 +189,11 @@ export function FeedDefault() {
               <ChevronUp className="w-4 h-4" />
             </button>
 
-            {/* Save = SAVED_CLIP (clip + word) */}
             <button onClick={toggleSave}
-              className={`w-10 h-10 rounded-full backdrop-blur-md border flex flex-col items-center justify-center gap-0.5 transition-all ${isSaved ? 'bg-#C8623E/90 border-#C8623E' : 'bg-white/15 border-white/30 hover:bg-white/25'}`}>
+              className={`w-10 h-10 rounded-full backdrop-blur-md border flex flex-col items-center justify-center gap-0.5 transition-all ${isSaved ? 'bg-white/30 border-white/50' : 'bg-white/15 border-white/30 hover:bg-white/25'}`}>
               <Bookmark className={`w-4 h-4 ${isSaved ? 'text-white fill-white' : 'text-white'}`} />
             </button>
 
-            {/* Mark studied = STUDY_EVENT */}
             <button onClick={toggleMark}
               className={`w-9 h-9 rounded-full backdrop-blur-md border flex items-center justify-center transition-all ${isMarked ? 'bg-emerald-500/80 border-emerald-400' : 'bg-white/15 border-white/30 hover:bg-white/25'}`}>
               <Zap className={`w-4 h-4 ${isMarked ? 'text-white fill-white' : 'text-white/80'}`} />
@@ -209,14 +221,14 @@ export function FeedDefault() {
             <PixelPlay sz={4} fill="white" />
           </div>
 
-          {/* Playback progress bar */}
+          {/* Playback progress bar — orange accent */}
           <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-white/15">
-            <div className="h-full bg-white/55 w-1/3 transition-all duration-300" />
+            <div className="h-full w-1/3 transition-all duration-300" style={{ background: '#C8623E' }} />
           </div>
         </div>
 
         {/* ════════════════════════════════
-            SECTION 2 — SUBTITLE & TRANSCRIPT
+            SECTION 2 — TRANSCRIPT + LEARNING PANEL
         ════════════════════════════════ */}
         <div className="flex-[6] min-h-0 flex flex-col bg-[#F8F6F2] border-t-2 border-[#DDD9D2] overflow-y-auto">
 
@@ -251,16 +263,15 @@ export function FeedDefault() {
                 return (
                   <div key={i} className="rounded-xl bg-[#E8E5DF] border border-[#DDD9D2] px-4 py-3">
                     <div className="flex items-start gap-3">
-                      {/* Speaker avatar placeholder */}
-                      <div className="w-6 h-6 rounded-full bg-#C8623E/20 border border-#C8623E/30 flex items-center justify-center shrink-0 mt-0.5">
-                        <span className="text-[9px] font-bold text-#C8623E">{line.speaker[0]}</span>
+                      <div className="w-6 h-6 rounded-full bg-[#E8E5DF] border border-[#DDD9D2] flex items-center justify-center shrink-0 mt-0.5">
+                        <span className="text-[9px] font-bold text-[#52504B]">{line.speaker[0]}</span>
                       </div>
                       <div className="flex-1 min-w-0">
                         <span className="text-[10px] font-bold text-[#958F87] mr-2">{line.speaker}</span>
                         <p className="text-[#1C1917] text-[15px] font-medium leading-snug mt-0.5">
                           {parts.map((seg, j) =>
                             seg.highlight ? (
-                              <mark key={j} className="not-italic font-bold px-1 py-0.5 rounded" style={{ background: reel.accent + '28', color: reel.accent, borderBottom: `2px solid ${reel.accent}`, textDecoration: 'none' }}>
+                              <mark key={j} className="not-italic font-bold px-1 py-0.5 rounded bg-amber-300 text-[#1C1917] border border-[#1C1917] shadow-[1px_1px_0_#1C1917]" style={{ textDecoration: 'none' }}>
                                 {seg.text}
                               </mark>
                             ) : (
@@ -296,68 +307,153 @@ export function FeedDefault() {
           {/* Divider */}
           <div className="mx-6 border-t border-[#DDD9D2]" />
 
-          {/* Word card */}
-          <div className="px-6 py-4 space-y-3">
-            {/* Word header */}
-            <div className="flex items-center gap-2 flex-wrap">
-              <BookOpen className="w-4 h-4 text-[#958F87] shrink-0" />
-              <span className="font-['Playfair_Display'] text-[#1C1917] font-bold text-base italic">
-                "{reel.targetWord}"
-              </span>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#E8E5DF] text-[#958F87] border border-[#DDD9D2]">{reel.wordType}</span>
-              {showJa && (
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#E8E5DF] text-[#9C9791] border border-[#DDD9D2]">{reel.wordTypeJa}</span>
-              )}
-            </div>
+          {/* ── Learning Panel ── */}
+          <div className="px-6 py-4 grid grid-cols-2 gap-4">
 
-            {/* Definition */}
-            <div className="space-y-1.5">
-              <p className="text-[#3C3A38] text-sm leading-relaxed">{reel.definition}</p>
-              {showJa && (
-                <div className="flex items-start gap-1.5">
-                  <span className="text-[8px] font-bold text-[#958F87] mt-0.5 shrink-0 tracking-wide">JA</span>
-                  <p className="text-[#958F87] text-xs leading-relaxed">
-                    <span className="font-semibold text-[#52504B]">{reel.phraseJa}</span>
-                    <span className="text-[#C5C0BB] mx-1.5">—</span>
-                    {reel.definitionJa}
-                  </p>
-                </div>
-              )}
-            </div>
-
-            {/* Related words */}
-            <div>
-              <div className="flex items-center gap-1.5 mb-1.5">
-                <TrendingUp className="w-3 h-3 text-[#958F87]" />
-                <span className="text-[10px] font-bold text-[#958F87] uppercase tracking-wider">Related words</span>
+            {/* ── Key Phrase Card (dark) ── */}
+            <div className="bg-[#1C1917] rounded-2xl p-5 text-white flex flex-col gap-3">
+              {/* Label + word type badge */}
+              <div className="flex items-center justify-between">
+                <span
+                  className="text-[#C8623E] text-[10px] font-bold uppercase tracking-widest"
+                  style={{ fontFamily: 'Playfair Display, serif' }}
+                >
+                  Key phrase
+                </span>
+                {/* Word type — sticker shadow tag */}
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-violet-200 text-[#1C1917] border border-[#1C1917] shadow-[1px_1px_0_#1C1917]">
+                  {reel.wordType}
+                </span>
               </div>
-              <div className="flex flex-wrap gap-1.5">
-                {reel.relatedWords.map(w => (
-                  <span key={w} className="text-xs px-2.5 py-1 rounded-full bg-white border border-[#DDD9D2] text-[#52504B] cursor-pointer hover:border-[#C5C0BB] hover:bg-[#EDEBE5] transition-colors">
-                    {w}
-                  </span>
-                ))}
-              </div>
-            </div>
 
-            {/* Action buttons */}
-            <div className="flex gap-2 pt-1">
-              <button
-                onClick={toggleMark}
-                className={`flex-1 py-2.5 rounded-xl font-semibold text-xs flex items-center justify-center gap-1.5 border transition-all ${isMarked ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-white text-[#52504B] border-[#DDD9D2] hover:border-[#C5C0BB] hover:bg-[#EDEBE5]'}`}
+              {/* Word heading */}
+              <h3
+                className="text-lg font-bold leading-tight"
+                style={{ fontFamily: 'Playfair Display, serif' }}
               >
-                {isMarked ? <><CheckCircle2 className="w-3.5 h-3.5" /> Got it!</> : <><Brain className="w-3.5 h-3.5" /> Mark as studied</>}
-              </button>
+                {reel.targetWord}
+              </h3>
+
+              {/* IPA + listen */}
+              <div className="flex items-center gap-3">
+                <button className="w-7 h-7 rounded-lg bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors shrink-0">
+                  <Volume2 className="w-3.5 h-3.5 text-[#DDD9D2]" />
+                </button>
+                <span className="text-xs text-white/55 font-mono">{reel.ipa}</span>
+                {showJa && (
+                  <span className="text-[10px] text-white/40 ml-auto shrink-0">{reel.wordTypeJa}</span>
+                )}
+              </div>
+
+              {/* Definition — orange left border */}
+              <p className="text-white/70 text-sm leading-relaxed border-l-2 border-[#C8623E] pl-3">
+                {reel.definition}
+                {showJa && (
+                  <span className="block text-white/38 text-xs mt-1 leading-relaxed">{reel.definitionJa}</span>
+                )}
+              </p>
+
+              {/* Native usage */}
+              <div className="bg-white/5 rounded-xl p-3 border border-white/10">
+                <strong className="text-white block mb-1 text-[10px] uppercase tracking-wider">A native might say:</strong>
+                <span className="text-white/55 italic text-xs leading-relaxed">{reel.nativeUsage}</span>
+              </div>
+
+              {/* Save button — sticker shadow */}
               <button
                 onClick={toggleSave}
-                className="flex-[2] py-2.5 rounded-xl font-semibold text-sm transition-all hover:opacity-90 active:scale-[0.98]"
-                style={{ background: isSaved ? '#F2EFE9' : reel.accent, color: isSaved ? reel.accent : 'white', border: isSaved ? `1.5px solid ${reel.accent}50` : 'none' }}
+                className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold border transition-all ${
+                  isSaved
+                    ? 'bg-emerald-400 border-emerald-500 text-[#1C1917]'
+                    : 'bg-[#C8623E] border-[#A34E2E] text-white shadow-[3px_3px_0_#6B4226] hover:shadow-[2px_2px_0_#6B4226] hover:translate-x-[0.5px] hover:translate-y-[0.5px]'
+                }`}
               >
                 {isSaved
-                  ? <span className="flex items-center justify-center gap-2"><CheckCircle2 className="w-4 h-4" /> Saved to deck</span>
-                  : 'Save & study this phrase'}
+                  ? <><CheckCircle2 className="w-4 h-4" /> Saved to deck</>
+                  : <><Bookmark className="w-4 h-4" /> Save to my vocab deck</>
+                }
               </button>
             </div>
+
+            {/* ── Right column: Progress + Related words + Mark studied ── */}
+            <div className="flex flex-col gap-4">
+
+              {/* Today's Progress card */}
+              <div className="bg-white border border-[#DDD9D2] rounded-2xl p-5">
+                <h4 className="font-semibold text-[#1C1917] mb-4 text-sm">Today's Progress</h4>
+                <div className="flex items-center gap-4">
+                  <div className="relative w-14 h-14 flex items-center justify-center shrink-0">
+                    <svg className="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+                      <path className="text-[#E8E5DF]" strokeWidth="3" stroke="currentColor" fill="none"
+                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                      <path className="text-[#C8623E]" strokeWidth="3"
+                        strokeDasharray={dashArray}
+                        stroke="currentColor" fill="none"
+                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                        strokeLinecap="round" />
+                    </svg>
+                    <span className="absolute text-xs font-bold text-[#1C1917]">{reel.progressDone}/{reel.progressGoal}</span>
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-[#1C1917]">{reel.progressCategory}</p>
+                    <p className="text-xs text-[#A09890] mt-0.5">
+                      {reel.progressGoal - reel.progressDone} more to reach your daily goal.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Related words */}
+              <div className="bg-white border border-[#DDD9D2] rounded-2xl p-4">
+                <div className="flex items-center gap-1.5 mb-3">
+                  <TrendingUp className="w-3 h-3 text-[#958F87]" />
+                  <span className="text-[10px] font-bold text-[#958F87] uppercase tracking-wider">Related words</span>
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                  {reel.relatedWords.map(w => (
+                    <span key={w} className="text-xs px-2.5 py-1 rounded-full bg-[#F8F6F2] border border-[#DDD9D2] text-[#52504B] cursor-pointer hover:border-[#C5C0BB] hover:bg-[#EDEBE5] transition-colors">
+                      {w}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Mark as studied */}
+              <button
+                onClick={toggleMark}
+                className={`w-full py-2.5 rounded-xl font-semibold text-xs flex items-center justify-center gap-1.5 border transition-all ${
+                  isMarked
+                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+                    : 'bg-white text-[#52504B] border-[#DDD9D2] hover:border-[#C5C0BB] hover:bg-[#EDEBE5]'
+                }`}
+              >
+                {isMarked
+                  ? <><CheckCircle2 className="w-3.5 h-3.5" /> Got it!</>
+                  : <><Brain className="w-3.5 h-3.5" /> Mark as studied</>
+                }
+              </button>
+
+            </div>
+          </div>
+
+          {/* BookOpen word header (compact, below the two-col grid) — for Related quick context */}
+          <div className="px-6 pb-6">
+            {showJa && (
+              <div className="flex items-start gap-1.5 px-4 py-3 rounded-xl bg-[#EDEBE5] border border-[#DDD9D2]">
+                <BookOpen className="w-3.5 h-3.5 text-[#958F87] mt-0.5 shrink-0" />
+                <div>
+                  <span
+                    className="font-bold text-sm italic text-[#1C1917]"
+                    style={{ fontFamily: 'Playfair Display, serif' }}
+                  >
+                    "{reel.targetWord}"
+                  </span>
+                  <span className="text-[#C5C0BB] mx-2">—</span>
+                  <span className="text-[#52504B] text-xs font-semibold">{reel.phraseJa}</span>
+                  <p className="text-[#958F87] text-xs mt-0.5 leading-relaxed">{reel.definitionJa}</p>
+                </div>
+              </div>
+            )}
           </div>
 
         </div>
