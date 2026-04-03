@@ -1,0 +1,108 @@
+import React from 'react';
+import { Home, Film, RotateCcw, User } from 'lucide-react';
+
+function PlayFill({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 16 16" className={className} xmlns="http://www.w3.org/2000/svg">
+      <path d="M4 2.5L13 8L4 13.5V2.5Z" fill="currentColor" />
+    </svg>
+  );
+}
+
+export function LogoMark({ size = 'md' }: { size?: 'sm' | 'md' }) {
+  const box = size === 'sm'
+    ? 'w-6 h-6 rounded-md border border-[#1C1917] shadow-[1.5px_1.5px_0_#1C1917]'
+    : 'w-8 h-8 rounded-lg border-2 border-[#1C1917] shadow-[2px_2px_0_#1C1917]';
+  const icon = size === 'sm' ? 'w-2.5 h-2.5' : 'w-3.5 h-3.5';
+  const clip = size === 'sm' ? 'text-[14px]' : 'text-[17px]';
+  const vocab = size === 'sm' ? 'text-[11px]' : 'text-[13px]';
+  return (
+    <div className="flex items-center gap-2 select-none">
+      <div className={`rotate-[-4deg] bg-[#C8623E] ${box} flex items-center justify-center shrink-0`}>
+        <PlayFill className={`${icon} text-white translate-x-[1px]`} />
+      </div>
+      <span className="leading-none flex items-baseline gap-[2px]">
+        <span style={{ fontFamily: 'Outfit, sans-serif' }} className={`${clip} font-bold tracking-tight text-[#1C1917]`}>Clip</span>
+        <span style={{ fontFamily: 'Space Mono, monospace' }} className={`${vocab} font-bold tracking-tight text-[#C8623E]`}>Vocab</span>
+      </span>
+    </div>
+  );
+}
+
+export function StatusBar({ dark = false }: { dark?: boolean }) {
+  const txt = dark ? 'text-white/80' : 'text-[#1C1917]';
+  return (
+    <div className={`flex items-center justify-between px-5 pt-3 pb-1 text-[11px] font-semibold ${txt} shrink-0`}>
+      <span>9:41</span>
+      <div className="flex items-center gap-1">
+        <svg width="15" height="11" viewBox="0 0 15 11" fill="none">
+          <rect x="0" y="4" width="3" height="7" rx="0.5" fill="currentColor" opacity="0.35" />
+          <rect x="4" y="3" width="3" height="8" rx="0.5" fill="currentColor" opacity="0.5" />
+          <rect x="8" y="1.5" width="3" height="9.5" rx="0.5" fill="currentColor" opacity="0.75" />
+          <rect x="12" y="0" width="3" height="11" rx="0.5" fill="currentColor" />
+        </svg>
+        <svg width="15" height="11" viewBox="0 0 15 11" fill="none">
+          <path d="M7.5 2C9.5 2 11.3 2.9 12.5 4.3L14 2.7C12.3 0.9 10 0 7.5 0C5 0 2.7 0.9 1 2.7L2.5 4.3C3.7 2.9 5.5 2 7.5 2Z" fill="currentColor" />
+          <path d="M7.5 5C8.8 5 9.9 5.5 10.7 6.4L12.2 4.8C11 3.7 9.3 3 7.5 3C5.7 3 4 3.7 2.8 4.8L4.3 6.4C5.1 5.5 6.2 5 7.5 5Z" fill="currentColor" />
+          <circle cx="7.5" cy="9" r="1.5" fill="currentColor" />
+        </svg>
+        <svg width="25" height="11" viewBox="0 0 25 11" fill="none">
+          <rect x="0.5" y="0.5" width="21" height="10" rx="2" stroke="currentColor" strokeOpacity="0.35" />
+          <rect x="2" y="2" width="17" height="7" rx="1" fill="currentColor" />
+          <path d="M23 3.5V7.5C23.8 7.2 24.5 6.4 24.5 5.5C24.5 4.6 23.8 3.8 23 3.5Z" fill="currentColor" fillOpacity="0.4" />
+        </svg>
+      </div>
+    </div>
+  );
+}
+
+interface MobileShellProps {
+  children: React.ReactNode;
+  activePage: 'feed' | 'watch' | 'review' | 'profile';
+  dark?: boolean;
+}
+
+const NAV_ITEMS = [
+  { id: 'feed',    label: 'Feed',    Icon: Home,      href: '/__mockup/preview/mobile/MobileFeed' },
+  { id: 'watch',   label: 'Watch',   Icon: Film,      href: '/__mockup/preview/mobile/MobileReel' },
+  { id: 'review',  label: 'Review',  Icon: RotateCcw, href: '/__mockup/preview/mobile/MobileReview' },
+  { id: 'profile', label: 'Profile', Icon: User,      href: '/__mockup/preview/mobile/MobileProfile' },
+] as const;
+
+export function MobileShell({ children, activePage, dark = false }: MobileShellProps) {
+  return (
+    <div
+      className="flex flex-col bg-[#F8F6F2] text-[#1C1917] overflow-hidden"
+      style={{ width: 390, height: 844, fontFamily: 'Inter, sans-serif', position: 'relative' }}
+    >
+      {children}
+
+      {/* Bottom tab bar */}
+      <nav className="shrink-0 border-t border-[#DDD9D2] bg-[#F8F6F2] px-2 pt-2 pb-5">
+        <div className="flex items-start justify-around">
+          {NAV_ITEMS.map(({ id, label, Icon, href }) => {
+            const isActive = activePage === id;
+            return (
+              <a
+                key={id}
+                href={href}
+                className="flex flex-col items-center gap-1 min-w-[56px]"
+                style={{ textDecoration: 'none' }}
+              >
+                <div className={`w-10 h-8 flex items-center justify-center rounded-xl transition-colors ${isActive ? 'bg-[#C8623E]/10' : ''}`}>
+                  <Icon
+                    className={`w-5 h-5 transition-colors ${isActive ? 'text-[#C8623E]' : 'text-[#A09890]'}`}
+                    strokeWidth={isActive ? 2.5 : 1.8}
+                  />
+                </div>
+                <span className={`text-[10px] font-semibold tracking-tight ${isActive ? 'text-[#C8623E]' : 'text-[#A09890]'}`}>
+                  {label}
+                </span>
+              </a>
+            );
+          })}
+        </div>
+      </nav>
+    </div>
+  );
+}
