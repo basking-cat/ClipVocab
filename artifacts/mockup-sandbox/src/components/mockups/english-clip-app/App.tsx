@@ -113,21 +113,21 @@ export function App() {
             </div>
           </div>
 
-          <div className="relative">
+          <div className="relative pr-6">
             {/* Pixel bolt — bare accent below hero card */}
             <div className="absolute -bottom-5 -left-4 rotate-[-6deg] pointer-events-none">
               <PixelBolt sz={4} fill="#C8623E" />
             </div>
-            {/* Hero card — clean frame, floating sticker accent */}
-            <div className="relative rounded-2xl overflow-hidden border border-[#DDD9D2] bg-white p-2 rotate-1 hover:rotate-0 transition-transform duration-500 shadow-sm">
-              <div className="aspect-video bg-[#1C1917] rounded-xl flex items-center justify-center">
+            {/* Floating sticker quote — outside the card so it isn't clipped */}
+            <div className="absolute -right-2 -top-4 z-10 bg-amber-300 px-3 py-2 rounded-lg border border-[#1C1917] shadow-[3px_3px_0_#1C1917] rotate-[5deg]">
+              <span className="font-bold text-sm text-[#1C1917]" style={{ fontFamily: 'Playfair Display, serif' }}>
+                "Cut to the chase"
+              </span>
+            </div>
+            {/* Hero card — clean frame, no overflow-hidden so sticker above isn't clipped */}
+            <div className="relative rounded-2xl border border-[#DDD9D2] bg-white p-2 rotate-1 hover:rotate-0 transition-transform duration-500 shadow-sm">
+              <div className="aspect-video bg-[#1C1917] rounded-xl overflow-hidden flex items-center justify-center">
                 <Play className="w-12 h-12 text-white/40 fill-white/20" />
-              </div>
-              {/* Floating sticker quote */}
-              <div className="absolute -right-4 -top-4 bg-amber-300 px-3 py-2 rounded-lg border border-[#1C1917] shadow-[3px_3px_0_#1C1917] rotate-[5deg]">
-                <span className="font-bold text-sm text-[#1C1917]" style={{ fontFamily: 'Playfair Display, serif' }}>
-                  "Cut to the chase"
-                </span>
               </div>
             </div>
           </div>
