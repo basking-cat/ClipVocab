@@ -2,6 +2,27 @@ import React from 'react';
 import { PlaySquare, User, RotateCcw, Settings } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
+// Pixel art lightning bolt — 5×8 grid, each cell is `sz` CSS pixels
+function PixelBolt({ sz = 3 }: { sz?: number }) {
+  const rows = [
+    [0,0,1,1,1],
+    [0,0,1,1,0],
+    [0,1,1,0,0],
+    [0,1,1,0,0],
+    [1,1,1,1,0],
+    [0,0,1,1,1],
+    [0,0,0,1,1],
+    [0,0,0,1,0],
+  ];
+  return (
+    <svg width={5*sz} height={8*sz} viewBox={`0 0 ${5*sz} ${8*sz}`} shapeRendering="crispEdges" style={{ display: 'block' }}>
+      {rows.map((row, y) => row.map((on, x) =>
+        on ? <rect key={`${x}-${y}`} x={x*sz} y={y*sz} width={sz} height={sz} fill="#C8623E" /> : null
+      ))}
+    </svg>
+  );
+}
+
 // Play icon path — inline so we can style fill independently
 function PlayFill({ className }: { className?: string }) {
   return (
@@ -85,6 +106,13 @@ export function AppShell({ children, activePage }: AppShellProps) {
             );
           })}
         </nav>
+
+        {/* Pixel bolt sticker — decorative accent in blank sidebar space */}
+        <div className="flex justify-center pb-3 pt-1">
+          <div className="rotate-[-5deg] inline-flex p-2 bg-amber-50 rounded-lg border-2 border-[#1C1917] shadow-[2px_2px_0_#1C1917]">
+            <PixelBolt sz={4} />
+          </div>
+        </div>
 
         {/* User row */}
         <div className="p-3 border-t border-[#DDD9D2]/70">
