@@ -166,8 +166,8 @@ export function FeedSearch() {
                   </span>
                 </div>
 
-                {/* Thumbnail */}
-                <div className={`w-28 shrink-0 ${clip.thumbnailBg} relative flex items-center justify-center`}>
+                {/* Thumbnail — 16:9 landscape (176×99px) */}
+                <div className={`w-44 h-[99px] shrink-0 self-center ${clip.thumbnailBg} relative flex items-center justify-center`}>
                   <div className="w-9 h-9 rounded-full bg-white/30 backdrop-blur-sm flex items-center justify-center group-hover:bg-white/50 transition-colors">
                     <Play className="w-4 h-4 text-[#1C1917] fill-[#1C1917] ml-0.5" />
                   </div>
