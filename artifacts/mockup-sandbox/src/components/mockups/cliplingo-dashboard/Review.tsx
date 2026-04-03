@@ -2,6 +2,26 @@ import React, { useState } from 'react';
 import { AppShell } from './_shared/AppShell';
 import { Check, X, RotateCcw, Volume2, Brain, Mic, Send, ChevronRight, Zap } from 'lucide-react';
 
+// Pixel art heart — 7×6 grid, each "pixel" is `sz` CSS pixels
+function PixelHeart({ filled = true, sz = 4 }: { filled?: boolean; sz?: number }) {
+  const rows = [
+    [0,1,1,0,1,1,0],
+    [1,1,1,1,1,1,1],
+    [1,1,1,1,1,1,1],
+    [0,1,1,1,1,1,0],
+    [0,0,1,1,1,0,0],
+    [0,0,0,1,0,0,0],
+  ];
+  const fill = filled ? '#C8623E' : '#DDD9D2';
+  return (
+    <svg width={7*sz} height={6*sz} viewBox={`0 0 ${7*sz} ${6*sz}`} shapeRendering="crispEdges" style={{ display: 'block' }}>
+      {rows.map((row, y) => row.map((on, x) =>
+        on ? <rect key={`${x}-${y}`} x={x*sz} y={y*sz} width={sz} height={sz} fill={fill} /> : null
+      ))}
+    </svg>
+  );
+}
+
 type ReviewType = 'RECALL' | 'AI_EVAL';
 type Phase = 'question' | 'answered' | 'ai_feedback';
 
@@ -54,6 +74,13 @@ export function Review() {
               <div className="h-full bg-amber-300 rounded-full" style={{ width: `${pct}%` }} />
             </div>
             <span className="text-lg font-bold tabular-nums font-mono text-white/60">{totalCount}</span>
+            {/* Pixel art heart divider */}
+            <span className="w-px h-4 bg-white/20 mx-1" />
+            <span className="flex items-center gap-1.5">
+              <PixelHeart filled={true}  sz={4} />
+              <PixelHeart filled={true}  sz={4} />
+              <PixelHeart filled={false} sz={4} />
+            </span>
           </div>
           <p className="text-[10px] text-[#A09890] uppercase tracking-wider font-bold">Words reviewed today</p>
         </div>
