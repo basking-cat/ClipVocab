@@ -1,6 +1,6 @@
 import { useEffect, useState, type ComponentType } from "react";
 
-import { modules as discoveredModules } from "./.generated/mockup-components";
+import { modules as discoveredModules } from "./.generated/screen-components";
 
 type ModuleMap = Record<string, () => Promise<Record<string, unknown>>>;
 
@@ -36,7 +36,7 @@ function PreviewRenderer({
     setError(null);
 
     async function loadComponent(): Promise<void> {
-      const key = `./components/mockups/${componentPath}.tsx`;
+      const key = `./components/screens/${componentPath}.tsx`;
       const loader = modules[key];
       if (!loader) {
         setError(`No component found at ${componentPath}.tsx`);
