@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Play, Pause, ChevronUp, ChevronDown, Bookmark, Volume2, Zap, Languages, Clock, CheckCircle2 } from 'lucide-react';
-import { MobileShell, StatusBar } from './_shared/MobileShell';
+import { MobileShell } from './_shared/MobileShell';
 import { PixelPlay } from '../_shared/PixelArt';
 
 export function MobileReel() {
@@ -10,12 +10,11 @@ export function MobileReel() {
   const [showJa, setShowJa] = useState(true);
 
   return (
-    <MobileShell activePage="watch">
+    <MobileShell activePage="watch" dark>
       <div className="flex-1 flex flex-col overflow-hidden min-h-0">
 
         {/* ── Video section (~55% height) ── */}
         <div className="relative flex-[55] min-h-0 bg-gradient-to-br from-[#3A3F52] via-[#2C3245] to-[#1E2235]">
-          <StatusBar dark />
 
           {/* Source info — bottom left */}
           <div className="absolute bottom-4 left-4 z-10 flex items-center gap-1.5">
@@ -125,6 +124,7 @@ export function MobileReel() {
               <h3 className="text-[14px] font-bold italic leading-tight" style={{ fontFamily: 'Playfair Display, serif' }}>
                 throw under the bus
               </h3>
+              <p className="text-white/35 text-[9px] font-mono tracking-wide">/θrəʊ ˈʌndər ðə bʌs/</p>
               <p className="text-white/65 text-[11px] leading-relaxed border-l-2 border-[#C8623E] pl-2">
                 To betray someone to avoid blame yourself.
                 {showJa && <span className="block text-white/38 text-[9px] mt-0.5">自分の責任を逃れるために裏切ること。</span>}

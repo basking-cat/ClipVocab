@@ -1,6 +1,6 @@
 import React from 'react';
 import { Flame, PlayCircle, BookMarked, Brain, Settings } from 'lucide-react';
-import { MobileShell, StatusBar } from './_shared/MobileShell';
+import { MobileShell } from './_shared/MobileShell';
 import { PixelCrown } from '../_shared/PixelArt';
 
 const stats = [
@@ -23,7 +23,6 @@ const prefs = [
 export function MobileProfile() {
   return (
     <MobileShell activePage="profile">
-      <StatusBar />
       <div className="flex-1 overflow-y-auto">
 
         {/* Profile header */}
