@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { AppShell } from './_shared/AppShell';
 import { Search, X, Play, Clock, Bookmark, BookOpen, ChevronRight, SlidersHorizontal } from 'lucide-react';
+import { PixelSpark } from '../_shared/PixelArt';
 
 const QUERY = 'throw under the bus';
 
@@ -106,7 +107,7 @@ export function FeedSearch() {
       <div className="h-full flex flex-col" style={{ fontFamily: 'Inter, sans-serif' }}>
 
         {/* ── Sticky Search Header ── */}
-        <div className="bg-[#F8F6F2] border-b border-[#DDD9D2] px-8 py-5 shrink-0">
+        <div className="bg-[#F8F6F2] border-b border-[#DDD9D2] px-8 py-5 shrink-0 relative">
           <div className="flex items-center gap-3">
             {/* Search bar */}
             <div className="flex-1 flex items-center gap-2.5 bg-white border-2 border-[#C8623E] rounded-2xl px-4 py-2.5 shadow-[0_0_0_4px_rgba(226,112,88,0.08)]">
@@ -142,6 +143,10 @@ export function FeedSearch() {
                 </button>
               ))}
             </div>
+          </div>
+          {/* Pixel spark — bare accent in search header corner */}
+          <div className="absolute right-5 top-4 rotate-[5deg] pointer-events-none">
+            <PixelSpark sz={3} fill="#7C3AED" />
           </div>
         </div>
 

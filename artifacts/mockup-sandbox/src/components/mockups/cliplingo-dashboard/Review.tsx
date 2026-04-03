@@ -1,25 +1,7 @@
 import React, { useState } from 'react';
 import { AppShell } from './_shared/AppShell';
 import { Check, X, RotateCcw, Volume2, Brain, Mic, Send, ChevronRight, Zap } from 'lucide-react';
-
-// Pixel art gem — 7×6 grid, each cell is `sz` CSS pixels
-function PixelGem({ sz = 3 }: { sz?: number }) {
-  const rows = [
-    [0,0,1,1,1,0,0],
-    [0,1,1,0,1,1,0],
-    [1,1,0,1,0,1,1],
-    [0,1,1,1,1,1,0],
-    [0,0,1,1,1,0,0],
-    [0,0,0,1,0,0,0],
-  ];
-  return (
-    <svg width={7*sz} height={6*sz} viewBox={`0 0 ${7*sz} ${6*sz}`} shapeRendering="crispEdges" style={{ display: 'block' }}>
-      {rows.map((row, y) => row.map((on, x) =>
-        on ? <rect key={`${x}-${y}`} x={x*sz} y={y*sz} width={sz} height={sz} fill="#6B6AE0" /> : null
-      ))}
-    </svg>
-  );
-}
+import { PixelGem } from '../_shared/PixelArt';
 
 type ReviewType = 'RECALL' | 'AI_EVAL';
 type Phase = 'question' | 'answered' | 'ai_feedback';
@@ -94,9 +76,9 @@ export function Review() {
 
           {/* Flash card — dot grid background */}
           <div className="relative">
-            {/* Pixel gem sticker — hand-placed on card corner */}
-            <div className="absolute -top-3 -right-2 z-10 rotate-[5deg] inline-flex p-1.5 bg-white rounded-lg border-2 border-[#1C1917] shadow-[2px_2px_0_#1C1917]">
-              <PixelGem sz={4} />
+            {/* Pixel gem — bare shape floats on card corner */}
+            <div className="absolute -top-3 -right-1 z-10 rotate-[5deg]">
+              <PixelGem sz={4} fill="#6B6AE0" />
             </div>
           <div
             className="bg-white border-2 border-[#1C1917] rounded-2xl overflow-hidden shadow-[4px_4px_0_#1C1917]"

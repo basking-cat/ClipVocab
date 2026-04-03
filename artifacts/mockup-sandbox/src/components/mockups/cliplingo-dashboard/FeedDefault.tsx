@@ -5,6 +5,7 @@ import {
   Volume2, Search, X, Sparkles, CheckCircle2, Languages,
   Clock, Brain, TrendingUp, Zap, Pause
 } from 'lucide-react';
+import { PixelPlay } from '../_shared/PixelArt';
 
 const reels = [
   {
@@ -201,6 +202,11 @@ export function FeedDefault() {
                 <div key={i} className={`rounded-full transition-all ${i === currentIdx ? 'w-1.5 h-4 bg-white' : 'w-1.5 h-1.5 bg-white/35'}`} />
               ))}
             </div>
+          </div>
+
+          {/* Pixel play — bare accent in bottom-right of dark video */}
+          <div className="absolute bottom-5 right-16 z-10 rotate-[-4deg] opacity-45 pointer-events-none">
+            <PixelPlay sz={4} fill="white" />
           </div>
 
           {/* Playback progress bar */}
