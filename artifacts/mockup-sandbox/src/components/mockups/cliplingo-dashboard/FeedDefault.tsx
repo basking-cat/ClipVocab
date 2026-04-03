@@ -13,8 +13,8 @@ const reels = [
     showName: 'The Office (US)',
     episode: 'S04 · E12',
     clipRange: '1:22 → 1:43',
-    bg: 'from-[#7A5C50] via-[#5C4038] to-[#3D2820]',
-    accent: '#E27058',
+    bg: 'from-[#3A3F52] via-[#2C3245] to-[#1E2235]',
+    accent: '#C95030',
     targetWord: 'throw under the bus',
     wordType: 'Idiom',
     wordTypeJa: '慣用句',
@@ -46,8 +46,8 @@ const reels = [
     showName: 'Lex Fridman Podcast',
     episode: 'Ep. 401',
     clipRange: '4:51 → 5:14',
-    bg: 'from-[#3A4A6A] via-[#2A3850] to-[#1A2438]',
-    accent: '#7C9EE8',
+    bg: 'from-[#2A3A50] via-[#1E2C40] to-[#141C2C]',
+    accent: '#5B8DEF',
     targetWord: 'nuance',
     wordType: 'Noun',
     wordTypeJa: '名詞',
@@ -176,7 +176,7 @@ export function FeedDefault() {
 
             {/* Save = SAVED_CLIP (clip + word) */}
             <button onClick={toggleSave}
-              className={`w-10 h-10 rounded-full backdrop-blur-md border flex flex-col items-center justify-center gap-0.5 transition-all ${isSaved ? 'bg-[#E27058]/90 border-[#E27058]' : 'bg-white/15 border-white/30 hover:bg-white/25'}`}>
+              className={`w-10 h-10 rounded-full backdrop-blur-md border flex flex-col items-center justify-center gap-0.5 transition-all ${isSaved ? 'bg-#C95030/90 border-#C95030' : 'bg-white/15 border-white/30 hover:bg-white/25'}`}>
               <Bookmark className={`w-4 h-4 ${isSaved ? 'text-white fill-white' : 'text-white'}`} />
             </button>
 
@@ -212,14 +212,14 @@ export function FeedDefault() {
         {/* ════════════════════════════════
             SECTION 2 — SUBTITLE & TRANSCRIPT
         ════════════════════════════════ */}
-        <div className="flex-[6] min-h-0 flex flex-col bg-[#FDFBF7] border-t-2 border-[#E8E4DB] overflow-y-auto">
+        <div className="flex-[6] min-h-0 flex flex-col bg-[#F4F5F7] border-t-2 border-[#D8DBE4] overflow-y-auto">
 
           {/* Section header */}
-          <div className="flex items-center justify-between px-6 py-3 border-b border-[#EBE7E0] bg-[#F7F4EE] shrink-0">
+          <div className="flex items-center justify-between px-6 py-3 border-b border-[#D8DBE4] bg-[#EAECF1] shrink-0">
             <div className="flex items-center gap-2">
-              <span className="text-[11px] font-bold text-[#827D79] uppercase tracking-widest">Transcript</span>
+              <span className="text-[11px] font-bold text-[#9AA0B4] uppercase tracking-widest">Transcript</span>
               <span className="text-[#D6D2C9]">·</span>
-              <span className="text-[11px] text-[#B5B0AA]">{reel.clipRange}</span>
+              <span className="text-[11px] text-[#9AA0B4]">{reel.clipRange}</span>
             </div>
             <div className="flex items-center gap-2">
               {reel.studyCount > 0 && (
@@ -229,7 +229,7 @@ export function FeedDefault() {
               )}
               <button
                 onClick={() => setShowJa(v => !v)}
-                className={`flex items-center gap-1 px-2.5 py-1 rounded-lg border text-[11px] font-semibold transition-all ${showJa ? 'bg-[#2C2A29] text-white border-[#2C2A29]' : 'bg-white text-[#827D79] border-[#E0DCD4] hover:border-[#C5C0BB]'}`}
+                className={`flex items-center gap-1 px-2.5 py-1 rounded-lg border text-[11px] font-semibold transition-all ${showJa ? 'bg-[#2C2A29] text-white border-[#2C2A29]' : 'bg-white text-[#9AA0B4] border-[#D8DBE4] hover:border-[#C5C0BB]'}`}
               >
                 <Languages className="w-3 h-3" />
                 日本語
@@ -243,15 +243,15 @@ export function FeedDefault() {
               if (line.active) {
                 const parts = line.en as { text: string; highlight: boolean }[];
                 return (
-                  <div key={i} className="rounded-xl bg-[#F2EFE9] border border-[#E0DCD4] px-4 py-3">
+                  <div key={i} className="rounded-xl bg-[#E4E6EB] border border-[#D8DBE4] px-4 py-3">
                     <div className="flex items-start gap-3">
                       {/* Speaker avatar placeholder */}
-                      <div className="w-6 h-6 rounded-full bg-[#E27058]/20 border border-[#E27058]/30 flex items-center justify-center shrink-0 mt-0.5">
-                        <span className="text-[9px] font-bold text-[#E27058]">{line.speaker[0]}</span>
+                      <div className="w-6 h-6 rounded-full bg-#C95030/20 border border-#C95030/30 flex items-center justify-center shrink-0 mt-0.5">
+                        <span className="text-[9px] font-bold text-#C95030">{line.speaker[0]}</span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <span className="text-[10px] font-bold text-[#827D79] mr-2">{line.speaker}</span>
-                        <p className="text-[#1A1918] text-[15px] font-medium leading-snug mt-0.5">
+                        <span className="text-[10px] font-bold text-[#9AA0B4] mr-2">{line.speaker}</span>
+                        <p className="text-[#191C22] text-[15px] font-medium leading-snug mt-0.5">
                           {parts.map((seg, j) =>
                             seg.highlight ? (
                               <mark key={j} className="not-italic font-bold px-1 py-0.5 rounded" style={{ background: reel.accent + '28', color: reel.accent, borderBottom: `2px solid ${reel.accent}`, textDecoration: 'none' }}>
@@ -264,8 +264,8 @@ export function FeedDefault() {
                         </p>
                         {showJa && (
                           <div className="flex items-start gap-1.5 mt-1.5">
-                            <span className="text-[8px] font-bold text-[#B5B0AA] shrink-0 mt-0.5 tracking-wide">JA</span>
-                            <p className="text-[#827D79] text-xs leading-relaxed">{line.ja}</p>
+                            <span className="text-[8px] font-bold text-[#9AA0B4] shrink-0 mt-0.5 tracking-wide">JA</span>
+                            <p className="text-[#9AA0B4] text-xs leading-relaxed">{line.ja}</p>
                           </div>
                         )}
                       </div>
@@ -279,8 +279,8 @@ export function FeedDefault() {
                     <span className="text-[9px] font-bold text-[#9C9791]">{line.speaker[0]}</span>
                   </div>
                   <div>
-                    <span className="text-[10px] font-bold text-[#B5B0AA] mr-2">{line.speaker}</span>
-                    <p className="text-[#827D79] text-sm leading-snug mt-0.5">{line.en as string}</p>
+                    <span className="text-[10px] font-bold text-[#9AA0B4] mr-2">{line.speaker}</span>
+                    <p className="text-[#9AA0B4] text-sm leading-snug mt-0.5">{line.en as string}</p>
                   </div>
                 </div>
               );
@@ -288,19 +288,19 @@ export function FeedDefault() {
           </div>
 
           {/* Divider */}
-          <div className="mx-6 border-t border-[#EBE7E0]" />
+          <div className="mx-6 border-t border-[#D8DBE4]" />
 
           {/* Word card */}
           <div className="px-6 py-4 space-y-3">
             {/* Word header */}
             <div className="flex items-center gap-2 flex-wrap">
-              <BookOpen className="w-4 h-4 text-[#827D79] shrink-0" />
-              <span className="font-['Playfair_Display'] text-[#2C2A29] font-bold text-base italic">
+              <BookOpen className="w-4 h-4 text-[#9AA0B4] shrink-0" />
+              <span className="font-['Playfair_Display'] text-[#191C22] font-bold text-base italic">
                 "{reel.targetWord}"
               </span>
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#F2EFE9] text-[#827D79] border border-[#E0DCD4]">{reel.wordType}</span>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#E4E6EB] text-[#9AA0B4] border border-[#D8DBE4]">{reel.wordType}</span>
               {showJa && (
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#F2EFE9] text-[#9C9791] border border-[#E0DCD4]">{reel.wordTypeJa}</span>
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#E4E6EB] text-[#9C9791] border border-[#D8DBE4]">{reel.wordTypeJa}</span>
               )}
             </div>
 
@@ -309,9 +309,9 @@ export function FeedDefault() {
               <p className="text-[#3C3A38] text-sm leading-relaxed">{reel.definition}</p>
               {showJa && (
                 <div className="flex items-start gap-1.5">
-                  <span className="text-[8px] font-bold text-[#B5B0AA] mt-0.5 shrink-0 tracking-wide">JA</span>
-                  <p className="text-[#827D79] text-xs leading-relaxed">
-                    <span className="font-semibold text-[#5C5856]">{reel.phraseJa}</span>
+                  <span className="text-[8px] font-bold text-[#9AA0B4] mt-0.5 shrink-0 tracking-wide">JA</span>
+                  <p className="text-[#9AA0B4] text-xs leading-relaxed">
+                    <span className="font-semibold text-[#4B5063]">{reel.phraseJa}</span>
                     <span className="text-[#C5C0BB] mx-1.5">—</span>
                     {reel.definitionJa}
                   </p>
@@ -322,12 +322,12 @@ export function FeedDefault() {
             {/* Related words */}
             <div>
               <div className="flex items-center gap-1.5 mb-1.5">
-                <TrendingUp className="w-3 h-3 text-[#B5B0AA]" />
-                <span className="text-[10px] font-bold text-[#B5B0AA] uppercase tracking-wider">Related words</span>
+                <TrendingUp className="w-3 h-3 text-[#9AA0B4]" />
+                <span className="text-[10px] font-bold text-[#9AA0B4] uppercase tracking-wider">Related words</span>
               </div>
               <div className="flex flex-wrap gap-1.5">
                 {reel.relatedWords.map(w => (
-                  <span key={w} className="text-xs px-2.5 py-1 rounded-full bg-white border border-[#E0DCD4] text-[#5C5856] cursor-pointer hover:border-[#C5C0BB] hover:bg-[#F7F4EE] transition-colors">
+                  <span key={w} className="text-xs px-2.5 py-1 rounded-full bg-white border border-[#D8DBE4] text-[#4B5063] cursor-pointer hover:border-[#C5C0BB] hover:bg-[#EAECF1] transition-colors">
                     {w}
                   </span>
                 ))}
@@ -338,7 +338,7 @@ export function FeedDefault() {
             <div className="flex gap-2 pt-1">
               <button
                 onClick={toggleMark}
-                className={`flex-1 py-2.5 rounded-xl font-semibold text-xs flex items-center justify-center gap-1.5 border transition-all ${isMarked ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-white text-[#5C5856] border-[#E0DCD4] hover:border-[#C5C0BB] hover:bg-[#F7F4EE]'}`}
+                className={`flex-1 py-2.5 rounded-xl font-semibold text-xs flex items-center justify-center gap-1.5 border transition-all ${isMarked ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-white text-[#4B5063] border-[#D8DBE4] hover:border-[#C5C0BB] hover:bg-[#EAECF1]'}`}
               >
                 {isMarked ? <><CheckCircle2 className="w-3.5 h-3.5" /> Got it!</> : <><Brain className="w-3.5 h-3.5" /> Mark as studied</>}
               </button>

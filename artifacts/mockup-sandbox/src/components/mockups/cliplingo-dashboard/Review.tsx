@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { AppShell } from './_shared/AppShell';
-import { Check, X, RotateCcw, Volume2, Info, Brain, Mic, Send, Sparkles, ChevronRight } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
+import { Check, X, RotateCcw, Volume2, Brain, Mic, Send, ChevronRight } from 'lucide-react';
 
 type ReviewType = 'RECALL' | 'AI_EVAL';
 type Phase = 'question' | 'answered' | 'ai_feedback';
@@ -11,121 +9,88 @@ const currentCard = {
   phrase: 'Cut to the chase',
   context: 'She really ___ in that meeting and got everyone back on track.',
   meaning: 'To get directly to the point, leaving out unnecessary details.',
-  example: 'We don\'t have much time, so let\'s cut to the chase: are we buying the company or not?',
+  example: "We don't have much time, so let's cut to the chase: are we buying the company or not?",
   sourceClip: 'The Office (US) · S04E12',
-  sourceThumbnail: 'bg-[#E8E4DB]',
   pronunciation: '/kʌt tə ðə tʃeɪs/',
   reviewType: 'AI_EVAL' as ReviewType,
 };
 
 const upcomingWords = ['Reckon', 'Throw under the bus', 'Nuance', 'Elephant in the room', 'Blow off'];
 
-const REVIEW_TYPE_META: Record<ReviewType, { label: string; desc: string; color: string }> = {
-  RECALL: { label: 'Recall', desc: 'Can you remember the meaning?', color: 'bg-sky-50 text-sky-700 border-sky-200' },
-  AI_EVAL: { label: 'AI Evaluation', desc: 'Write a sentence — AI will score your usage.', color: 'bg-violet-50 text-violet-700 border-violet-200' },
-};
-
-function AiFeedback({ score, feedback }: { score: number; feedback: string }) {
-  const color = score >= 85 ? 'emerald' : score >= 65 ? 'amber' : 'rose';
-  const colorMap: Record<string, string> = {
-    emerald: 'text-emerald-700 bg-emerald-50 border-emerald-200',
-    amber: 'text-amber-700 bg-amber-50 border-amber-200',
-    rose: 'text-rose-700 bg-rose-50 border-rose-200',
-  };
-  return (
-    <div className={`rounded-2xl border p-5 ${colorMap[color]}`}>
-      <div className="flex items-center gap-3 mb-3">
-        <div className="flex items-center gap-2">
-          <Brain className="w-4 h-4" />
-          <span className="text-sm font-bold">AI Feedback</span>
-        </div>
-        <div className="ml-auto flex items-center gap-1.5">
-          <span className="text-xs font-medium opacity-70">Score</span>
-          <span className="text-2xl font-bold">{score}</span>
-          <span className="text-xs opacity-60">/100</span>
-        </div>
-      </div>
-      {/* Score bar */}
-      <div className="h-1.5 bg-white/60 rounded-full overflow-hidden mb-3">
-        <div
-          className={`h-full rounded-full ${color === 'emerald' ? 'bg-emerald-500' : color === 'amber' ? 'bg-amber-500' : 'bg-rose-500'}`}
-          style={{ width: `${score}%` }}
-        ></div>
-      </div>
-      <p className="text-sm leading-relaxed opacity-90">{feedback}</p>
-    </div>
-  );
-}
+const aiScore = 88;
+const aiFeedback = `Good usage! Your sentence correctly places "${currentCard.phrase}" in a natural context. The word "meeting" gives it situational grounding. Minor tip: idioms like this land better when the stakes feel slightly higher — e.g. "in the boardroom" vs "in that meeting". Still, solid command of the phrase.`;
 
 export function Review() {
   const [phase, setPhase] = useState<Phase>('question');
   const [userAnswer, setUserAnswer] = useState('');
   const [isRevealed, setIsRevealed] = useState(false);
 
-  const meta = REVIEW_TYPE_META[currentCard.reviewType];
+  const handleSubmit = () => { if (userAnswer.trim()) setPhase('ai_feedback'); };
+  const handleReveal = () => { setIsRevealed(true); setPhase('answered'); };
+  const handleNext = () => { setPhase('question'); setUserAnswer(''); setIsRevealed(false); };
 
-  const handleSubmitAnswer = () => {
-    if (!userAnswer.trim()) return;
-    setPhase('ai_feedback');
+  const scoreColor = aiScore >= 85 ? 'emerald' : aiScore >= 65 ? 'amber' : 'rose';
+  const scoreStyles: Record<string, string> = {
+    emerald: 'bg-emerald-50 border-emerald-200 text-emerald-800',
+    amber:   'bg-amber-50 border-amber-200 text-amber-800',
+    rose:    'bg-rose-50 border-rose-200 text-rose-800',
+  };
+  const barColor: Record<string, string> = {
+    emerald: 'bg-emerald-500',
+    amber:   'bg-amber-500',
+    rose:    'bg-rose-500',
   };
 
-  const handleRevealRecall = () => {
-    setIsRevealed(true);
-    setPhase('answered');
-  };
-
-  const handleNext = () => {
-    setPhase('question');
-    setUserAnswer('');
-    setIsRevealed(false);
-  };
-
-  // Mock AI response
-  const aiScore = 88;
-  const aiFeedback = `Good usage! Your sentence correctly places "${currentCard.phrase}" in a natural context. The word "meeting" gives it great situational grounding. Minor tip: idioms like this work best when the stakes feel slightly higher — e.g. "in the boardroom" vs. "in that meeting". Still, solid command of the phrase.`;
+  const reviewedCount = 12;
+  const totalCount = 47;
+  const pct = Math.round((reviewedCount / totalCount) * 100);
 
   return (
     <AppShell activePage="review">
-      <div className="max-w-2xl mx-auto px-6 py-10 flex flex-col min-h-[calc(100vh-0px)]">
+      <div className="max-w-xl mx-auto px-6 py-9">
 
         {/* Header */}
-        <div className="mb-8 text-center">
-          <h1 className="text-3xl font-['Playfair_Display'] font-bold text-[#1A1918] mb-4">Daily Review</h1>
-          <div className="flex items-center justify-center gap-3 max-w-sm mx-auto">
-            <span className="text-sm font-mono font-semibold text-[#827D79]">12</span>
-            <Progress value={(12 / 47) * 100} className="h-2 bg-[#E8E4DB] [&>div]:bg-[#E27058]" />
-            <span className="text-sm font-mono font-semibold text-[#827D79]">47</span>
+        <div className="mb-7 text-center">
+          <h1 className="text-3xl font-bold text-[#191C22] mb-4 tracking-tight" style={{ fontFamily: 'Playfair Display, serif' }}>Daily Review</h1>
+          <div className="flex items-center justify-center gap-3 max-w-xs mx-auto">
+            <span className="text-xs font-mono font-semibold text-[#4B5063] tabular-nums">{reviewedCount}</span>
+            <div className="flex-1 h-1.5 bg-[#E4E6EB] rounded-full overflow-hidden">
+              <div className="h-full bg-[#C95030] rounded-full" style={{ width: `${pct}%` }} />
+            </div>
+            <span className="text-xs font-mono font-semibold text-[#4B5063] tabular-nums">{totalCount}</span>
           </div>
-          <p className="text-xs text-[#B5B0AA] mt-1.5">Words reviewed today</p>
+          <p className="text-[10px] text-[#9AA0B4] mt-1.5">Words reviewed today</p>
         </div>
 
-        {/* Review Type Badge */}
-        <div className="flex justify-center mb-6">
-          <span className={`inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-full border ${meta.color}`}>
-            {currentCard.reviewType === 'AI_EVAL' ? <Brain className="w-3 h-3" /> : <RotateCcw className="w-3 h-3" />}
-            {meta.label} Mode · {meta.desc}
-          </span>
+        {/* Review type badge */}
+        <div className="flex justify-center mb-5">
+          {currentCard.reviewType === 'AI_EVAL' ? (
+            <span className="inline-flex items-center gap-1.5 text-[10px] font-bold px-2.5 py-1 rounded border bg-violet-50 text-violet-700 border-violet-200">
+              <Brain className="w-3 h-3" /> AI Evaluation · Write a sentence, get scored
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1.5 text-[10px] font-bold px-2.5 py-1 rounded border bg-sky-50 text-sky-700 border-sky-200">
+              <RotateCcw className="w-3 h-3" /> Recall Mode · Can you remember?
+            </span>
+          )}
         </div>
 
-        {/* Flash Card */}
-        <div className="flex-1 flex flex-col gap-5">
+        <div className="space-y-4">
 
-          {/* Card */}
-          <div className="bg-white rounded-3xl border border-[#E8E4DB] shadow-sm overflow-hidden relative">
-            <div className="h-1.5 w-full bg-[#E27058]"></div>
+          {/* Flash card */}
+          <div className="bg-white border border-[#D8DBE4] rounded-lg overflow-hidden">
+            <div className="h-0.5 w-full bg-[#C95030]" />
+            <div className="px-7 pt-7 pb-8">
 
-            <div className="px-8 pt-8 pb-10">
-              {/* Context */}
-              <div className="text-center mb-7">
-                <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-widest text-[#827D79] mb-4 bg-[#F2EFE9] px-3 py-1 rounded-full">
-                  <Info className="w-3 h-3" /> Context
-                </span>
-                <p className="text-2xl text-[#2C2A29] leading-relaxed font-light">
+              {/* Context sentence */}
+              <div className="text-center mb-6">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-[#9AA0B4] mb-3">Context</p>
+                <p className="text-xl text-[#191C22] leading-relaxed font-light">
                   {currentCard.context.split('___').map((part, i, arr) => (
                     <React.Fragment key={i}>
                       {part}
                       {i < arr.length - 1 && (
-                        <span className="font-bold border-b-2 border-dashed border-[#E27058] pb-0.5 px-1 text-[#A6452B]">
+                        <span className="font-semibold border-b-2 border-dashed border-[#C95030] pb-0.5 px-1 text-[#C95030]">
                           {currentCard.phrase}
                         </span>
                       )}
@@ -134,122 +99,118 @@ export function Review() {
                 </p>
               </div>
 
-              {/* Source Clip */}
-              <div className="flex items-center justify-center gap-2 text-xs text-[#827D79] mb-6">
-                <div className={`w-7 h-5 rounded ${currentCard.sourceThumbnail} flex items-center justify-center`}>
-                  <span className="text-[8px] font-bold text-[#827D79]">▶</span>
+              {/* Source */}
+              <div className="flex items-center justify-center gap-2 text-xs text-[#9AA0B4] mb-5">
+                <div className="w-6 h-4 rounded bg-[#E4E6EB] flex items-center justify-center">
+                  <span className="text-[7px] font-bold">▶</span>
                 </div>
-                <span>From: <span className="font-semibold text-[#5C5856]">{currentCard.sourceClip}</span></span>
-                <button className="ml-1 text-[#E27058] hover:text-[#D15F43]"><Volume2 className="w-3.5 h-3.5" /></button>
+                <span>From: <span className="font-semibold text-[#4B5063]">{currentCard.sourceClip}</span></span>
+                <button className="text-[#9AA0B4] hover:text-[#C95030] transition-colors"><Volume2 className="w-3.5 h-3.5" /></button>
               </div>
 
-              {/* AI_EVAL: text input */}
+              {/* AI_EVAL input */}
               {currentCard.reviewType === 'AI_EVAL' && phase === 'question' && (
-                <div className="mt-2">
-                  <label className="text-xs font-bold uppercase tracking-widest text-[#827D79] block mb-2 text-center">
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-[#9AA0B4] text-center mb-2">
                     Write your own sentence using this phrase
-                  </label>
+                  </p>
                   <div className="relative">
                     <textarea
                       value={userAnswer}
                       onChange={e => setUserAnswer(e.target.value)}
                       placeholder="e.g. He cut to the chase and told us the budget was cut…"
                       rows={3}
-                      className="w-full resize-none rounded-2xl border-2 border-[#E8E4DB] focus:border-[#E27058] bg-[#FDFBF7] text-[#2C2A29] text-sm px-4 py-3 outline-none placeholder:text-[#C5C0BB] transition-colors leading-relaxed pr-12"
+                      className="w-full resize-none rounded-lg border border-[#D8DBE4] focus:border-[#C95030] focus:ring-2 focus:ring-[#C95030]/10 bg-[#F4F5F7] text-[#191C22] text-sm px-4 py-3 outline-none placeholder:text-[#9AA0B4] transition-all leading-relaxed pr-11"
                     />
-                    <Mic className="absolute top-3 right-4 w-4 h-4 text-[#B5B0AA]" />
+                    <Mic className="absolute top-3 right-3.5 w-4 h-4 text-[#9AA0B4]" />
                   </div>
                 </div>
               )}
 
-              {/* After submit: show user answer */}
-              {(phase === 'ai_feedback') && (
-                <div className="mt-2 bg-[#F8F6F1] rounded-2xl p-4 border border-[#E8E4DB]">
-                  <p className="text-xs font-bold text-[#827D79] uppercase tracking-wider mb-1.5">Your answer</p>
-                  <p className="text-sm text-[#2C2A29] italic">"{userAnswer}"</p>
+              {/* User answer display */}
+              {phase === 'ai_feedback' && (
+                <div className="bg-[#F4F5F7] rounded-lg p-3.5 border border-[#E4E6EB]">
+                  <p className="text-[9px] font-bold text-[#9AA0B4] uppercase tracking-wider mb-1">Your answer</p>
+                  <p className="text-sm text-[#191C22] italic">"{userAnswer}"</p>
                 </div>
               )}
 
-              {/* RECALL: reveal section */}
+              {/* RECALL reveal */}
               {currentCard.reviewType === 'RECALL' && isRevealed && (
-                <div className="mt-6 pt-6 border-t border-[#E8E4DB] space-y-4">
+                <div className="mt-5 pt-5 border-t border-[#E4E6EB] space-y-3">
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-wider text-[#827D79] mb-1">Meaning</p>
-                    <p className="text-lg font-medium text-[#2C2A29]">{currentCard.meaning}</p>
+                    <p className="text-[9px] font-bold uppercase tracking-wider text-[#9AA0B4] mb-1">Meaning</p>
+                    <p className="text-base font-medium text-[#191C22]">{currentCard.meaning}</p>
                   </div>
-                  <div className="bg-[#F8F6F1] p-4 rounded-xl">
-                    <p className="text-xs font-bold uppercase tracking-wider text-[#827D79] mb-1">Example</p>
-                    <p className="text-sm text-[#5C5856] italic">"{currentCard.example}"</p>
+                  <div className="bg-[#F4F5F7] p-3.5 rounded-lg border border-[#E4E6EB]">
+                    <p className="text-[9px] font-bold uppercase tracking-wider text-[#9AA0B4] mb-1">Example</p>
+                    <p className="text-sm text-[#4B5063] italic">"{currentCard.example}"</p>
                   </div>
-                  <div className="flex items-center justify-between text-xs text-[#827D79]">
-                    <span className="font-mono bg-[#F2EFE9] px-2 py-1 rounded">{currentCard.pronunciation}</span>
-                  </div>
+                  <span className="inline-block font-mono text-xs bg-[#E4E6EB] text-[#4B5063] px-2 py-1 rounded">{currentCard.pronunciation}</span>
                 </div>
               )}
             </div>
           </div>
 
-          {/* AI Feedback block */}
+          {/* AI Feedback */}
           {phase === 'ai_feedback' && (
-            <AiFeedback score={aiScore} feedback={aiFeedback} />
+            <div className={`rounded-lg border p-5 ${scoreStyles[scoreColor]}`}>
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <Brain className="w-4 h-4" />
+                  <span className="text-sm font-bold">AI Feedback</span>
+                </div>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-2xl font-bold tabular-nums">{aiScore}</span>
+                  <span className="text-xs opacity-60">/100</span>
+                </div>
+              </div>
+              <div className="h-1 bg-white/60 rounded-full overflow-hidden mb-3">
+                <div className={`h-full rounded-full ${barColor[scoreColor]}`} style={{ width: `${aiScore}%` }} />
+              </div>
+              <p className="text-sm leading-relaxed opacity-90">{aiFeedback}</p>
+            </div>
           )}
 
-          {/* Action Buttons */}
-          <div className="flex gap-3 justify-center">
+          {/* Buttons */}
+          <div className="flex gap-2.5">
             {currentCard.reviewType === 'AI_EVAL' && phase === 'question' && (
-              <Button
-                onClick={handleSubmitAnswer}
+              <button
+                onClick={handleSubmit}
                 disabled={!userAnswer.trim()}
-                className="flex-1 bg-[#2C2A29] hover:bg-[#1A1918] text-white rounded-2xl py-6 text-base font-medium disabled:opacity-40 gap-2"
+                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg bg-[#191C22] text-white text-sm font-semibold disabled:opacity-30 hover:bg-[#2A2D38] transition-colors"
               >
-                <Send className="w-4 h-4" />
-                Submit for AI Review
-              </Button>
+                <Send className="w-4 h-4" /> Submit for AI Review
+              </button>
             )}
-
             {currentCard.reviewType === 'RECALL' && phase === 'question' && (
-              <Button
-                onClick={handleRevealRecall}
-                className="flex-1 bg-[#2C2A29] hover:bg-[#1A1918] text-white rounded-2xl py-6 text-base font-medium"
-              >
+              <button onClick={handleReveal} className="flex-1 py-3 rounded-lg bg-[#191C22] text-white text-sm font-semibold hover:bg-[#2A2D38] transition-colors">
                 Reveal Meaning
-              </Button>
+              </button>
             )}
-
             {phase === 'answered' && (
               <>
-                <Button
-                  onClick={handleNext}
-                  variant="outline"
-                  className="flex-1 py-6 rounded-2xl border-2 border-[#E8E4DB] text-[#5C5856] hover:bg-[#F2EFE9] text-base font-medium group"
-                >
-                  <X className="w-4 h-4 mr-2 group-hover:text-rose-500 transition-colors" /> Hard
-                </Button>
-                <Button
-                  onClick={handleNext}
-                  className="flex-1 py-6 rounded-2xl bg-[#E27058] hover:bg-[#D15F43] text-white text-base font-medium"
-                >
-                  <Check className="w-4 h-4 mr-2" /> Got it
-                </Button>
+                <button onClick={handleNext} className="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-lg border border-[#D8DBE4] text-[#4B5063] text-sm font-semibold hover:bg-[#E4E6EB] transition-colors">
+                  <X className="w-4 h-4" /> Hard
+                </button>
+                <button onClick={handleNext} className="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-lg bg-[#C95030] text-white text-sm font-semibold hover:bg-[#A63E25] transition-colors">
+                  <Check className="w-4 h-4" /> Got it
+                </button>
               </>
             )}
-
             {phase === 'ai_feedback' && (
-              <Button
-                onClick={handleNext}
-                className="flex-1 bg-[#E27058] hover:bg-[#D15F43] text-white rounded-2xl py-6 text-base font-medium gap-2"
-              >
+              <button onClick={handleNext} className="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-lg bg-[#C95030] text-white text-sm font-semibold hover:bg-[#A63E25] transition-colors">
                 Next Word <ChevronRight className="w-4 h-4" />
-              </Button>
+              </button>
             )}
           </div>
 
-          {/* Upcoming Queue */}
-          <div className="pb-4">
-            <p className="text-xs font-bold uppercase tracking-widest text-[#B5B0AA] text-center mb-3">Coming up next</p>
-            <div className="flex flex-wrap justify-center gap-2">
+          {/* Queue */}
+          <div>
+            <p className="text-[9px] font-bold uppercase tracking-widest text-[#9AA0B4] text-center mb-2.5">Coming up</p>
+            <div className="flex flex-wrap justify-center gap-1.5">
               {upcomingWords.map((word, i) => (
-                <span key={i} className="px-3 py-1.5 bg-white border border-[#E8E4DB] rounded-full text-xs font-medium text-[#827D79] shadow-sm" style={{ opacity: 1 - i * 0.15 }}>
+                <span key={i} className="px-2.5 py-1 bg-white border border-[#D8DBE4] rounded text-[11px] font-medium text-[#4B5063]" style={{ opacity: 1 - i * 0.15 }}>
                   {word}
                 </span>
               ))}
