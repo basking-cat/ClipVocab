@@ -51,15 +51,15 @@ export function Review() {
 
         {/* Header */}
         <div className="mb-7 text-center">
-          <h1 className="text-3xl font-bold text-[#191C22] mb-4 tracking-tight" style={{ fontFamily: 'Playfair Display, serif' }}>Daily Review</h1>
+          <h1 className="text-3xl font-bold text-[#1C1917] mb-4 tracking-tight" style={{ fontFamily: 'Playfair Display, serif' }}>Daily Review</h1>
           <div className="flex items-center justify-center gap-3 max-w-xs mx-auto">
-            <span className="text-xs font-mono font-semibold text-[#4B5063] tabular-nums">{reviewedCount}</span>
-            <div className="flex-1 h-1.5 bg-[#E4E6EB] rounded-full overflow-hidden">
-              <div className="h-full bg-[#C95030] rounded-full" style={{ width: `${pct}%` }} />
+            <span className="text-xs font-mono font-semibold text-[#52504B] tabular-nums">{reviewedCount}</span>
+            <div className="flex-1 h-1.5 bg-[#E8E5DF] rounded-full overflow-hidden">
+              <div className="h-full bg-[#C8623E] rounded-full" style={{ width: `${pct}%` }} />
             </div>
-            <span className="text-xs font-mono font-semibold text-[#4B5063] tabular-nums">{totalCount}</span>
+            <span className="text-xs font-mono font-semibold text-[#52504B] tabular-nums">{totalCount}</span>
           </div>
-          <p className="text-[10px] text-[#9AA0B4] mt-1.5">Words reviewed today</p>
+          <p className="text-[10px] text-[#958F87] mt-1.5">Words reviewed today</p>
         </div>
 
         {/* Review type badge */}
@@ -78,19 +78,19 @@ export function Review() {
         <div className="space-y-4">
 
           {/* Flash card */}
-          <div className="bg-white border border-[#D8DBE4] rounded-lg overflow-hidden">
-            <div className="h-0.5 w-full bg-[#C95030]" />
+          <div className="bg-white border border-[#DDD9D2] rounded-lg overflow-hidden">
+            <div className="h-0.5 w-full bg-[#C8623E]" />
             <div className="px-7 pt-7 pb-8">
 
               {/* Context sentence */}
               <div className="text-center mb-6">
-                <p className="text-[10px] font-bold uppercase tracking-widest text-[#9AA0B4] mb-3">Context</p>
-                <p className="text-xl text-[#191C22] leading-relaxed font-light">
+                <p className="text-[10px] font-bold uppercase tracking-widest text-[#958F87] mb-3">Context</p>
+                <p className="text-xl text-[#1C1917] leading-relaxed font-light">
                   {currentCard.context.split('___').map((part, i, arr) => (
                     <React.Fragment key={i}>
                       {part}
                       {i < arr.length - 1 && (
-                        <span className="font-semibold border-b-2 border-dashed border-[#C95030] pb-0.5 px-1 text-[#C95030]">
+                        <span className="font-semibold border-b-2 border-dashed border-[#C8623E] pb-0.5 px-1 text-[#C8623E]">
                           {currentCard.phrase}
                         </span>
                       )}
@@ -100,18 +100,18 @@ export function Review() {
               </div>
 
               {/* Source */}
-              <div className="flex items-center justify-center gap-2 text-xs text-[#9AA0B4] mb-5">
-                <div className="w-6 h-4 rounded bg-[#E4E6EB] flex items-center justify-center">
+              <div className="flex items-center justify-center gap-2 text-xs text-[#958F87] mb-5">
+                <div className="w-6 h-4 rounded bg-[#E8E5DF] flex items-center justify-center">
                   <span className="text-[7px] font-bold">▶</span>
                 </div>
-                <span>From: <span className="font-semibold text-[#4B5063]">{currentCard.sourceClip}</span></span>
-                <button className="text-[#9AA0B4] hover:text-[#C95030] transition-colors"><Volume2 className="w-3.5 h-3.5" /></button>
+                <span>From: <span className="font-semibold text-[#52504B]">{currentCard.sourceClip}</span></span>
+                <button className="text-[#958F87] hover:text-[#C8623E] transition-colors"><Volume2 className="w-3.5 h-3.5" /></button>
               </div>
 
               {/* AI_EVAL input */}
               {currentCard.reviewType === 'AI_EVAL' && phase === 'question' && (
                 <div>
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-[#9AA0B4] text-center mb-2">
+                  <p className="text-[10px] font-bold uppercase tracking-widest text-[#958F87] text-center mb-2">
                     Write your own sentence using this phrase
                   </p>
                   <div className="relative">
@@ -120,33 +120,33 @@ export function Review() {
                       onChange={e => setUserAnswer(e.target.value)}
                       placeholder="e.g. He cut to the chase and told us the budget was cut…"
                       rows={3}
-                      className="w-full resize-none rounded-lg border border-[#D8DBE4] focus:border-[#C95030] focus:ring-2 focus:ring-[#C95030]/10 bg-[#F4F5F7] text-[#191C22] text-sm px-4 py-3 outline-none placeholder:text-[#9AA0B4] transition-all leading-relaxed pr-11"
+                      className="w-full resize-none rounded-lg border border-[#DDD9D2] focus:border-[#C8623E] focus:ring-2 focus:ring-[#C8623E]/10 bg-[#F8F6F2] text-[#1C1917] text-sm px-4 py-3 outline-none placeholder:text-[#958F87] transition-all leading-relaxed pr-11"
                     />
-                    <Mic className="absolute top-3 right-3.5 w-4 h-4 text-[#9AA0B4]" />
+                    <Mic className="absolute top-3 right-3.5 w-4 h-4 text-[#958F87]" />
                   </div>
                 </div>
               )}
 
               {/* User answer display */}
               {phase === 'ai_feedback' && (
-                <div className="bg-[#F4F5F7] rounded-lg p-3.5 border border-[#E4E6EB]">
-                  <p className="text-[9px] font-bold text-[#9AA0B4] uppercase tracking-wider mb-1">Your answer</p>
-                  <p className="text-sm text-[#191C22] italic">"{userAnswer}"</p>
+                <div className="bg-[#F8F6F2] rounded-lg p-3.5 border border-[#E8E5DF]">
+                  <p className="text-[9px] font-bold text-[#958F87] uppercase tracking-wider mb-1">Your answer</p>
+                  <p className="text-sm text-[#1C1917] italic">"{userAnswer}"</p>
                 </div>
               )}
 
               {/* RECALL reveal */}
               {currentCard.reviewType === 'RECALL' && isRevealed && (
-                <div className="mt-5 pt-5 border-t border-[#E4E6EB] space-y-3">
+                <div className="mt-5 pt-5 border-t border-[#E8E5DF] space-y-3">
                   <div>
-                    <p className="text-[9px] font-bold uppercase tracking-wider text-[#9AA0B4] mb-1">Meaning</p>
-                    <p className="text-base font-medium text-[#191C22]">{currentCard.meaning}</p>
+                    <p className="text-[9px] font-bold uppercase tracking-wider text-[#958F87] mb-1">Meaning</p>
+                    <p className="text-base font-medium text-[#1C1917]">{currentCard.meaning}</p>
                   </div>
-                  <div className="bg-[#F4F5F7] p-3.5 rounded-lg border border-[#E4E6EB]">
-                    <p className="text-[9px] font-bold uppercase tracking-wider text-[#9AA0B4] mb-1">Example</p>
-                    <p className="text-sm text-[#4B5063] italic">"{currentCard.example}"</p>
+                  <div className="bg-[#F8F6F2] p-3.5 rounded-lg border border-[#E8E5DF]">
+                    <p className="text-[9px] font-bold uppercase tracking-wider text-[#958F87] mb-1">Example</p>
+                    <p className="text-sm text-[#52504B] italic">"{currentCard.example}"</p>
                   </div>
-                  <span className="inline-block font-mono text-xs bg-[#E4E6EB] text-[#4B5063] px-2 py-1 rounded">{currentCard.pronunciation}</span>
+                  <span className="inline-block font-mono text-xs bg-[#E8E5DF] text-[#52504B] px-2 py-1 rounded">{currentCard.pronunciation}</span>
                 </div>
               )}
             </div>
@@ -178,28 +178,28 @@ export function Review() {
               <button
                 onClick={handleSubmit}
                 disabled={!userAnswer.trim()}
-                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg bg-[#191C22] text-white text-sm font-semibold disabled:opacity-30 hover:bg-[#2A2D38] transition-colors"
+                className="flex-1 flex items-center justify-center gap-2 py-3 rounded-lg bg-[#1C1917] text-white text-sm font-semibold disabled:opacity-30 hover:bg-[#282622] transition-colors"
               >
                 <Send className="w-4 h-4" /> Submit for AI Review
               </button>
             )}
             {currentCard.reviewType === 'RECALL' && phase === 'question' && (
-              <button onClick={handleReveal} className="flex-1 py-3 rounded-lg bg-[#191C22] text-white text-sm font-semibold hover:bg-[#2A2D38] transition-colors">
+              <button onClick={handleReveal} className="flex-1 py-3 rounded-lg bg-[#1C1917] text-white text-sm font-semibold hover:bg-[#282622] transition-colors">
                 Reveal Meaning
               </button>
             )}
             {phase === 'answered' && (
               <>
-                <button onClick={handleNext} className="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-lg border border-[#D8DBE4] text-[#4B5063] text-sm font-semibold hover:bg-[#E4E6EB] transition-colors">
+                <button onClick={handleNext} className="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-lg border border-[#DDD9D2] text-[#52504B] text-sm font-semibold hover:bg-[#E8E5DF] transition-colors">
                   <X className="w-4 h-4" /> Hard
                 </button>
-                <button onClick={handleNext} className="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-lg bg-[#C95030] text-white text-sm font-semibold hover:bg-[#A63E25] transition-colors">
+                <button onClick={handleNext} className="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-lg bg-[#C8623E] text-white text-sm font-semibold hover:bg-[#A34E2E] transition-colors">
                   <Check className="w-4 h-4" /> Got it
                 </button>
               </>
             )}
             {phase === 'ai_feedback' && (
-              <button onClick={handleNext} className="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-lg bg-[#C95030] text-white text-sm font-semibold hover:bg-[#A63E25] transition-colors">
+              <button onClick={handleNext} className="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-lg bg-[#C8623E] text-white text-sm font-semibold hover:bg-[#A34E2E] transition-colors">
                 Next Word <ChevronRight className="w-4 h-4" />
               </button>
             )}
@@ -207,10 +207,10 @@ export function Review() {
 
           {/* Queue */}
           <div>
-            <p className="text-[9px] font-bold uppercase tracking-widest text-[#9AA0B4] text-center mb-2.5">Coming up</p>
+            <p className="text-[9px] font-bold uppercase tracking-widest text-[#958F87] text-center mb-2.5">Coming up</p>
             <div className="flex flex-wrap justify-center gap-1.5">
               {upcomingWords.map((word, i) => (
-                <span key={i} className="px-2.5 py-1 bg-white border border-[#D8DBE4] rounded text-[11px] font-medium text-[#4B5063]" style={{ opacity: 1 - i * 0.15 }}>
+                <span key={i} className="px-2.5 py-1 bg-white border border-[#DDD9D2] rounded text-[11px] font-medium text-[#52504B]" style={{ opacity: 1 - i * 0.15 }}>
                   {word}
                 </span>
               ))}
