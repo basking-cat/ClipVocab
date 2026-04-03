@@ -35,9 +35,9 @@ interface AppShellProps {
 
 export function AppShell({ children, activePage }: AppShellProps) {
   const navItems = [
-    { id: 'feed',    label: 'Daily Feed',   icon: PlaySquare, href: '/__mockup/preview/cliplingo-dashboard/Feed' },
-    { id: 'review',  label: 'Review Queue', icon: RotateCcw,  href: '/__mockup/preview/cliplingo-dashboard/Review' },
-    { id: 'profile', label: 'My Profile',   icon: User,       href: '/__mockup/preview/cliplingo-dashboard/Profile' },
+    { id: 'feed',    label: 'Daily Feed',   icon: PlaySquare, href: '/__mockup/preview/dashboard/Feed' },
+    { id: 'review',  label: 'Review Queue', icon: RotateCcw,  href: '/__mockup/preview/dashboard/Review' },
+    { id: 'profile', label: 'My Profile',   icon: User,       href: '/__mockup/preview/dashboard/Profile' },
   ];
 
   return (
