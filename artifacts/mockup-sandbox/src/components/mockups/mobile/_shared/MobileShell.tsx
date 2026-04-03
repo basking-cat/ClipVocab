@@ -29,23 +29,26 @@ export function LogoMark({ size = 'md' }: { size?: 'sm' | 'md' }) {
   );
 }
 
-export function StatusBar({ dark = false }: { dark?: boolean }) {
+function StatusBarInner({ dark }: { dark: boolean }) {
   const txt = dark ? 'text-white/80' : 'text-[#1C1917]';
   return (
     <div className={`flex items-center justify-between px-5 pt-3 pb-1 text-[11px] font-semibold ${txt} shrink-0`}>
       <span>9:41</span>
       <div className="flex items-center gap-1">
+        {/* Signal bars */}
         <svg width="15" height="11" viewBox="0 0 15 11" fill="none">
           <rect x="0" y="4" width="3" height="7" rx="0.5" fill="currentColor" opacity="0.35" />
           <rect x="4" y="3" width="3" height="8" rx="0.5" fill="currentColor" opacity="0.5" />
           <rect x="8" y="1.5" width="3" height="9.5" rx="0.5" fill="currentColor" opacity="0.75" />
           <rect x="12" y="0" width="3" height="11" rx="0.5" fill="currentColor" />
         </svg>
+        {/* Wifi */}
         <svg width="15" height="11" viewBox="0 0 15 11" fill="none">
           <path d="M7.5 2C9.5 2 11.3 2.9 12.5 4.3L14 2.7C12.3 0.9 10 0 7.5 0C5 0 2.7 0.9 1 2.7L2.5 4.3C3.7 2.9 5.5 2 7.5 2Z" fill="currentColor" />
           <path d="M7.5 5C8.8 5 9.9 5.5 10.7 6.4L12.2 4.8C11 3.7 9.3 3 7.5 3C5.7 3 4 3.7 2.8 4.8L4.3 6.4C5.1 5.5 6.2 5 7.5 5Z" fill="currentColor" />
           <circle cx="7.5" cy="9" r="1.5" fill="currentColor" />
         </svg>
+        {/* Battery */}
         <svg width="25" height="11" viewBox="0 0 25 11" fill="none">
           <rect x="0.5" y="0.5" width="21" height="10" rx="2" stroke="currentColor" strokeOpacity="0.35" />
           <rect x="2" y="2" width="17" height="7" rx="1" fill="currentColor" />
@@ -59,6 +62,7 @@ export function StatusBar({ dark = false }: { dark?: boolean }) {
 interface MobileShellProps {
   children: React.ReactNode;
   activePage: 'feed' | 'watch' | 'review' | 'profile';
+  /** When true, the status bar renders with light text and the shell header bg matches the screen's dark top area. */
   dark?: boolean;
 }
 
@@ -72,13 +76,26 @@ const NAV_ITEMS = [
 export function MobileShell({ children, activePage, dark = false }: MobileShellProps) {
   return (
     <div
-      className="flex flex-col bg-[#F8F6F2] text-[#1C1917] overflow-hidden"
-      style={{ width: 390, height: 844, fontFamily: 'Inter, sans-serif', position: 'relative' }}
+      className="flex flex-col text-[#1C1917] overflow-hidden"
+      style={{
+        width: 390,
+        height: 844,
+        fontFamily: 'Inter, sans-serif',
+        position: 'relative',
+        background: dark ? '#2C3245' : '#F8F6F2',
+      }}
     >
+      {/* Status bar — rendered by shell so all screens share the same chrome */}
+      <StatusBarInner dark={dark} />
+
+      {/* Screen content */}
       {children}
 
-      {/* Bottom tab bar */}
-      <nav className="shrink-0 border-t border-[#DDD9D2] bg-[#F8F6F2] px-2 pt-2 pb-5">
+      {/* Bottom tab bar with CSS safe-area inset */}
+      <nav
+        className="shrink-0 border-t border-[#DDD9D2] bg-[#F8F6F2] px-2 pt-2"
+        style={{ paddingBottom: 'max(8px, env(safe-area-inset-bottom, 8px))' }}
+      >
         <div className="flex items-start justify-around">
           {NAV_ITEMS.map(({ id, label, Icon, href }) => {
             const isActive = activePage === id;

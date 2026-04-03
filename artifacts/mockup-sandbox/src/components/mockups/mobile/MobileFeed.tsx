@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Search, Bell, Bookmark, Clock } from 'lucide-react';
-import { MobileShell, LogoMark, StatusBar } from './_shared/MobileShell';
+import { MobileShell, LogoMark } from './_shared/MobileShell';
 import { PixelStar } from '../_shared/PixelArt';
 
 const clips = [
@@ -47,7 +47,6 @@ export function MobileFeed() {
 
   return (
     <MobileShell activePage="feed">
-      <StatusBar />
 
       {/* Header */}
       <div className="relative px-5 pt-2 pb-3 shrink-0">

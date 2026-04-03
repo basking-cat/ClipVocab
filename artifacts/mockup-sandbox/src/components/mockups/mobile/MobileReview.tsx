@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Mic, Send, Sparkles } from 'lucide-react';
-import { MobileShell, StatusBar } from './_shared/MobileShell';
+import { MobileShell } from './_shared/MobileShell';
 import { PixelGem } from '../_shared/PixelArt';
 
 export function MobileReview() {
@@ -9,7 +9,6 @@ export function MobileReview() {
 
   return (
     <MobileShell activePage="review">
-      <StatusBar />
       <div className="flex-1 flex flex-col min-h-0 px-4">
 
         {/* Progress bar */}
