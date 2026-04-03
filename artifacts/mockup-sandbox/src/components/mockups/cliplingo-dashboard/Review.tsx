@@ -95,7 +95,7 @@ export function Review() {
           {/* Flash card — dot grid background */}
           <div className="relative">
             {/* Pixel gem sticker — hand-placed on card corner */}
-            <div className="absolute -top-3 -right-2 z-10 rotate-[8deg] inline-flex p-1.5 bg-white rounded-lg border-2 border-[#1C1917] shadow-[2px_2px_0_#1C1917]">
+            <div className="absolute -top-3 -right-2 z-10 rotate-[5deg] inline-flex p-1.5 bg-white rounded-lg border-2 border-[#1C1917] shadow-[2px_2px_0_#1C1917]">
               <PixelGem sz={4} />
             </div>
           <div
