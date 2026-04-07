@@ -106,52 +106,51 @@ export function FeedSearch() {
     <AppShell activePage="feed">
       <div className="h-full flex flex-col" style={{ fontFamily: 'Inter, sans-serif' }}>
 
-        {/* ── Sticky Search Header ── */}
-        <div className="bg-[#F8F6F2] border-b border-[#DDD9D2] px-8 py-5 shrink-0 relative">
+        {/* Sticky Search Header */}
+        <div className="bg-[#F8F6F2] border-b border-[#DDD9D2] px-4 sm:px-8 py-4 sm:py-5 shrink-0 relative">
           <div className="flex items-center gap-3">
-            {/* Search bar */}
-            <div className="flex-1 flex items-center gap-2.5 bg-white border-2 border-[#C8623E] rounded-2xl px-4 py-2.5 shadow-[0_0_0_4px_rgba(226,112,88,0.08)]">
+            <div className="flex-1 flex items-center gap-2.5 bg-white border-2 border-[#C8623E] rounded-2xl px-3 sm:px-4 py-2.5 shadow-[0_0_0_4px_rgba(226,112,88,0.08)]">
               <Search className="w-4 h-4 text-[#C8623E] shrink-0" />
               <input
                 type="text"
                 value={query}
                 onChange={e => setQuery(e.target.value)}
-                className="flex-1 bg-transparent text-[#1C1917] text-sm outline-none font-semibold"
+                className="flex-1 bg-transparent text-[#1C1917] text-sm outline-none font-semibold min-w-0"
               />
-              <button onClick={() => setQuery('')} className="text-[#958F87] hover:text-[#958F87] transition-colors">
+              <button onClick={() => setQuery('')} className="text-[#958F87] hover:text-[#958F87] transition-colors shrink-0">
                 <X className="w-3.5 h-3.5" />
               </button>
             </div>
 
-            <button className="flex items-center gap-2 px-4 py-2.5 rounded-2xl border-2 border-[#DDD9D2] text-sm font-medium text-[#52504B] hover:border-[#DDD9D2] transition-colors bg-white">
+            <button className="flex items-center gap-2 px-3 sm:px-4 py-2.5 rounded-2xl border-2 border-[#DDD9D2] text-sm font-medium text-[#52504B] hover:border-[#DDD9D2] transition-colors bg-white shrink-0">
               <SlidersHorizontal className="w-4 h-4" />
-              Filter
+              <span className="hidden sm:inline">Filter</span>
             </button>
           </div>
 
           {/* Result meta */}
-          <div className="flex items-center gap-3 mt-3">
+          <div className="flex items-center gap-2 mt-3 flex-wrap">
             <p className="text-sm text-[#958F87]">
               <span className="font-bold text-[#1C1917]">{results.length} clips</span> contain
               <span className="inline-flex items-center mx-1.5 bg-[#F5E2D8] text-[#8B3E23] text-xs font-bold px-2.5 py-0.5 rounded-full">"{query}"</span>
             </p>
-            <span className="text-[#DDD9D2]">·</span>
+            <span className="text-[#DDD9D2] hidden sm:inline">·</span>
             <div className="flex gap-1.5">
               {['All', 'Intermediate', 'Advanced'].map((f, i) => (
-                <button key={f} className={`text-xs font-semibold px-3 py-1 rounded-full border transition-colors ${i === 0 ? 'bg-[#1C1917] text-white border-[#1C1917]' : 'bg-white text-[#958F87] border-[#DDD9D2] hover:border-[#B5B0A9]'}`}>
+                <button key={f} className={`text-xs font-semibold px-2.5 sm:px-3 py-1 rounded-full border transition-colors ${i === 0 ? 'bg-[#1C1917] text-white border-[#1C1917]' : 'bg-white text-[#958F87] border-[#DDD9D2] hover:border-[#B5B0A9]'}`}>
                   {f}
                 </button>
               ))}
             </div>
           </div>
-          {/* Pixel spark — bare accent in search header corner */}
-          <div className="absolute right-5 top-4 rotate-[5deg] pointer-events-none">
+          {/* Pixel spark */}
+          <div className="absolute right-4 sm:right-5 top-4 rotate-[5deg] pointer-events-none">
             <PixelSpark sz={3} fill="#7C3AED" />
           </div>
         </div>
 
-        {/* ── Results List ── */}
-        <div className="flex-1 overflow-y-auto px-8 py-5 space-y-4">
+        {/* Results List */}
+        <div className="flex-1 overflow-y-auto px-4 sm:px-8 py-5 space-y-4">
           {results.map((clip, idx) => (
             <div
               key={clip.id}
@@ -159,55 +158,55 @@ export function FeedSearch() {
             >
               <div className="flex gap-0">
 
-                {/* Rank */}
-                <div className="w-12 shrink-0 flex items-center justify-center border-r border-[#E8E5DF]">
+                {/* Rank — hidden on mobile */}
+                <div className="hidden sm:flex w-12 shrink-0 items-center justify-center border-r border-[#E8E5DF]">
                   <span className="text-xl font-bold font-['Playfair_Display'] text-[#DDD9D2] group-hover:text-[#D0CCC3] transition-colors">
                     {String(idx + 1).padStart(2, '0')}
                   </span>
                 </div>
 
-                {/* Thumbnail — 16:9 landscape (176×99px) */}
-                <div className={`w-44 h-[99px] shrink-0 self-center ${clip.thumbnailBg} relative flex items-center justify-center`}>
-                  <div className="w-9 h-9 rounded-full bg-white/30 backdrop-blur-sm flex items-center justify-center group-hover:bg-white/50 transition-colors">
-                    <Play className="w-4 h-4 text-[#1C1917] fill-[#1C1917] ml-0.5" />
+                {/* Thumbnail — responsive size */}
+                <div className={`w-24 sm:w-44 h-[68px] sm:h-[99px] shrink-0 self-center ${clip.thumbnailBg} relative flex items-center justify-center`}>
+                  <div className="w-7 sm:w-9 h-7 sm:h-9 rounded-full bg-white/30 backdrop-blur-sm flex items-center justify-center group-hover:bg-white/50 transition-colors">
+                    <Play className="w-3 sm:w-4 h-3 sm:h-4 text-[#1C1917] fill-[#1C1917] ml-0.5" />
                   </div>
                   <div className="absolute bottom-1.5 right-1.5 bg-black/50 rounded text-white text-[9px] px-1 font-mono">{clip.duration}</div>
                 </div>
 
                 {/* Content */}
-                <div className="flex-1 min-w-0 p-5">
-                  <div className="flex items-start justify-between gap-3 mb-2">
-                    <div>
-                      <p className="text-[10px] font-bold text-[#958F87] uppercase tracking-wider mb-0.5">{clip.showName} · {clip.episode}</p>
-                      <h3 className="font-semibold text-[#1C1917] group-hover:text-[#C8623E] transition-colors text-sm">{clip.title}</h3>
+                <div className="flex-1 min-w-0 p-3 sm:p-5">
+                  <div className="flex items-start justify-between gap-2 mb-2">
+                    <div className="min-w-0">
+                      <p className="text-[10px] font-bold text-[#958F87] uppercase tracking-wider mb-0.5 truncate">{clip.showName} · <span className="hidden sm:inline">{clip.episode}</span></p>
+                      <h3 className="font-semibold text-[#1C1917] group-hover:text-[#C8623E] transition-colors text-sm truncate">{clip.title}</h3>
                     </div>
-                    <div className="flex items-center gap-2 shrink-0">
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded border ${clip.difficultyColor}`}>{clip.difficulty}</span>
+                    <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded border ${clip.difficultyColor} hidden sm:inline`}>{clip.difficulty}</span>
                       <span className="text-[10px] text-[#958F87] font-mono flex items-center gap-0.5"><Clock className="w-2.5 h-2.5" />{clip.timestamp}</span>
                     </div>
                   </div>
 
-                  {/* Transcript snippet with highlight */}
-                  <div className="bg-[#F8F6F2] rounded-xl px-4 py-3 mb-3 border-l-2 border-[#C8623E]">
+                  {/* Transcript snippet */}
+                  <div className="bg-[#F8F6F2] rounded-xl px-3 sm:px-4 py-2 sm:py-3 mb-3 border-l-2 border-[#C8623E]">
                     <HighlightedSnippet parts={clip.snippet} />
                   </div>
 
                   {/* Actions */}
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-1.5 text-xs text-[#958F87]">
-                      <BookOpen className="w-3.5 h-3.5" />
-                      <span>Learn: <span className="font-semibold text-[#8B3E23]">"{QUERY}"</span></span>
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-1.5 text-xs text-[#958F87] min-w-0 hidden sm:flex">
+                      <BookOpen className="w-3.5 h-3.5 shrink-0" />
+                      <span className="truncate">Learn: <span className="font-semibold text-[#8B3E23]">"{QUERY}"</span></span>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 shrink-0 ml-auto">
                       <button
                         onClick={() => toggleSave(clip.id)}
-                        className={`flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl border transition-all ${saved[clip.id] ? 'bg-[#F5E2D8] text-[#8B3E23] border-[#C8623E]/30' : 'bg-white text-[#958F87] border-[#DDD9D2] hover:border-[#D0CCC3]'}`}
+                        className={`flex items-center gap-1.5 text-xs font-semibold px-2.5 sm:px-3 py-1.5 rounded-xl border transition-all ${saved[clip.id] ? 'bg-[#F5E2D8] text-[#8B3E23] border-[#C8623E]/30' : 'bg-white text-[#958F87] border-[#DDD9D2] hover:border-[#D0CCC3]'}`}
                       >
                         <Bookmark className={`w-3 h-3 ${saved[clip.id] ? 'fill-[#C8623E] text-[#C8623E]' : ''}`} />
                         {saved[clip.id] ? 'Saved' : 'Save'}
                       </button>
-                      <button className="flex items-center gap-1 text-xs font-semibold text-[#1C1917] hover:text-[#C8623E] transition-colors px-3 py-1.5 rounded-xl border border-[#DDD9D2] hover:border-[#C8623E]/40 bg-white">
-                        Watch clip
+                      <button className="flex items-center gap-1 text-xs font-semibold text-[#1C1917] hover:text-[#C8623E] transition-colors px-2.5 sm:px-3 py-1.5 rounded-xl border border-[#DDD9D2] hover:border-[#C8623E]/40 bg-white">
+                        Watch
                         <ChevronRight className="w-3 h-3" />
                       </button>
                     </div>

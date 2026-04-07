@@ -62,7 +62,6 @@ const clips = [
   },
 ];
 
-// Sticker tag — used sparingly as accent
 function StickerTag({ children, bg, textColor = 'text-[#1C1917]', size = 'sm' }: {
   children: React.ReactNode; bg: string; textColor?: string; size?: 'xs' | 'sm';
 }) {
@@ -93,15 +92,14 @@ export function Feed() {
 
   return (
     <AppShell activePage="feed">
-      <div className="max-w-5xl mx-auto px-8 py-9">
+      <div className="max-w-5xl mx-auto px-4 sm:px-8 py-6 sm:py-9">
 
         {/* Header */}
-        <div className="mb-7 relative">
-          {/* Pixel star — bare accent in header margin */}
+        <div className="mb-6 sm:mb-7 relative">
           <div className="absolute right-0 top-0 rotate-[4deg] pointer-events-none">
             <PixelStar sz={4} fill="#10B981" />
           </div>
-          <h1 className="text-3xl font-bold text-[#1C1917] mb-1 tracking-tight" style={{ fontFamily: 'Playfair Display, serif' }}>Daily Feed</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#1C1917] mb-1 tracking-tight" style={{ fontFamily: 'Playfair Display, serif' }}>Daily Feed</h1>
           <p className="text-sm text-[#6B6660]">
             {isSearchMode
               ? 'Results for your search.'
@@ -118,23 +116,24 @@ export function Feed() {
               value={inputValue}
               onChange={e => setInputValue(e.target.value)}
               placeholder="Search a word or phrase…"
-              className="flex-1 bg-transparent text-[#1C1917] placeholder:text-[#A09890] text-sm outline-none"
+              className="flex-1 bg-transparent text-[#1C1917] placeholder:text-[#A09890] text-sm outline-none min-w-0"
             />
             {inputValue && (
-              <button type="button" onClick={clearSearch} className="text-[#A09890] hover:text-[#6B6660]">
+              <button type="button" onClick={clearSearch} className="text-[#A09890] hover:text-[#6B6660] shrink-0">
                 <X className="w-3.5 h-3.5" />
               </button>
             )}
           </form>
           <button
             onClick={() => setShowPrefs(v => !v)}
-            className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg border text-sm font-medium transition-all ${
+            className={`flex items-center gap-1.5 px-3 sm:px-3.5 py-2 rounded-lg border text-sm font-medium transition-all shrink-0 ${
               showPrefs
                 ? 'border-[#C8623E] bg-[#FDF0EB] text-[#C8623E]'
                 : 'border-[#DDD9D2] bg-white text-[#6B6660] hover:border-[#A09890]'
             }`}
           >
-            <SlidersHorizontal className="w-3.5 h-3.5" /> Preferences
+            <SlidersHorizontal className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Preferences</span>
           </button>
         </div>
 
@@ -179,10 +178,11 @@ export function Feed() {
           )}
         </div>
 
-        <div className="grid grid-cols-12 gap-7">
+        {/* ── Responsive grid: stacked on sm/md, side-by-side on lg+ ── */}
+        <div className="grid lg:grid-cols-12 gap-6 lg:gap-7">
 
           {/* Clip list */}
-          <div className="col-span-5 space-y-2">
+          <div className="lg:col-span-5 space-y-2">
             {clips.map(clip => {
               const isActive = activeClipId === clip.id;
               return (
@@ -196,7 +196,6 @@ export function Feed() {
                   }`}
                 >
                   <div className="flex gap-3">
-                    {/* Thumbnail */}
                     <div className="w-16 h-12 rounded-lg shrink-0 bg-[#E8E5DF] relative flex items-center justify-center overflow-hidden">
                       {clip.isCompleted ? (
                         <div className="absolute inset-0 bg-[#1C1917]/50 rounded-lg flex items-center justify-center">
@@ -212,7 +211,6 @@ export function Feed() {
                       <p className="text-[9px] font-bold text-[#A09890] uppercase tracking-wider truncate mb-0.5">{clip.showName}</p>
                       <h3 className={`text-xs font-semibold truncate mb-1.5 ${isActive ? 'text-[#1C1917]' : 'text-[#52504B]'}`}>{clip.title}</h3>
                       <div className="flex items-center gap-1.5">
-                        {/* Difficulty — sticker accent */}
                         <StickerTag bg={clip.difficultyColor} textColor={clip.difficultyColor.includes('text-white') ? 'text-white' : 'text-[#1C1917]'} size="xs">
                           {clip.difficulty}
                         </StickerTag>
@@ -223,13 +221,11 @@ export function Feed() {
                     </div>
                   </div>
 
-                  {/* Learn row */}
                   <div className="mt-2.5 pt-2 border-t border-dashed border-[#E8E5DF] flex items-center gap-2">
                     <BookOpen className={`w-3 h-3 shrink-0 ${isActive ? 'text-[#C8623E]' : 'text-[#A09890]'}`} />
                     <span className={`text-[11px] flex-1 truncate ${isActive ? 'text-[#1C1917] font-semibold' : 'text-[#6B6660]'}`}>
                       "{clip.targetWord}"
                     </span>
-                    {/* Word type — sticker accent */}
                     <StickerTag bg={clip.wordTypeBg} size="xs">{clip.wordType}</StickerTag>
                   </div>
                 </button>
@@ -237,9 +233,9 @@ export function Feed() {
             })}
           </div>
 
-          {/* Player panel — clean card */}
-          <div className="col-span-7">
-            <div className="bg-white rounded-xl border border-[#DDD9D2] overflow-hidden sticky top-8">
+          {/* Player panel */}
+          <div className="lg:col-span-7">
+            <div className="bg-white rounded-xl border border-[#DDD9D2] overflow-hidden lg:sticky lg:top-8">
 
               {/* Video */}
               <div className="aspect-video bg-[#1C1917] relative flex items-center justify-center">
@@ -250,7 +246,7 @@ export function Feed() {
                 </div>
                 <button
                   onClick={() => setIsPlaying(!isPlaying)}
-                  className="w-13 h-13 w-12 h-12 rounded-full bg-white/10 border border-white/25 flex items-center justify-center hover:bg-white/20 transition-colors z-10"
+                  className="w-12 h-12 rounded-full bg-white/10 border border-white/25 flex items-center justify-center hover:bg-white/20 transition-colors z-10"
                 >
                   {isPlaying
                     ? <span className="flex gap-1"><span className="w-1 h-4 bg-white rounded-sm" /><span className="w-1 h-4 bg-white rounded-sm" /></span>
@@ -269,7 +265,7 @@ export function Feed() {
               </div>
 
               {/* Transcript */}
-              <div className="px-5 py-4 border-b border-[#E8E5DF]">
+              <div className="px-4 sm:px-5 py-4 border-b border-[#E8E5DF]">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-[10px] font-bold uppercase tracking-widest text-[#A09890]">Transcript</span>
                   <span className="text-[10px] text-[#A09890] font-mono">{activeClip.start} – {activeClip.end}</span>
@@ -286,7 +282,6 @@ export function Feed() {
                                 <React.Fragment key={j}>
                                   {part}
                                   {j < arr.length - 1 && (
-                                    /* Transcript highlight — sticker accent */
                                     <mark className="not-italic bg-amber-300 text-[#1C1917] font-bold px-1 py-0.5 rounded border border-[#1C1917] shadow-[1px_1px_0_#1C1917]">
                                       {line.highlight}
                                     </mark>
@@ -305,21 +300,20 @@ export function Feed() {
               </div>
 
               {/* Word card */}
-              <div className="px-5 py-4">
+              <div className="px-4 sm:px-5 py-4">
                 <div className="bg-[#FDFCFA] border border-[#DDD9D2] rounded-xl p-4">
                   <div className="flex items-start gap-3">
                     <div className="w-8 h-8 rounded-lg bg-amber-100 border border-amber-200 flex items-center justify-center shrink-0">
                       <BookOpen className="w-3.5 h-3.5 text-[#C8623E]" />
                     </div>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1 flex-wrap">
                         <span className="font-bold text-[#1C1917] text-sm">"{activeClip.targetWord}"</span>
                         <StickerTag bg={activeClip.wordTypeBg} size="xs">{activeClip.wordType}</StickerTag>
                       </div>
                       <p className="text-xs text-[#6B6660] leading-relaxed mb-3">
                         To betray a colleague or friend for personal gain, usually to avoid blame.
                       </p>
-                      {/* Primary action — sticker shadow accent */}
                       <button
                         onClick={() => setWordSaved(s => !s)}
                         className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-bold border transition-all ${

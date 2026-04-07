@@ -25,7 +25,7 @@ const reels = [
     nativeUsage: `"I can't believe she threw me under the bus in front of the whole team."`,
     lines: [
       { speaker: 'Michael', active: false, en: 'So the presentation went fine. I handled it.', ja: null },
-      { speaker: 'Jim',     active: false, en: 'Really? Because Pam looked pretty upset when she left.', ja: null },
+      { speaker: 'Jim',     active: false, en: "Yeah, but that framing misses a lot.", ja: null },
       { speaker: 'Michael', active: false, en: "I just… clarified a few things. That's all.", ja: null },
       {
         speaker: 'Jim', active: true,
@@ -112,41 +112,38 @@ export function FeedDefault() {
     <AppShell activePage="feed">
       <div className="h-screen flex flex-col overflow-hidden" style={{ fontFamily: 'Inter, sans-serif' }}>
 
-        {/* ════════════════════════════════
-            SECTION 1 — VIDEO
-        ════════════════════════════════ */}
+        {/* SECTION 1 — VIDEO */}
         <div className={`relative flex-[5] min-h-0 bg-gradient-to-br ${reel.bg} transition-colors duration-700`}>
 
-          {/* Grain texture */}
           <div className="absolute inset-0 opacity-[0.05] pointer-events-none"
             style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'n\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.75\' numOctaves=\'4\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23n)\'/%3E%3C/svg%3E")' }}
           />
 
-          {/* Top bar: search + preferences + JP toggle */}
-          <div className="absolute top-0 left-0 right-0 z-20 px-5 pt-4 pb-3 bg-gradient-to-b from-black/50 to-transparent">
-            <div className="flex items-center gap-2">
-              <div className="flex-1 flex items-center gap-2 bg-white/15 backdrop-blur-md border border-white/25 rounded-xl px-3 py-2">
+          {/* Top bar */}
+          <div className="absolute top-0 left-0 right-0 z-20 px-3 sm:px-5 pt-4 pb-3 bg-gradient-to-b from-black/50 to-transparent">
+            <div className="flex items-center gap-2 flex-wrap">
+              <div className="flex-1 min-w-0 flex items-center gap-2 bg-white/15 backdrop-blur-md border border-white/25 rounded-xl px-3 py-2">
                 <Search className="w-3.5 h-3.5 text-white/55 shrink-0" />
                 <input
                   type="text"
                   value={searchValue}
                   onChange={e => setSearchValue(e.target.value)}
                   placeholder="Search a word or phrase…"
-                  className="flex-1 bg-transparent text-white placeholder:text-white/38 text-sm outline-none"
+                  className="flex-1 bg-transparent text-white placeholder:text-white/38 text-sm outline-none min-w-0"
                 />
                 {searchValue && (
-                  <button onClick={() => setSearchValue('')} className="text-white/40 hover:text-white/80">
+                  <button onClick={() => setSearchValue('')} className="text-white/40 hover:text-white/80 shrink-0">
                     <X className="w-3 h-3" />
                   </button>
                 )}
               </div>
-              <div className="flex items-center gap-1.5 bg-white/15 backdrop-blur-md border border-white/25 rounded-xl px-3 py-2">
+              <div className="hidden sm:flex items-center gap-1.5 bg-white/15 backdrop-blur-md border border-white/25 rounded-xl px-3 py-2">
                 <Sparkles className="w-3 h-3 text-white/55" />
                 <span className="text-[11px] text-white/55 font-medium">{reel.preferences.join(', ')}</span>
               </div>
               <button
                 onClick={() => setShowJa(v => !v)}
-                className={`flex items-center gap-1 px-3 py-2 rounded-xl border backdrop-blur-md text-[11px] font-semibold transition-all ${showJa ? 'bg-white/25 border-white/50 text-white' : 'bg-white/10 border-white/20 text-white/45'}`}
+                className={`flex items-center gap-1 px-3 py-2 rounded-xl border backdrop-blur-md text-[11px] font-semibold transition-all shrink-0 ${showJa ? 'bg-white/25 border-white/50 text-white' : 'bg-white/10 border-white/20 text-white/45'}`}
               >
                 <Languages className="w-3 h-3" />
                 日本語
@@ -154,22 +151,21 @@ export function FeedDefault() {
             </div>
           </div>
 
-          {/* Source info — bottom-left of video */}
-          <div className="absolute bottom-4 left-5 z-10 flex items-center gap-2">
+          {/* Source info */}
+          <div className="absolute bottom-4 left-3 sm:left-5 z-10 flex items-center gap-2 flex-wrap">
             <div className="w-5 h-4 bg-white/15 rounded flex items-center justify-center">
               <span className="text-[7px] font-bold text-white">▶</span>
             </div>
             <span className="text-white/85 text-xs font-semibold">{reel.showName}</span>
-            <span className="text-white/45 text-xs">{reel.episode}</span>
-            <span className="text-white/25 text-xs">·</span>
-            <div className="flex items-center gap-1 text-white/40 text-[10px] font-mono">
+            <span className="text-white/45 text-xs hidden sm:inline">{reel.episode}</span>
+            <span className="text-white/25 text-xs hidden sm:inline">·</span>
+            <div className="hidden sm:flex items-center gap-1 text-white/40 text-[10px] font-mono">
               <Clock className="w-2.5 h-2.5" />
               {reel.clipRange}
             </div>
-            <span className="text-[9px] text-white/20 font-mono">{reel.videoId}</span>
           </div>
 
-          {/* Play / Pause — center */}
+          {/* Play / Pause */}
           <div className="absolute inset-0 flex items-center justify-center">
             <button
               onClick={() => setIsPlaying(p => !p)}
@@ -182,8 +178,8 @@ export function FeedDefault() {
             </button>
           </div>
 
-          {/* Right rail — navigation + actions */}
-          <div className="absolute right-4 top-1/2 -translate-y-1/2 z-10 flex flex-col items-center gap-3">
+          {/* Right rail */}
+          <div className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 z-10 flex flex-col items-center gap-3">
             <button onClick={prev} disabled={currentIdx === 0}
               className="w-9 h-9 rounded-full bg-white/15 backdrop-blur-md border border-white/30 flex items-center justify-center text-white disabled:opacity-25 hover:bg-white/25 transition-colors">
               <ChevronUp className="w-4 h-4" />
@@ -208,7 +204,6 @@ export function FeedDefault() {
               <ChevronDown className="w-4 h-4" />
             </button>
 
-            {/* Reel counter dots */}
             <div className="flex flex-col gap-1.5 mt-1">
               {reels.map((_, i) => (
                 <div key={i} className={`rounded-full transition-all ${i === currentIdx ? 'w-1.5 h-4 bg-white' : 'w-1.5 h-1.5 bg-white/35'}`} />
@@ -216,32 +211,30 @@ export function FeedDefault() {
             </div>
           </div>
 
-          {/* Pixel play — bare accent in bottom-right of dark video */}
+          {/* Pixel play — bare accent */}
           <div className="absolute bottom-5 right-16 z-10 rotate-[-4deg] opacity-45 pointer-events-none">
             <PixelPlay sz={4} fill="white" />
           </div>
 
-          {/* Playback progress bar — orange accent */}
+          {/* Playback progress bar */}
           <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-white/15">
             <div className="h-full w-1/3 transition-all duration-300" style={{ background: '#C8623E' }} />
           </div>
         </div>
 
-        {/* ════════════════════════════════
-            SECTION 2 — TRANSCRIPT + LEARNING PANEL
-        ════════════════════════════════ */}
+        {/* SECTION 2 — TRANSCRIPT + LEARNING */}
         <div className="flex-[6] min-h-0 flex flex-col bg-[#F8F6F2] border-t-2 border-[#DDD9D2] overflow-y-auto">
 
           {/* Section header */}
-          <div className="flex items-center justify-between px-6 py-3 border-b border-[#DDD9D2] bg-[#EDEBE5] shrink-0">
+          <div className="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-[#DDD9D2] bg-[#EDEBE5] shrink-0">
             <div className="flex items-center gap-2">
               <span className="text-[11px] font-bold text-[#958F87] uppercase tracking-widest">Transcript</span>
               <span className="text-[#D6D2C9]">·</span>
-              <span className="text-[11px] text-[#958F87]">{reel.clipRange}</span>
+              <span className="text-[11px] text-[#958F87] hidden sm:inline">{reel.clipRange}</span>
             </div>
             <div className="flex items-center gap-2">
               {reel.studyCount > 0 && (
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 hidden sm:inline">
                   {reel.studyCount}× studied
                 </span>
               )}
@@ -256,12 +249,12 @@ export function FeedDefault() {
           </div>
 
           {/* Conversation lines */}
-          <div className="px-6 py-4 space-y-2 shrink-0">
+          <div className="px-4 sm:px-6 py-4 space-y-2 shrink-0">
             {reel.lines.map((line, i) => {
               if (line.active) {
                 const parts = line.en as { text: string; highlight: boolean }[];
                 return (
-                  <div key={i} className="rounded-xl bg-[#E8E5DF] border border-[#DDD9D2] px-4 py-3">
+                  <div key={i} className="rounded-xl bg-[#E8E5DF] border border-[#DDD9D2] px-3 sm:px-4 py-3">
                     <div className="flex items-start gap-3">
                       <div className="w-6 h-6 rounded-full bg-[#E8E5DF] border border-[#DDD9D2] flex items-center justify-center shrink-0 mt-0.5">
                         <span className="text-[9px] font-bold text-[#52504B]">{line.speaker[0]}</span>
@@ -305,14 +298,13 @@ export function FeedDefault() {
           </div>
 
           {/* Divider */}
-          <div className="mx-6 border-t border-[#DDD9D2]" />
+          <div className="mx-4 sm:mx-6 border-t border-[#DDD9D2]" />
 
-          {/* ── Learning Panel ── */}
-          <div className="px-6 py-4 grid grid-cols-2 gap-4">
+          {/* Learning Panel — stacked on sm, 2-col on md+ */}
+          <div className="px-4 sm:px-6 py-4 grid grid-cols-1 md:grid-cols-2 gap-4">
 
-            {/* ── Key Phrase Card (dark) ── */}
-            <div className="bg-[#1C1917] rounded-2xl p-5 text-white flex flex-col gap-3">
-              {/* Label + word type badge */}
+            {/* Key Phrase Card (dark) */}
+            <div className="bg-[#1C1917] rounded-2xl p-4 sm:p-5 text-white flex flex-col gap-3">
               <div className="flex items-center justify-between">
                 <span
                   className="text-[#C8623E] text-[10px] font-bold uppercase tracking-widest"
@@ -320,13 +312,11 @@ export function FeedDefault() {
                 >
                   Key phrase
                 </span>
-                {/* Word type — sticker shadow tag */}
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-violet-200 text-[#1C1917] border border-[#1C1917] shadow-[1px_1px_0_#1C1917]">
                   {reel.wordType}
                 </span>
               </div>
 
-              {/* Word heading */}
               <h3
                 className="text-lg font-bold italic leading-tight"
                 style={{ fontFamily: 'Playfair Display, serif' }}
@@ -334,7 +324,6 @@ export function FeedDefault() {
                 {reel.targetWord}
               </h3>
 
-              {/* IPA + listen */}
               <div className="flex items-center gap-3">
                 <button className="w-7 h-7 rounded-lg bg-white/10 flex items-center justify-center hover:bg-white/20 transition-colors shrink-0">
                   <Volume2 className="w-3.5 h-3.5 text-[#DDD9D2]" />
@@ -345,7 +334,6 @@ export function FeedDefault() {
                 )}
               </div>
 
-              {/* Definition — orange left border */}
               <p className="text-white/70 text-sm leading-relaxed border-l-2 border-[#C8623E] pl-3">
                 {reel.definition}
                 {showJa && (
@@ -353,13 +341,11 @@ export function FeedDefault() {
                 )}
               </p>
 
-              {/* Native usage */}
               <div className="bg-white/5 rounded-xl p-3 border border-white/10">
                 <strong className="text-white block mb-1 text-[10px] uppercase tracking-wider">A native might say:</strong>
                 <span className="text-white/55 italic text-xs leading-relaxed">{reel.nativeUsage}</span>
               </div>
 
-              {/* Save button — sticker shadow */}
               <button
                 onClick={toggleSave}
                 className={`w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-bold border transition-all ${
@@ -375,11 +361,11 @@ export function FeedDefault() {
               </button>
             </div>
 
-            {/* ── Right column: Progress + Related words + Mark studied ── */}
+            {/* Right column */}
             <div className="flex flex-col gap-4">
 
-              {/* Today's Progress card */}
-              <div className="bg-white border border-[#DDD9D2] rounded-2xl p-5">
+              {/* Today's Progress */}
+              <div className="bg-white border border-[#DDD9D2] rounded-2xl p-4 sm:p-5">
                 <h4 className="font-semibold text-[#1C1917] mb-4 text-sm">Today's Progress</h4>
                 <div className="flex items-center gap-4">
                   <div className="relative w-14 h-14 flex items-center justify-center shrink-0">
@@ -436,10 +422,10 @@ export function FeedDefault() {
             </div>
           </div>
 
-          {/* BookOpen word header (compact, below the two-col grid) — for Related quick context */}
-          <div className="px-6 pb-6">
+          {/* Japanese summary */}
+          <div className="px-4 sm:px-6 pb-6">
             {showJa && (
-              <div className="flex items-start gap-1.5 px-4 py-3 rounded-xl bg-[#EDEBE5] border border-[#DDD9D2]">
+              <div className="flex items-start gap-1.5 px-3 sm:px-4 py-3 rounded-xl bg-[#EDEBE5] border border-[#DDD9D2]">
                 <BookOpen className="w-3.5 h-3.5 text-[#958F87] mt-0.5 shrink-0" />
                 <div>
                   <span
