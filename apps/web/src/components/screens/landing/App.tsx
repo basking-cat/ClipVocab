@@ -13,9 +13,10 @@ import {
   ArrowRight,
   RotateCcw,
 } from "lucide-react";
+import { LoginModal } from "@/components/LoginModal";
 import { PixelBolt } from "../_shared/PixelArt";
 
-// Logo mark — tilted play sticker + Outfit/SpaceMono split wordmark
+// Logo mark — tilted badge + Outfit/SpaceMono split wordmark
 function LogoMark({ size = "md" }: { size?: "sm" | "md" }) {
   const boxCls =
     size === "sm"
@@ -27,14 +28,32 @@ function LogoMark({ size = "md" }: { size?: "sm" | "md" }) {
   return (
     <div className="flex items-center gap-2.5 select-none">
       <div
-        className={`rotate-[-4deg] bg-[#C8623E] ${boxCls} flex items-center justify-center shrink-0`}
+        className={`rotate-[-4deg] bg-white ${boxCls} flex items-center justify-center shrink-0`}
       >
         <svg
           viewBox="0 0 16 16"
-          className={`${iconCls} text-white translate-x-[1px]`}
+          className={`${iconCls} text-[#1C1917]`}
           xmlns="http://www.w3.org/2000/svg"
         >
-          <path d="M4 2.5L13 8L4 13.5V2.5Z" fill="currentColor" />
+          <path
+            d="M3.5 4.4C3.5 3.86 3.94 3.42 4.48 3.42H11.52C12.06 3.42 12.5 3.86 12.5 4.4V9.45C12.5 9.99 12.06 10.43 11.52 10.43H7.63L5.3 12.18V10.43H4.48C3.94 10.43 3.5 9.99 3.5 9.45V4.4Z"
+            fill="white"
+            stroke="currentColor"
+            strokeWidth="1"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M5.15 6.25H10.85"
+            stroke="currentColor"
+            strokeWidth="1.15"
+            strokeLinecap="round"
+          />
+          <path
+            d="M5.15 8H8.85"
+            stroke="currentColor"
+            strokeWidth="1.15"
+            strokeLinecap="round"
+          />
         </svg>
       </div>
       {/* Outfit = pop/bold energy  |  Space Mono = bit/digital accent */}
@@ -47,7 +66,7 @@ function LogoMark({ size = "md" }: { size?: "sm" | "md" }) {
         </span>
         <span
           style={{ fontFamily: "Space Mono, monospace" }}
-          className={`${vocab} font-bold tracking-tight text-[#C8623E]`}
+          className={`${vocab} font-bold tracking-tight text-[#1C1917]`}
         >
           Vocab
         </span>
@@ -58,6 +77,8 @@ function LogoMark({ size = "md" }: { size?: "sm" | "md" }) {
 
 export function App() {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<"login" | "signup">("login");
   const [savedWords, setSavedWords] = useState<string[]>([
     "reckon",
     "cut to the chase",
@@ -92,15 +113,35 @@ export function App() {
           </a>
         </div>
         <div className="flex items-center gap-3">
-          <button className="text-sm font-medium text-[#52504B] px-4 py-2 rounded-lg hover:bg-[#E8E5DF] transition-colors">
+          <button
+            className="text-sm font-medium text-[#52504B] px-4 py-2 rounded-lg hover:bg-[#E8E5DF] transition-colors"
+            type="button"
+            onClick={() => {
+              setAuthMode("login");
+              setIsAuthOpen(true);
+            }}
+          >
             Log in
           </button>
           {/* Primary nav CTA — sticker shadow accent */}
-          <button className="text-sm font-bold text-white bg-[#1C1917] px-5 py-2 rounded-lg border border-[#1C1917] shadow-[2px_2px_0_#6B4226] hover:shadow-[1px_1px_0_#6B4226] hover:translate-x-[1px] hover:translate-y-[1px] transition-all">
+          <button
+            className="text-sm font-bold text-white bg-[#1C1917] px-5 py-2 rounded-lg border border-[#1C1917] shadow-[2px_2px_0_#6B4226] hover:shadow-[1px_1px_0_#6B4226] hover:translate-x-[1px] hover:translate-y-[1px] transition-all"
+            type="button"
+            onClick={() => {
+              setAuthMode("signup");
+              setIsAuthOpen(true);
+            }}
+          >
             Start free
           </button>
         </div>
       </nav>
+
+      <LoginModal
+        isOpen={isAuthOpen}
+        closeModal={() => setIsAuthOpen(false)}
+        initialMode={authMode}
+      />
 
       <main className="max-w-7xl mx-auto px-6 md:px-12">
         {/* Hero */}

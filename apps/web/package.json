@@ -13,14 +13,18 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@radix-ui/react-avatar": "^1.1.11",
+    "clsx": "^2.1.1",
     "firebase": "^11.0.0",
     "firestore": "^1.1.6",
+    "framer-motion": "^12.38.0",
     "lucide-react": "^0.534.0",
     "next": "15.3.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-modal": "^3.16.3",
-    "sass": "^1.88.0"
+    "sass": "^1.88.0",
+    "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {
     "@chromatic-com/storybook": "^3.2.6",
@@ -31,6 +35,7 @@
     "@storybook/experimental-nextjs-vite": "^8.6.12",
     "@storybook/react": "^8.6.12",
     "@storybook/test": "^8.6.12",
+    "@tailwindcss/postcss": "^4.2.2",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -42,6 +47,7 @@
     "playwright": "^1.52.0",
     "sass": "^1.89.2",
     "storybook": "^8.6.12",
+    "tailwindcss": "^4.2.2",
     "typescript": "^5",
     "vitest": "^3.1.3"
   }
