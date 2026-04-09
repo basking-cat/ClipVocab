@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from 'react';
 import { Mic, Send, Sparkles } from 'lucide-react';
 import { MobileShell } from './_shared/MobileShell';

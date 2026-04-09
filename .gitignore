@@ -9,7 +9,7 @@ node_modules/
 !.yarn/versions
 
 # next.js & build output
-**/ .next/
+**/.next/
 **/out/
 **/build/
 

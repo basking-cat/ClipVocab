@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from 'react';
 import { Search, Bell, Bookmark, Clock } from 'lucide-react';
 import { MobileShell, LogoMark } from './_shared/MobileShell';

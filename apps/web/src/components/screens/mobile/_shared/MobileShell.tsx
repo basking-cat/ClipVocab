@@ -157,25 +157,25 @@ const NAV_ITEMS = [
     id: "feed",
     label: "Feed",
     Icon: Home,
-    href: "/__mockup/preview/mobile/MobileFeed",
+    href: "/mobile/feed",
   },
   {
     id: "watch",
     label: "Watch",
     Icon: Film,
-    href: "/__mockup/preview/mobile/MobileReel",
+    href: "/mobile/reel",
   },
   {
     id: "review",
     label: "Review",
     Icon: RotateCcw,
-    href: "/__mockup/preview/mobile/MobileReview",
+    href: "/mobile/review",
   },
   {
     id: "profile",
     label: "Profile",
     Icon: User,
-    href: "/__mockup/preview/mobile/MobileProfile",
+    href: "/mobile/profile",
   },
 ] as const;
 
