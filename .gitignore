@@ -27,3 +27,9 @@ node_modules/
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# terraform
+*.tfvars
+**/.terraform/*
+*.tfstate
+*.tfstate.*
