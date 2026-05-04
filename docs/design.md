@@ -238,155 +238,89 @@ Fargate --> FS
 
 ```mermaid
 erDiagram
-  USER ||--|| PREFERENCE : has
-  PREFERENCE ||--o{ PREFERENCE_TOPIC : includes
+  users ||--|| preferences : has
+  preferences ||--o{ preference_topics : includes
+  users ||--o{ saved_clips : saves
+  users ||--o{ review_sessions : does
+  videos ||--o{ clips : contains
+  clips ||--o{ clip_related_phrases : has
+  clips ||--o{ saved_clips : referenced_by
+  saved_clips ||--o{ review_sessions : reviewed_via
 
-  VIDEO ||--o{ CLIP : contains
-  CLIP ||--o{ CLIP_OCCURRENCE : has
-  WORD ||--o{ CLIP_OCCURRENCE : appears_in
-
-  USER ||--o{ SAVED_CLIP : saves
-  CLIP ||--o{ SAVED_CLIP : referenced_by
-  WORD ||--o{ SAVED_CLIP : saved_as
-
-  USER ||--o{ STUDY_EVENT : generates
-  CLIP ||--o{ STUDY_EVENT : related_to
-  WORD ||--o{ STUDY_EVENT : related_to
-  SEARCH_SESSION ||--o{ STUDY_EVENT : context_of
-
-  USER ||--o{ SEARCH_SESSION : starts
-  SEARCH_SESSION ||--o{ SEARCH_RESULT_ITEM : produces
-  CLIP ||--o{ SEARCH_RESULT_ITEM : candidate
-
-  USER {
-    string id PK
-    string displayName
-    datetime createdAt
-    datetime updatedAt
+  users {
+    varchar id PK
+    varchar name
+    varchar email
+    varchar photo_url
+    varchar native_lang
+    varchar cefr_level
+    int app_level
+    int streak
+    date last_active
+    timestamp created_at
   }
 
-  PREFERENCE {
-    string id PK
-    string userId FK  "unique (1:1)"
-    string languagePair
-    string level
-    datetime updatedAt
+  preferences {
+    varchar id PK
+    varchar user_id FK
+    varchar level
+    timestamp updated_at
   }
 
-  PREFERENCE_TOPIC {
-    string id PK
-    string preferenceId FK
-    string label
+  preference_topics {
+    varchar id PK
+    varchar preference_id FK
+    varchar label
     float weight
   }
 
-  WORD {
-    string id PK
-    string text
-    string normalized
-    datetime createdAt
+  videos {
+    varchar id PK
+    varchar title
+    varchar channel_id
+    varchar channel_title
+    int duration_sec
+    varchar language
+    timestamp published_at
   }
 
-  VIDEO {
-    string id PK  "YouTube videoId"
-    string title
-    string channelId
-    string channelTitle
-    int durationSec
-    datetime publishedAt
-    string language
+  clips {
+    varchar id PK
+    varchar video_id FK
+    float start_sec
+    float end_sec
+    text transcript
+    text translation
+    varchar key_phrase
+    varchar caption_src
+    timestamp created_at
   }
 
-  CLIP {
-    string id PK
-    string videoId FK
-    float startSec
-    float endSec
-    string captionSnippetEn  "optional"
-    string translationJa     "optional"
-    string captionSource
-    datetime createdAt
+  clip_related_phrases {
+    varchar id PK
+    varchar clip_id FK
+    varchar phrase
   }
 
-  CLIP_OCCURRENCE {
-    string id PK
-    string clipId FK
-    string wordId FK
-    int startChar
-    int endChar
-    float confidence "optional"
+  saved_clips {
+    varchar id PK
+    varchar user_id FK
+    varchar clip_id FK
+    varchar key_phrase
+    timestamp saved_at
+    varchar note
   }
 
-  SAVED_CLIP {
-    string id PK
-    string userId FK
-    string clipId FK
-    string wordId FK
-    datetime savedAt
-    string tags "optional"
-  }
-
-  STUDY_EVENT {
-    string id PK
-    string userId FK
-    string clipId FK "nullable"
-    string wordId FK "nullable"
-    string searchSessionId FK "nullable"
-    string eventType
-    string source "optional"
-    float watchedSec "optional"
-    datetime createdAt
-    string reviewType "optional"
-    string prompt "optional"
-    string userAnswer "optional"
-    float aiScore "optional"
-    string aiFeedback "optional"
-  }
-
-  SEARCH_SESSION {
-    string id PK
-    string userId FK
-    string queryWord "optional"
-    string preferenceSnapshot "optional"
-    datetime createdAt
-    string status
-  }
-
-  SEARCH_RESULT_ITEM {
-    string id PK
-    string searchSessionId FK
-    string clipId FK
-    int rank
-  float score "optional"
-  string reason "optional"
+  review_sessions {
+    varchar id PK
+    varchar user_id FK
+    varchar saved_clip_id FK
+    text user_answer
+    float ai_score
+    text ai_feedback
+    timestamp reviewed_at
   }
 ```
-
-## 5.2 Access Patterns(Firestore Queries)
-
-各画面で必要となる主要なクエリ要件は以下。
-
-| 機能 or 画面       | 対象コレクション     | クエリ条件                                                                                    | 備考                                                 |
-| :----------------- | :------------------- | :-------------------------------------------------------------------------------------------- | :--------------------------------------------------- |
-| **ログイン**       | `USER`               | `getDoc(doc(db, "USER", uid))`                                                                | ユーザープロフィールの取得                           |
-| **ホーム (進捗)**  | `STUDY_EVENT`        | `where("userId", "==", uid)`, `orderBy("createdAt", "desc")`, `limit(10)`                     | 直近の学習状況の表示                                 |
-| **視聴 (Feed)**    | `SEARCH_RESULT_ITEM` | `where("searchSessionId", "==", sessionId)`, `orderBy("rank", "asc")`                         | **複合インデックス必須**。セッションに基づく候補提示 |
-| **復習 (リスト)**  | `SAVED_CLIP`         | `where("userId", "==", uid)`, `orderBy("savedAt", "asc")`                                     | 復習が必要な保存済みアイテムの取得                   |
-| **復習 (詳細)**    | `STUDY_EVENT`        | `where("userId", "==", uid)`, `where("wordId", "==", wordId)`, `orderBy("createdAt", "desc")` | **複合インデックス必須**。過去の回答傾向の参照       |
-| **保存済み一覧**   | `SAVED_CLIP`         | `where("userId", "==", uid)`, `orderBy("savedAt", "desc")`                                    | **複合インデックス必須**。保存した順での表示         |
-| **単語別クリップ** | `SAVED_CLIP`         | `where("userId", "==", uid)`, `where("wordId", "==", wordId)`, `orderBy("savedAt", "desc")`   | **複合インデックス必須**。特定単語の例文一覧         |
-| **学習履歴**       | `STUDY_EVENT`        | `where("userId", "==", uid)`, `orderBy("createdAt", "desc")`                                  | **複合インデックス必須**。全学習ログの時系列表示     |
-| **設定管理**       | `PREFERENCE`         | `where("userId", "==", uid)`, `limit(1)`                                                      | ユーザーの好み設定の取得                             |
-
-### Index Requirements
-
-以下のクエリ実行には、Firestore 上で複合インデックスの作成が必要となる。
-
-1.  **STUDY_EVENT**: `userId` (ASC) + `createdAt` (DESC)
-2.  **SEARCH_RESULT_ITEM**: `searchSessionId` (ASC) + `rank` (ASC)
-3.  **SAVED_CLIP**: `userId` (ASC) + `savedAt` (DESC)
-4.  **SAVED_CLIP**: `userId` (ASC) + `wordId` (ASC) + `savedAt` (DESC)
-5.  **STUDY_EVENT**: `userId` (ASC) + `wordId` (ASC) + `createdAt` (DESC)
 
 ### Supplement
 
