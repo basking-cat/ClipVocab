@@ -72,7 +72,7 @@
 
 #### Clip Definition / Playback (Copyright-safe)
 
-- クリップは動画データを保存せず、**YouTubeの動画IDと再生区間（start/end）**のみを保持する
+- クリップは動画データを保存せず、YouTubeの動画IDと再生区間（start/end）のみを保持する
 - クリップ再生は**YouTube公式プレイヤー**を用いて行い、指定した区間のみを再生する（再配布や自前配信は行わない）
 - 同一動画から連続してクリップを提示しない
 
@@ -135,95 +135,94 @@
 図があれば貼る
 -->
 
-### High-level (Hybrid: Firebase + AWS Workers)
+### High-level
 
 ```mermaid
 flowchart LR
+
 %% ======================
 %% Client
 %% ======================
 subgraph Client["Client (Web / Mobile)"]
-UI["UI (Feed / Review / Settings)"]
-YTPlayer["YouTube Official Player (Embed/SDK)"]
+  UI["UI (Feed / Review / Settings)"]
+  YTPlayer["YouTube Official Player (Embed/SDK)"]
 end
 
 %% ======================
-%% Firebase / GCP side
+%% Vercel
 %% ======================
-subgraph Firebase["Firebase / GCP (Lightweight app state)"]
-Auth["Firebase Auth"]
-FS["Firestore (User/Preference/Clip meta/SavedClip/StudyEvent/SearchSession)"]
-CR["Cloud Run API (optional)"]
+subgraph Vercel["Vercel"]
+  NextAPI["Next.js API Routes"]
+end
+
+%% ======================
+%% Supabase
+%% ======================
+subgraph Supabase["Supabase"]
+  SB_Auth["Supabase Auth"]
+  SB_DB["PostgreSQL (User / Preference / Clip / SavedClip / ReviewSession)"]
+  SB_RT["Realtime"]
 end
 
 %% ======================
 %% AWS side
 %% ======================
 subgraph AWS["AWS (Heavy processing)"]
-SQS["SQS Queue (Job: search/generate/review-eval)"]
-Fargate["ECS Fargate Worker (Clip candidate generation / AI eval)"]
-CloudWatch_Logs["CloudWatch Logs"]
-Secrets_Manager["Secrets Manager (Firebase Admin creds, API keys)"]
+  SQS["SQS Queue (Job: generate-clip / review-eval)"]
+  Fargate["ECS Fargate Worker (Go)\n- 字幕取得・クリップ抽出 (goroutine)\n- 翻訳API\n- LLM呼び出し"]
+  Secrets_Manager["Secrets Manager (API keys)"]
 end
 
 %% ======================
 %% External services
 %% ======================
 subgraph External["External Services"]
-YTAPI["YouTube Data APIs (search/meta/captions if available)"]
-Translate["Translation API"]
-LLM["LLM API (review evaluation / feedback)"]
+  YTAPI["YouTube Data API"]
+  Translate["Translation API"]
+  LLM["LLM API (review evaluation)"]
 end
 
 %% ----------------------
-%% Auth & app state
+%% Auth & direct data access
 %% ----------------------
-UI --> Auth
-UI <--> FS
+UI --> SB_Auth
+UI <--> SB_DB
+UI -.->|Realtime購読| SB_RT
 
 %% ----------------------
-%% Search / feed generation
+%% Job投入が必要な操作
 %% ----------------------
-UI --> CR
-CR --> FS
-CR --> SQS
+UI --> NextAPI
+NextAPI --> SQS
+
+%% ----------------------
+%% Worker
+%% ----------------------
 SQS --> Fargate
-
-%% Worker reads secrets + calls external APIs
 Fargate --> Secrets_Manager
 Fargate --> YTAPI
 Fargate --> Translate
-
-%% Worker writes results back
-Fargate --> FS
-Fargate --> CloudWatch_Logs
-
-%% Client listens for updates
-UI <--> FS
+Fargate --> LLM
+Fargate --> SB_DB
 
 %% ----------------------
 %% Playback
 %% ----------------------
 UI --> YTPlayer
-
-%% ----------------------
-%% Review
-%% ----------------------
-UI --> FS
-FS --> CR
-CR --> SQS
-Fargate --> LLM
-Fargate --> FS
 ```
 
 ### Deployment / Hosting Strategy
 
-- 軽量なアプリ機能（認証・ユーザデータ・学習履歴・feed状態）はFirebase（Auth/Firestore）で管理する
-- クライアントからの検索・復習評価などのリクエストは Cloud Run API（または Firebase Cloud Functions）で受け、SQS にジョブを投入する
-- 重い処理（動画探索、字幕処理、クリップ区間抽出、翻訳、LLM評価、推薦計算）はAWSの非同期ワーカーで実行する
-- 非同期処理はSQSをキューとして利用し、ECS Fargate上のワーカーコンテナがジョブを処理する
-- ワーカーは処理結果をFirestoreに書き戻し、クライアントはFirestoreの更新を読んでfeedを更新する
-- Clip は動画データを保存せず、videoIdと再生区間（start/end）のみを保持し、再生はYouTube公式プレイヤーで行う
+- フロントエンドおよび API ルートは Next.js on Vercel で管理する
+- 認証・データ管理・リアルタイム購読は Supabase（Auth / PostgreSQL / Realtime）で一元管理する
+- クライアントは操作の種類によって通信先を使い分ける
+  - 認証・データ読み取り・リアルタイム購読 → Supabase に直接アクセス
+  - クリップ生成・復習評価など非同期ジョブが必要な操作 → Next.js API Routes 経由で SQS にジョブ投入
+- 重い処理（動画探索、字幕処理、クリップ区間抽出、翻訳、LLM評価）は AWS の非同期ワーカーで実行する
+- Fargate ワーカーは Go で実装し、goroutine による並行処理で複数動画の字幕取得・LLM 呼び出しを効率化する
+- ワーカーは処理結果を Supabase（PostgreSQL）に書き戻し、クライアントは Supabase Realtime で更新を検知して feed を更新する
+- Clip は動画データを保存せず、videoId と再生区間（start/end）のみを保持し、再生は YouTube 公式プレイヤーで行う
+- （将来）RAG 実装時は Python Worker を別コンテナとして Fargate に追加する
 
 ---
 
@@ -322,11 +321,6 @@ erDiagram
   }
 ```
 
-### Supplement
-
-- **推薦（復習候補・関連単語）**: 専用エンティティは設けず、STUDY_EVENT / SAVED_CLIP から都度算出する想定とする。
-- **Feed の並び**: 要件「同一動画から連続してクリップを提示しない」は、SEARCH_RESULT_ITEM の rank や feed 生成ロジックで同一 videoId が連続しないよう並べ替えて満たす。
-
 ## 6. APIs
 
 ### Endpoints
@@ -385,7 +379,9 @@ erDiagram
 外部API・外部サービス・ライブラリなど
 -->
 
-- 軽い部分は Firebase（Auth / Firestore）、重い処理は AWS（SQS + ECS Fargate ワーカー）で実行する。ワーカーから Firestore への書き込みには Firebase Admin SDK を使用する。
+- フロントエンド・API Routes は Vercel（Next.js）で管理する
+- 認証・DB・リアルタイム購読は Supabase（Auth / PostgreSQL / Realtime）で管理する
+- 重い処理は AWS（SQS + ECS Fargate ワーカー）で実行する。ワーカーから Supabase への書き込みは pg ドライバで直接接続する
 
 ---
 
@@ -395,7 +391,10 @@ erDiagram
 検討した別案と、それを採用しなかった理由
 -->
 
-- このアプリの作成はAWSの学習も兼ねているため全てにAWSを採用することも考えたが、MVPの完成速度を優先したいためFirebaseとのハイブリッドにした。
+- このアプリの作成はAWSの学習も兼ねているため全てにAWSを採用することも考えたが、MVPの完成速度を優先したいためSupabase + AWSのハイブリッドにした。
+- バックエンドAPIを独立したサーバー（AWS Lambda / ECS Fargate）として構築することも検討したが、ライトな処理はNext.js API Routesで十分であり、Vercelのデプロイ自動化の恩恵を受けるためこの構成とした。重い処理のみFargateワーカーに委譲する。
+- DBをFirestore（NoSQL）ではなくSupabase（PostgreSQL）にしたのは、SQLが使えること・認証とリアルタイム購読がビルトインで揃っていること・ERDをそのままDDLに変換できることが理由。AWS RDSも検討したがリアルタイム購読を自前実装するコストが高く、MVPでは過剰と判断した。
+- FargateワーカーをGoで実装するのは、goroutineによる並行処理で複数動画の字幕取得・LLM呼び出しを効率化するため。LLM呼び出し自体はHTTPリクエストであり言語に依存しないため、Pythonは不要と判断した。将来のRAG実装時のみPython Workerを別途追加する。
 
 ---
 
