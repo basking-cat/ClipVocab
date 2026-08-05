@@ -145,3 +145,16 @@
   padding: 0;
   text-decoration: underline;
 }
+
+.error {
+  margin: 0;
+  color: #b42318;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.primaryButton:disabled,
+.secondaryButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
