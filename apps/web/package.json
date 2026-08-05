@@ -14,6 +14,8 @@
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.11",
+    "@supabase/ssr": "^0.10.3",
+    "@supabase/supabase-js": "^2.78.0",
     "clsx": "^2.1.1",
     "firebase": "^11.0.0",
     "firestore": "^1.1.6",
