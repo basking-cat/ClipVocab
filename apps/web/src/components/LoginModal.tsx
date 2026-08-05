@@ -1,8 +1,14 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { ModalWindow } from "./ModalWindow";
 import styles from "./LoginModal.module.scss";
+import {
+  signInWithEmail,
+  signInWithGoogle,
+  signUpWithEmail,
+} from "@/lib/auth";
 
 type AuthMode = "login" | "signup";
 
@@ -33,15 +39,67 @@ export const LoginModal = ({
   closeModal,
   initialMode = "login",
 }: LoginModalProps) => {
+  const router = useRouter();
   const [mode, setMode] = useState<AuthMode>(initialMode);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [oauthLoading, setOauthLoading] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
       setMode(initialMode);
+      setError(null);
     }
   }, [initialMode, isOpen]);
 
   const isSignup = mode === "signup";
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setError(null);
+
+    if (isSignup && password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      if (isSignup) {
+        await signUpWithEmail(email, password, name);
+      } else {
+        await signInWithEmail(email, password);
+      }
+
+      closeModal();
+      router.refresh();
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "Authentication failed.";
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setError(null);
+    setOauthLoading(true);
+
+    try {
+      await signInWithGoogle();
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "Google sign-in failed.";
+      setError(message);
+      setOauthLoading(false);
+    }
+  };
 
   return (
     <ModalWindow
@@ -82,10 +140,7 @@ export const LoginModal = ({
           </button>
         </div>
 
-        <form
-          className={styles.form}
-          onSubmit={(event) => event.preventDefault()}
-        >
+        <form className={styles.form} onSubmit={handleSubmit}>
           {isSignup && (
             <label className={styles.field} htmlFor="name">
               <span className={styles.label}>name</span>
@@ -94,6 +149,9 @@ export const LoginModal = ({
                 type="text"
                 className={styles.input}
                 placeholder="Felix"
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+                autoComplete="name"
               />
             </label>
           )}
@@ -105,6 +163,10 @@ export const LoginModal = ({
               type="email"
               className={styles.input}
               placeholder="mail@example.com"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              autoComplete="email"
+              required
             />
           </label>
 
@@ -115,6 +177,11 @@ export const LoginModal = ({
               type="password"
               className={styles.input}
               placeholder="••••••••"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              autoComplete={isSignup ? "new-password" : "current-password"}
+              required
+              minLength={6}
             />
           </label>
 
@@ -126,18 +193,35 @@ export const LoginModal = ({
                 type="password"
                 className={styles.input}
                 placeholder="••••••••"
+                value={confirmPassword}
+                onChange={(event) => setConfirmPassword(event.target.value)}
+                autoComplete="new-password"
+                required
+                minLength={6}
               />
             </label>
           )}
 
-          <button type="submit" className={styles.primaryButton}>
-            {MODE_META[mode].action}
+          {error && <p className={styles.error}>{error}</p>}
+
+          <button
+            type="submit"
+            className={styles.primaryButton}
+            disabled={loading || oauthLoading}
+          >
+            {loading ? "Please wait..." : MODE_META[mode].action}
           </button>
 
-          <button type="button" className={styles.secondaryButton}>
-            Continue with Google
+          <button
+            type="button"
+            className={styles.secondaryButton}
+            onClick={handleGoogleSignIn}
+            disabled={loading || oauthLoading}
+          >
+            {oauthLoading ? "Redirecting..." : "Continue with Google"}
           </button>
-          <button type="button" className={styles.secondaryButton}>
+
+          <button type="button" className={styles.secondaryButton} disabled>
             Continue with X
           </button>
         </form>

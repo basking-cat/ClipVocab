@@ -1,12 +1,17 @@
+"use client";
+
 import styles from "./Header.module.scss";
 import { SlidersHorizontal, Search } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import type { User } from "@supabase/supabase-js";
 import { FilterModal } from "@/components/FilterModal";
 import { LoginModal } from "@/components/LoginModal";
-import { SignupModal } from "./SignupModal";
+import { signOut } from "@/lib/auth";
 
 type HeaderProps = {
   showSearch?: boolean;
+  user: User | null;
 };
 
 type Option = {
@@ -15,10 +20,12 @@ type Option = {
   checked: boolean;
 };
 
-export default function Header({ showSearch }: HeaderProps) {
+export default function Header({ showSearch, user }: HeaderProps) {
+  const router = useRouter();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const [isSignupOpen, setIsSignupOpen] = useState(false);
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [authMode, setAuthMode] = useState<"login" | "signup">("login");
+  const [loggingOut, setLoggingOut] = useState(false);
 
   const [categories, setCategories] = useState<Option[]>([
     { id: "news", label: "NEWS", checked: false },
@@ -55,6 +62,28 @@ export default function Header({ showSearch }: HeaderProps) {
     setRange([0, 80]);
   };
 
+  const openAuth = (mode: "login" | "signup") => {
+    setAuthMode(mode);
+    setIsAuthOpen(true);
+  };
+
+  const handleLogout = async () => {
+    setLoggingOut(true);
+
+    try {
+      await signOut();
+      router.refresh();
+    } finally {
+      setLoggingOut(false);
+    }
+  };
+
+  const displayName =
+    user?.user_metadata?.name ||
+    user?.user_metadata?.full_name ||
+    user?.email ||
+    "Account";
+
   return (
     <header className={styles.header}>
       <div className={styles.leftGroup}>
@@ -80,20 +109,36 @@ export default function Header({ showSearch }: HeaderProps) {
       </div>
 
       <div className={styles.authButtons}>
-        <button
-          className={styles.signup}
-          type="button"
-          onClick={() => setIsSignupOpen(true)}
-        >
-          Sign Up
-        </button>
-        <button
-          className={styles.login}
-          type="button"
-          onClick={() => setIsLoginOpen(true)}
-        >
-          Log In
-        </button>
+        {user ? (
+          <>
+            <span className={styles.userLabel}>{displayName}</span>
+            <button
+              className={styles.login}
+              type="button"
+              onClick={handleLogout}
+              disabled={loggingOut}
+            >
+              {loggingOut ? "Logging out..." : "Log Out"}
+            </button>
+          </>
+        ) : (
+          <>
+            <button
+              className={styles.signup}
+              type="button"
+              onClick={() => openAuth("signup")}
+            >
+              Sign Up
+            </button>
+            <button
+              className={styles.login}
+              type="button"
+              onClick={() => openAuth("login")}
+            >
+              Log In
+            </button>
+          </>
+        )}
       </div>
 
       <FilterModal
@@ -110,13 +155,11 @@ export default function Header({ showSearch }: HeaderProps) {
         range={range}
         setRange={setRange}
       />
+
       <LoginModal
-        isOpen={isLoginOpen}
-        closeModal={() => setIsLoginOpen(false)}
-      />
-      <SignupModal
-        isOpen={isSignupOpen}
-        closeModal={() => setIsSignupOpen(false)}
+        isOpen={isAuthOpen}
+        closeModal={() => setIsAuthOpen(false)}
+        initialMode={authMode}
       />
     </header>
   );

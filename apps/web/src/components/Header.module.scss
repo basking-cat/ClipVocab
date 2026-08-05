@@ -75,6 +75,7 @@
   position: absolute;
   right: 32px;
   display: flex;
+  align-items: center;
   gap: 12px;
 
   button {
@@ -105,4 +106,15 @@
   .login:hover {
     background-color: #383838;
   }
+
+  button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.userLabel {
+  font-size: 14px;
+  color: #333333;
+  margin-right: 8px;
 }
