@@ -1,5 +1,6 @@
-# Build Stage
-FROM golang:1.22-alpine AS builder
+FROM --platform=$BUILDPLATFORM golang:1.25-alpine AS builder
+ARG TARGETOS
+ARG TARGETARCH
 WORKDIR /app
 
 COPY apps/server/go.mod apps/server/go.sum* ./apps/server/
@@ -7,16 +8,14 @@ WORKDIR /app/apps/server
 RUN go mod download
 
 WORKDIR /app
-COPY . .
+COPY apps/server ./apps/server
 
 WORKDIR /app/apps/server
-RUN go build -o /app/main .
+ENV CGO_ENABLED=0
+RUN GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o /app/worker ./cmd/worker
 
-# Run Stage
 FROM alpine:latest
+RUN apk add --no-cache ca-certificates
 WORKDIR /app
-
-COPY --from=builder /app/main .
-
-EXPOSE 8080
-CMD ["./main"]
+COPY --from=builder /app/worker .
+CMD ["./worker"]
