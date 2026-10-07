@@ -41,6 +41,16 @@ resource "aws_secretsmanager_secret_version" "worker" {
   secret_string = var.database_url
 }
 
+# YouTube Data API キー。DATABASE_URL 用シークレットは文字列そのものなので、別シークレットにする。
+resource "aws_secretsmanager_secret" "youtube" {
+  name = "clip-vocab/youtube-api-key"
+}
+
+resource "aws_secretsmanager_secret_version" "youtube" {
+  secret_id     = aws_secretsmanager_secret.youtube.id
+  secret_string = var.youtube_api_key
+}
+
 # タスク実行用ロールにSecrets Managerからの値取得権限を付与
 resource "aws_iam_role_policy" "execution_secrets" {
   name = "read-worker-secret"
@@ -50,7 +60,10 @@ resource "aws_iam_role_policy" "execution_secrets" {
     Statement = [{
       Effect   = "Allow"
       Action   = ["secretsmanager:GetSecretValue"]
-      Resource = [aws_secretsmanager_secret.worker.arn]
+      Resource = [
+        aws_secretsmanager_secret.worker.arn,
+        aws_secretsmanager_secret.youtube.arn,
+      ]
     }]
   })
 }
@@ -118,6 +131,7 @@ resource "aws_ecs_task_definition" "worker" {
     ]
     secrets = [
       { name = "DATABASE_URL", valueFrom = aws_secretsmanager_secret.worker.arn },
+      { name = "YOUTUBE_API_KEY", valueFrom = aws_secretsmanager_secret.youtube.arn },
     ]
     logConfiguration = {
       logDriver = "awslogs"

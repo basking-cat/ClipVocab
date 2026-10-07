@@ -15,7 +15,10 @@ ENV CGO_ENABLED=0
 RUN GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -o /app/worker ./cmd/worker
 
 FROM alpine:latest
-RUN apk add --no-cache ca-certificates
+RUN apk add --no-cache ca-certificates python3 py3-pip \
+ && pip3 install --break-system-packages --no-cache-dir youtube-transcript-api
 WORKDIR /app
 COPY --from=builder /app/worker .
+COPY --from=builder /app/apps/server/internal/transcript/python/fetcher.py ./fetcher.py
+ENV TRANSCRIPT_SCRIPT=/app/fetcher.py
 CMD ["./worker"]
