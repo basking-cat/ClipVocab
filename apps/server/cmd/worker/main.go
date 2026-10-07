@@ -14,6 +14,9 @@ import (
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
+	"github.com/basking-cat/clip-vocab/apps/server/internal/clipgen"
+	"github.com/basking-cat/clip-vocab/apps/server/internal/transcript"
+	"github.com/basking-cat/clip-vocab/apps/server/internal/youtube"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -45,8 +48,9 @@ func run() error {
 
 	queueURL := os.Getenv("QUEUE_URL")
 	databaseURL := os.Getenv("DATABASE_URL")
-	if queueURL == "" || databaseURL == "" {
-		return errors.New("QUEUE_URL and DATABASE_URL environment variables are required")
+	youtubeAPIKey := os.Getenv("YOUTUBE_API_KEY")
+	if queueURL == "" || databaseURL == "" || youtubeAPIKey == "" {
+		return errors.New("QUEUE_URL, DATABASE_URL, and YOUTUBE_API_KEY environment variables are required")
 	}
 
 	cfg, err := config.LoadDefaultConfig(ctx)
@@ -61,6 +65,16 @@ func run() error {
 		return fmt.Errorf("connect db pool: %w", err)
 	}
 	defer pool.Close()
+
+	deps := workerDeps{
+		sqs:  client,
+		pool: pool,
+		store: clipgen.PGStore{
+			Pool: pool,
+		},
+		search:  &youtube.Client{APIKey: youtubeAPIKey},
+		fetcher: transcript.PythonFetcher{},
+	}
 
 	slog.Info("started polling worker", "queue_url", queueURL)
 
@@ -109,7 +123,7 @@ func run() error {
 			body := aws.ToString(msg.Body)
 			receipt := aws.ToString(msg.ReceiptHandle)
 
-			if err := handleMessage(ctx, client, pool, queueURL, body, receipt); err != nil {
+			if err := handleMessage(ctx, deps, queueURL, body, receipt); err != nil {
 				// NOTE: メッセージは削除せずキューに残すことで、VisibilityTimeout 経過後に SQS 側で再試行。
 				// 最大受信数を超えたものは SQS の DLQ（Dead Letter Queue）設定側で退避させる運用前提。
 				slog.Error("failed to process message",
@@ -121,10 +135,17 @@ func run() error {
 	}
 }
 
+type workerDeps struct {
+	sqs     *sqs.Client
+	pool    *pgxpool.Pool
+	store   clipgen.Store
+	search  clipgen.Searcher
+	fetcher transcript.Fetcher
+}
+
 func handleMessage(
 	ctx context.Context,
-	client *sqs.Client,
-	pool *pgxpool.Pool,
+	deps workerDeps,
 	queueURL, body, receipt string,
 ) error {
 	var j job
@@ -136,16 +157,38 @@ func handleMessage(
 			"error", err,
 			"payload", body,
 		)
-		return deleteMessage(ctx, client, queueURL, receipt)
+		return deleteMessage(ctx, deps.sqs, queueURL, receipt)
 	}
 
 	switch j.Type {
-	case "generate-clip", "review-eval":
+	case "generate-clip":
+		// 検索と字幕取得は 10 秒では終わらないため、このジョブだけ長めに切る。
+		execCtx, cancel := context.WithTimeout(ctx, 2*time.Minute)
+		defer cancel()
+
+		n, err := clipgen.Generate(execCtx, j.ID, deps.store, deps.search, deps.fetcher)
+		if errors.Is(err, clipgen.ErrNoTopics) {
+			slog.Warn("generate-clip has no preference topics, dropping message",
+				"job_id", j.ID,
+			)
+			return deleteMessage(ctx, deps.sqs, queueURL, receipt)
+		}
+		if err != nil {
+			return fmt.Errorf("generate clip: %w", err)
+		}
+
+		slog.Info("stored videos with captions",
+			"job_id", j.ID,
+			"count", n,
+		)
+		return deleteMessage(ctx, deps.sqs, queueURL, receipt)
+
+	case "review-eval":
 		// DB の遅延・デッドロックによるワーカー全体のハングを防ぐため個別タイムアウトを設定
 		execCtx, cancel := context.WithTimeout(ctx, 10*time.Second)
 		defer cancel()
 
-		_, err := pool.Exec(execCtx,
+		_, err := deps.pool.Exec(execCtx,
 			`insert into worker_pings (job_type, payload) values ($1, $2)`,
 			j.Type, body,
 		)
@@ -157,8 +200,7 @@ func handleMessage(
 			"job_type", j.Type,
 			"job_id", j.ID,
 		)
-
-		return deleteMessage(ctx, client, queueURL, receipt)
+		return deleteMessage(ctx, deps.sqs, queueURL, receipt)
 
 	default:
 		// 未知のジョブ種別。後方互換性やデプロイ順序の影響を考慮しログに残して破棄
@@ -167,7 +209,7 @@ func handleMessage(
 			"job_id", j.ID,
 			"payload", body,
 		)
-		return deleteMessage(ctx, client, queueURL, receipt)
+		return deleteMessage(ctx, deps.sqs, queueURL, receipt)
 	}
 }
 
