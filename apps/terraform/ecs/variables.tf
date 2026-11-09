@@ -1,21 +1,21 @@
 variable "queue_arn" {
-    type = string
+  type = string
 }
 
 variable "queue_url" {
-    type = string
+  type = string
 }
 
 variable "image" {
-    type = string
+  type = string
 }
 
 variable "database_url" {
-    type = string
-    sensitive = true
+  type      = string
+  sensitive = true
 }
 
 variable "youtube_api_key" {
-    type      = string
-    sensitive = true
+  type      = string
+  sensitive = true
 }
