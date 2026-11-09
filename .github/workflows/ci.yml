@@ -31,15 +31,15 @@ jobs:
       - run: pnpm --filter @clip-vocab/web exec playwright install --with-deps chromium
       - run: pnpm turbo lint typecheck test
 
-    terraform:
-      runs-on: ubuntu-latest
-      timeout-minutes: 10
-      defaults:
-        run:
-          working-directory: apps/terraform
-      steps:
-        - uses: actions/checkout@4
-        - uses: hashicorp/setup-terraform@3
-        - run: terraform fmt -check -recursive
-        - run: terraform init -backend=false
-        - run: terraform validate
+  terraform:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: apps/terraform
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+      - run: terraform fmt -check -recursive
+      - run: terraform init -backend=false
+      - run: terraform validate
