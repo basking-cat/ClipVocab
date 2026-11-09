@@ -2,12 +2,14 @@
   "name": "clip-vocab",
   "private": true,
   "scripts": {
-    "dev": "turbo dev",
+    "dev": "turbo dev & supabase start",
     "build": "turbo build",
-    "lint": "turbo lint"
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "test": "turbo test"
   },
   "devDependencies": {
-    "turbo": "latest",
+    "turbo": "^2",
     "prettier": "latest"
   },
   "packageManager": "pnpm@9.0.0"

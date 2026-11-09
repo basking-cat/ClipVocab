@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{github.ref}}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: pnpm
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: apps/server/go.mod
+          cache-dependency-path: apps/server/go.sum
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @clip-vocab/web exec playwright install --with-deps chromium
+      - run: pnpm turbo lint typecheck test
+
+    terraform:
+      runs-on: ubuntu-latest
+      timeout-minutes: 10
+      defaults:
+        run:
+          working-directory: apps/terraform
+      steps:
+        - uses: actions/checkout@4
+        - uses: hashicorp/setup-terraform@3
+        - run: terraform fmt -check -recursive
+        - run: terraform init -backend=false
+        - run: terraform validate
