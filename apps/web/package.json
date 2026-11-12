@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "test": "vitest",
+    "test": "vitest run --passWithNoTests",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
