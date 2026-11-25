@@ -4,7 +4,7 @@ resource "aws_sqs_queue" "generate_clip_dlq" {
 
 resource "aws_sqs_queue" "generate_clip" {
   name                       = "clip-vocab-generate-clip"
-  visibility_timeout_seconds = 300  # longer than worker process time
+  visibility_timeout_seconds = 300 # longer than worker process time
   redrive_policy = jsonencode({
     deadLetterTargetArn = aws_sqs_queue.generate_clip_dlq.arn
     maxReceiveCount     = 3
@@ -59,9 +59,9 @@ resource "aws_secretsmanager_secret" "sqs_credentials" {
 resource "aws_secretsmanager_secret_version" "sqs_credentials" {
   secret_id = aws_secretsmanager_secret.sqs_credentials.id
   secret_string = jsonencode({
-    AWS_ACCESS_KEY_ID     = aws_iam_access_key.api_routes.id
-    AWS_SECRET_ACCESS_KEY = aws_iam_access_key.api_routes.secret
-    AWS_REGION            = "ap-northeast-1"
+    AWS_ACCESS_KEY_ID       = aws_iam_access_key.api_routes.id
+    AWS_SECRET_ACCESS_KEY   = aws_iam_access_key.api_routes.secret
+    AWS_REGION              = "ap-northeast-1"
     GENERATE_CLIP_QUEUE_URL = aws_sqs_queue.generate_clip.url
     REVIEW_EVAL_QUEUE_URL   = aws_sqs_queue.review_eval.url
   })

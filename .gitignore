@@ -36,3 +36,8 @@ next-env.d.ts
 **/.terraform/*
 *.tfstate
 *.tfstate.*
+
+# Go
+apps/server/bin/
+apps/server/tmp/
+apps/server/server
